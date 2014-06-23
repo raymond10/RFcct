@@ -1,0 +1,138 @@
+@@ -0,0 +1,138 @@
+# (c) Cdre
+# Fichier de config de l'application RFCCT 
+# Les parametres definis ici remplacent ceux
+# definis dans la table USER.USER_PARAMETRES, RFCCT.RFCCT_PARAMETRES 
+
+APP_USE_MAIL = YES
+HOST_MAIL = smtp.univ.fr
+ADMIN_MAIL = raymond.naneon@univ.fr
+DOMAIN_NAME = utt.fr
+
+APP_ALIAS = Rfcct
+APP_TITLE = RFCCT
+APP_USE_GEDFS = NO
+APP_URL = http://server.univ.fr/cgi-bin/WebObjects/RFcct.woa
+
+NET_NO_PROXY_HOSTS=*.univ.fr
+
+#Identification CAS
+#utilisation de l'identification CAS
+#APP_USE_CAS=(YES|NO)
+#APP_USE_CAS = YES
+APP_USE_CAS = YES
+CAS_LOGOUT_URL = https://cas.univ.fr/cas/logout?service=http://server.univ.fr/cgi-bin/WebObjects/RFcct
+
+MAIN_WEB_SITE_URL = http://server.univ.fr/cgi-bin/WebObjects/RFcct.woa
+
+MAIN_LOGO_URL = http://server.univ.fr/WebObjects/Images/logoUTTgaucheLittle.png
+
+DEFAULT_NS_TIMEZONE = Europe/Paris
+
+# Ces modes  permettent d'activer ou non les logs ou envoie de mail
+TEST = YES
+MODE_DEBUG = YES
+
+#JRE Version MAX
+JRE_MAX = 1.7
+
+# Choix de la gestion des droits('Non' gestion par jefyAdmin/'YES' Gestion par AGRHUM
+# Activation/desactivation de la nouvelle gestion des droits
+ENABLE_NEW_GD = YES
+
+# OGNL
+ognl.helperFunctions=true
+ognl.inlineBindings=true
+
+# WoLips configuration
+wolips.password=passepar2
+wolips.host=localhost
+wolips.port=9485
+
+# Wonder Configuration
+
+#WODirectConnectEnabled = true
+
+WOFrameworksBaseURL = /WebObjects/RFcct.woa/Frameworks
+
+dbEOPrototypesEntityGLOBAL=EOJDBCOraclePrototypes
+
+er.extensions.ERXLocalizer.defaultLanguage=French
+er.extensions.ERXLocalizer.fileNamesToWatch=("Messages.strings", "ValidationTemplate.strings")
+er.extensions.ERXApplication.useEditingContextUnlocker=true
+er.extensions.ERXEC.defaultAutomaticLockUnlock=true
+er.extensions.ERXModelGroup.FwkGspot_Local.ignoreTypeMismatch=true
+er.extensions.ERXApplication.responseCompressionEnabled=true
+er.extensions.ERXJDBCAdaptor.className=er.extensions.jdbc.ERXJDBCAdaptor
+# laisse les valeurs errons au niveau des attributs jusqu' la prochaine phase
+er.extensions.ERXValidationShouldPushChangesToObject = true
+#er.extensions.ERXRaiseOnMissingEditingContextDelegate=false
+
+er.extensions.ERXSession.useSecureSessionCookies = true
+
+#Ignorer les bug du FWK droitUtils
+#er.extensions.ERXModelGroup.GdPerimetre.perimetreParentId.ignoreTypeMismatch=true
+#er.extensions.ERXModelGroup.GdPerimetre.id.ignoreTypeMismatch=true
+
+er.extensions.maxPageReplacementCacheSize=60
+
+#ERXThreadStorage memory leak Bug
+er.extensions.ERXThreadStorage.useInheritableThreadLocal=false
+
+er.extensions.WOConditional.patch=true
+er.extensions.loadOnDemandDuringReplace=true
+
+er.javamail.centralize=false
+
+# Log4j Configuration
+log4j.loggerFactory=er.extensions.logging.ERXLogger$Factory
+log4j.rootCategory=INFO,A1
+log4j.appender.A1=er.extensions.logging.ERXConsoleAppender
+log4j.appender.A1.layout=er.extensions.logging.ERXPatternLayout
+log4j.appender.A1.layout.ConversionPattern=%d{MMM dd HH:mm:ss} %$[%#] %-5p %c %x - %m%n
+
+# Log4j Categories
+# Here are a few log4j sub-categories that are interesting.
+# Don't forget that in development mode this file will get reloaded
+# everytime it changes, so if you say want to turn adaptor debugging
+# on in the middle of the app simply set the below category to debug.
+# Very handy.
+# Base Category
+log4j.logger.er=INFO
+
+# ERExtensions
+# Transaction - Switching this to debug will start the sql ouputting.
+#log4j.logger.er.transaction.adaptor.EOAdaptorDebugEnabled=DEBUG
+
+# Fixes - Turning this on will show all the models that are loaded
+log4j.logger.er.extensions.fixes.ERSharedEOLoader=INFO
+
+er.extensions.ERXNSLogLog4jBridge=INFO
+log4j.logger.er.eo.ERXGenericRecord=DEBUG
+log4j.logger.er.validation.ERXEntityClassDescription=DEBUG
+log4j.logger.er.default.ERXEntityClassDescription=DEBUG
+log4j.logger.er.extensions.ERXDatabaseContextDelegate=WARN
+log4j.logger.er.extensions.ERXConfigurationManager=INFO
+#log4j.logger.er.extensions.ERXApplication.RequestHandling=DEBUG
+#log4j.logger.er.extensions.appserver.ajax.ERXAjaxSession=DEBUG
+
+#Activation de la mise en forme automatique des formulaires
+org.cocktail.global.formulaires.miseenformeautomatique=true
+
+LIST_TYPE_TIER = 1_INDIVIDU,2_STRUCTURE,3_UV
+TYPE_TIER_CIBLE = USER.INDIVIDU_ULR,USER.STRUCTURE_ULR,SCOLARITE.SCOL_INSCRIPTION_EC
+
+# Logger RFCCT
+log4j.logger.org.utt.rfcct.serveur=INFO
+log4j.logger.org.utt.rfcct.serveur.components.DetailCompetence=INFO
+#log4j.logger.org.utt.rfcct.serveur.utils.Editions=INFO
+
+#Reverse Engine Info
+#jdbc:oracle:thin:@server.univ.fr:1500:DATABASE
+#oracle.jdbc.driver.OracleDriver
+
+# Paramtres de connexion  la base,  changer selon configuration
+dbConnectURLGLOBAL = jdbc:oracle:thin:@server.univ.fr:1500:DATABASE
+dbConnectUserGLOBAL = MyDataBaseUser
+dbConnectPasswordGLOBAL.encrypted = true
+dbConnectPasswordGLOBAL = 02acfd14f4d49c
