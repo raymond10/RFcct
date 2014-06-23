@@ -1,0 +1,79 @@
+/**
+ * 
+ */
+package org.utt.rfcct.serveur.components.commons;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOVDataRealCompTree;
+
+import com.webobjects.eocontrol.EOAndQualifier;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOFetchSpecification;
+import com.webobjects.eocontrol.EOKeyValueQualifier;
+import com.webobjects.eocontrol.EOQualifier;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSKeyValueCoding;
+import com.webobjects.foundation.NSMutableArray;
+
+import er.extensions.appserver.ERXDisplayGroup;
+import er.extensions.eof.ERXQ;
+import er.extensions.eof.ERXS;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 19 aožt 2013
+ */
+@SuppressWarnings("all")
+public class EODataForGroupeSpec {
+
+	private static EODataForGroupeSpec sharedInstance = new EODataForGroupeSpec();
+	static EOEditingContext ec;
+	public static final EOQualifier QUAL_NOT_PERE = new EOKeyValueQualifier(
+			EOVDataRealCompTree.TO_EOV_DATA_REAL_COMP_TREE_PERE_KEY,
+			EOKeyValueQualifier.QualifierOperatorNotEqual,
+			NSKeyValueCoding.NullValue);
+	public static final EOQualifier QUAL_GROUPES_DOMAINES = new EOKeyValueQualifier(
+			"compxIdPere", EOQualifier.QualifierOperatorEqual,
+			NSKeyValueCoding.NullValue);
+	public static final EOQualifier QUAL_GROUPES_COMPETENCES = ERXQ
+			.not(EOVDataRealCompTree.COMPX_ID.like("*M*")
+					.or(EOVDataRealCompTree.COMPX_ID.like("*T*"))
+					.or(EOVDataRealCompTree.COMPX_ID.like("*C*")));
+	//.and(EOVDataRealCompTree.COMPX_ID_PERE.isNotNull())
+	public static final EOQualifier QUAL_GROUPES_MATIERES = new EOKeyValueQualifier(
+			"compxId", EOQualifier.QualifierOperatorCaseInsensitiveLike, "*M*");
+	public static final EOQualifier QUAL_GROUPES_TERRAINS = new EOKeyValueQualifier(
+			"compxId", EOQualifier.QualifierOperatorCaseInsensitiveLike, "*T*");
+	public static final EOQualifier QUAL_GROUPES_CAPACITES = new EOKeyValueQualifier(
+			"compxId", EOQualifier.QualifierOperatorCaseInsensitiveLike, "*C*");
+
+	public static EODataForGroupeSpec sharedInstance() {
+		return sharedInstance;
+	}
+
+	public static NSArray getGroupesRacine(EOEditingContext ec) {
+		EOQualifier qual = EOVDataRealCompTree.COMPX_ID_PERE.isNull();
+		return EOVDataRealCompTree.fetchEOVDataRealCompTrees(ec, qual,
+				EOVDataRealCompTree.COMPX_LIBELLE.ascs());
+	}
+
+	public static boolean isGroupeRacine(EOVDataRealCompTree groupe) {
+		return ((groupe != null) && groupe.toEovDataRealCompTreePere().equals(
+				null));
+	}
+
+	public static NSArray<EOVDataRealCompTree> rechercherGroupes(
+			EOEditingContext ec, EOQualifier qual, int fetchLimit) {
+		NSMutableArray array = new NSMutableArray();
+		if (qual != null) {
+			array.addObject(qual);
+		}
+		EOFetchSpecification spec = new EOFetchSpecification(
+				EOVDataRealCompTree.ENTITY_NAME, new EOAndQualifier(array),
+				EOVDataRealCompTree.COMPX_LIBELLE.ascs());
+		if (fetchLimit > 0) {
+			spec.setFetchLimit(fetchLimit);
+		}
+		spec.setUsesDistinct(true);
+		NSArray res = ec.objectsWithFetchSpecification(spec);
+		return res;
+	}
+}

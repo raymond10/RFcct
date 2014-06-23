@@ -1,0 +1,66 @@
+<webobject name = "Cadre">
+  <table width = "100%">
+    <tr>
+      <td id = "main" valign = "top" align = "center">
+        <webobject name = "IsNotConnected">
+          <br />
+          <br />
+          <br />
+          <div>
+            <br />
+            <br />
+            <webobject name = "IfUseCAS">
+              <webobject name = "goCas">
+                <div class = "loginboxlink">
+                  <p style = "margin-top:0;font-size:1.3em;font-weight:bold;">Acc&eacute;der &agrave; l'application </p>
+                  <font style = "font-style:italic;font-weight:bold;color:black;">Une authentification sera demand&eacute;e si
+                    vous vous connectez pour la premi&egrave;re fois</font>
+                </div>
+              </webobject>
+            </webobject>
+            <webobject name = "NotUseCAS">
+              <div class = "loginboxlink" style = "cursor:default;">
+                <p style = "margin-top:0;font-size:1.3em;font-weight:bold;">Acc&eacute;der &agrave; l'application </p>
+                <webobject name = "FormLogin">
+                  <center>
+                    <p>
+                      <span class = "login_label">Identifiant :</span>
+                      <span class = "login_input"> <webobject name = "Login" /> </span>
+                      <br />
+                      <span class = "login_label nowrap">Mot de passe :</span>
+                      <span class = "login_input nowrap"> <webobject name = "MotDePasse" /> </span>
+                    </p>
+                    <div style = "clear:both"></div>
+                    <p>
+                      <span> <webobject name = "Valider" /> </span>
+                    </p>
+                  </center>
+                </webobject>
+              </div>
+            </webobject>
+            <br />
+            <br />
+            <webobject name = "BlocageQuestionSecrete">
+              <webobject name = "PwdLosted">
+                <div class = "lostpasswordboxlink">
+                  <p style = "margin-top:0;font-size:1.3em;font-weight:bold;">Vous n'avez pas ou plus de mot de passe ?</p>
+                  <font style = "font-style:italic;font-weight:bold;color:black;">En r&eacute;pondant correctement &agrave; une question secr&egrave;te, vous pourrez (re)-initialiser votre mot de passe</font>
+                </div>
+              </webobject>
+              &nbsp;&nbsp; 
+            </webobject>
+            <br />
+            <br />
+            <br />
+          </div>
+          <div>
+            <webobject name = "HasFicheProduit">
+              <webobject name = "FicheProduitLink">Guide d'utilisation</webobject>
+            </webobject>
+          </div>
+        </webobject>
+        <webobject name = "IsConnected"> </webobject>
+      </td>
+    </tr>
+  </table>
+</webobject>

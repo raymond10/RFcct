@@ -1,0 +1,3 @@
+ContainerTerrain : AjaxUpdateContainer {
+	id = "ContainerTerrain";
+}

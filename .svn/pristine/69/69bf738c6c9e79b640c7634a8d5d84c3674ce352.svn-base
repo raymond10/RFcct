@@ -1,0 +1,5 @@
+<webobject name = "Wrapper">
+  <webobject name = "AssistantAdministrateurContainer">
+  <webobject name = "AssistantAdministration" /> 
+  </webobject>
+</webobject>

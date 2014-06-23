@@ -1,0 +1,153 @@
+ContainerMatTerrain : AjaxUpdateContainer {
+	id = "ContainerMatTerrain";
+}
+
+FormMatTerrain : ERXWOForm {
+  id = "FormMatTerrain";
+  name ="FormMatTerrainName";
+  action = submit;
+  multipleSubmit = true;
+  onsubmit = "return false;";
+}
+
+TRMatiere : AjaxUpdateContainer {
+	id = "TRMatiere";
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreMatiere : WOPopUpButton {
+	disabled = disabled;
+	id = "CentreMatiere";
+	list = ctrl.lesMatieres;
+	item = ctrl.uneMatiere;
+	selection = ctrl.leCentreMatiere;
+	displayString = ctrl.uneMatiere.lblCourt;
+	noSelectionString = " ";
+}
+
+ObserverCentreMatiere : AjaxObserveField {
+	fullSubmit = false;
+	observeFieldID = "CentreMatiere";
+	action = refreshSousMat;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRMatiereUpdate(); TRSMatiereUpdate();}";
+}
+
+selectMatiere : WOConditional {
+	condition = ctrl.leCentreMatiere;
+}
+
+laSelectionMatiere : WOTextField {
+    id = "laSelectionMatiere";
+	value = ctrl.leCentreMatiere.lblCourt;
+	disabled = true;
+	escapeHTML = false;
+}
+
+TRSMatiere : AjaxUpdateContainer {
+	id = "TRSMatiere";
+	elementName = "tr";
+	class = "decale";
+}
+
+
+
+CentreSousMatiere : WOPopUpButton {
+	disabled = disabled;
+	id = "CentreSousMatiere";
+	list = ctrl.lesSousMatieres;
+	item = ctrl.uneSousMatiere;
+	selection = ctrl.leSousCentreMatiere;
+	displayString = ctrl.uneSousMatiere.lblCourt;
+	noSelectionString = " ";
+}
+
+ObserverCentreSousMatiere : AjaxObserveField {
+	fullSubmit = false;
+	observeFieldID = "CentreSousMatiere";
+	action = ctrl.actSmatComp;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRSMatiereUpdate();}";
+}
+
+selectSMatiere : WOConditional {
+	condition = ctrl.leSousCentreMatiere;
+}
+
+laSelectionSMatiere : WOTextField {
+    id = "laSelectionSMatiere";
+	value = ctrl.leSousCentreMatiere.lblCourt;
+	disabled = true;
+	escapeHTML = false;
+}
+
+TRTerrain : AjaxUpdateContainer {
+	id = "TRTerrain";
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreTerrain : WOPopUpButton {
+	disabled = disabled;
+	id = "CentreTerrain";
+	list = ctrl.lesTerrains;
+	item = ctrl.unTerrain;
+	selection = ctrl.leCentreTerrain;
+	displayString = ctrl.unTerrain.lblCourt;
+	noSelectionString = " ";
+}
+
+ObserverCentreTerrain : AjaxObserveField {
+	fullSubmit = true;
+	observeFieldID = "CentreTerrain";
+	action = refreshSousTerr;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRTerrainUpdate(); TRSTerrainUpdate();}";
+}
+
+selectTerrain : WOConditional {
+	condition = ctrl.leCentreTerrain;
+}
+
+laSelectionTerrain : WOTextField {
+    id = "laSelectionTerrain";
+	value = ctrl.leCentreTerrain.lblCourt;
+	disabled = true;
+	escapeHTML = false;
+}
+
+TRSTerrain : AjaxUpdateContainer {
+	id = "TRSTerrain";
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreSousTerrain : WOPopUpButton {
+	disabled = disabled;
+	id = "CentreSousTerrain";
+	list = ctrl.lesSousTerrains;
+	item = ctrl.uneSousTerrain;
+	selection = ctrl.leSousCentreTerrain;
+	displayString = ctrl.uneSousTerrain.lblCourt;
+	noSelectionString = " ";
+}
+
+ObserverCentreSousTerrain : AjaxObserveField {
+	fullSubmit = false;
+	observeFieldID = "CentreSousTerrain";
+	action = ctrl.actSterrComp;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRSTerrainUpdate();}";
+}
+
+selectSousTerrain : WOConditional {
+	condition = ctrl.leSousCentreTerrain;
+}
+
+laSelectionSousTerrain : WOTextField {
+    id = "leSousCentreTerrain";
+	value = ctrl.leSousCentreTerrain.lblCourt;
+	disabled = true;
+	escapeHTML = false;
+}

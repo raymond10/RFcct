@@ -1,0 +1,193 @@
+containerTier : AjaxUpdateContainer {
+	id = "containerTierId";
+	class = classeCss;
+	style = styleCss;
+}
+
+formTier : ERXWOForm {
+  id = "formTierId";
+  name ="formTierName";
+  action = submit;
+  multipleSubmit = true;
+  embedded = true;
+  onsubmit = "return false;";
+}
+
+TRTypeTier : AjaxUpdateContainer {
+	id = TRTypeTierId;
+	elementName = "tr";
+}
+
+CentreTypeTier : WOPopUpButton {
+	id = "CentreTypeTier";
+	list = ctrl.lesTypeTiers;
+	item = ctrl.itemTypeTier;
+	displayString = ctrl.itemTypeTier.libelle;
+	selection = ctrl.selectionTypeTier;
+	noSelectionString = " ";
+	disabled = isStandAlone;
+}
+
+ObserverCentreTypeTier : AjaxObserveField {
+	observeFieldID = "CentreTypeTier";
+	action = ctrl.majTier;
+	fullSubmit = false;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRTiersUpdate(); TRTiersSelectionUpdate(); TRDomaineUpdate(); TRComponentUpdate();}";
+}
+
+TRTiers : AjaxUpdateContainer {
+	id = TRTiersId;
+	elementName = "tr";
+}
+
+TiersTypeSelect : CktlAjaxButton {
+    dialogIDForOpen = personnesDialogId;
+    text = "Le tier";
+    title = "Sélectionner le tier";
+    type = "new";
+    enabled = butonTierEnable;
+}
+
+DialogPersonnes : CktlAjaxWindow {
+    id = personnesDialogId;
+    action = openAjouterPersonnes;
+    width = 670;
+    height = 500;
+    onClose = refreshTiers;
+    resizable = false;
+    closable = false;
+    showOpener = false; 
+	title = "Ajouter un tier";
+	linkTitle = "Ajouter un tier"; 
+    //closeUpdateContainerID = "TRTiersSelection";
+	afterHide = updateContainerJsAferHide;    
+}
+
+ObserverTiersType : AjaxObserveField {
+	fullSubmit = false;
+	observeFieldID = personnesDialogId;
+	action = submit;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRTiersUpdate(); TRComponentUpdate();}";
+}
+
+TRTiersSelection : AjaxUpdateContainer {
+	id = TRTiersSelectionId;
+	elementName = "tr";
+}
+
+tier : WOString {
+	value = mySession.leTier.tiersLibelle;
+	escapeHTML = false;
+	style = "";
+}
+
+TRDomaine : AjaxUpdateContainer {
+	id = TRDomaineId;
+	elementName = "tr";
+}
+
+unTierDomaineObserver : AjaxObserveField {
+    id = "checkId";
+    elementName = "span";
+    fullSubmit = true;
+	action = submit;
+	onComplete = "function() {TRDomaineUpdate(); TRComponentUpdate();}";
+}
+
+lesTiersDomaine : WORepetition {
+	list = ctrl.lesDomaines;
+	item = ctrl.itemDomaine;
+}
+
+font : WOString {
+	value = ctrl.itemDomaine.style;
+}
+
+unTierDomaine : WOCheckBox {
+  checked = ctrl.domaineSelected;
+  disabled = ctrl.lockDomaine;
+}
+
+lblMatiere : WOString {
+	value = ctrl.itemDomaine.lblCourt;
+	escapeHTML = false;
+	style = ctrl.itemDomaine.style;
+}
+
+compGenerate : CktlAjaxButton {
+    text = "Générer les compétences";
+    title = "Générer les composants des compétences";
+    type = "update";
+    action = compGenerate;
+	//updateContainerID = TRComponentId;
+	onComplete = "function() {TRComponentUpdate(); ContainerAssistantMenuUpdate();}";
+	enabled = activeGenerate;
+}
+
+TRCompoement : AjaxUpdateContainer {
+	id = TRComponentId;
+	elementName = "tr";
+	class = "decale";
+}
+
+competenceCount : WOConditional {
+	condition = competences.count;
+}
+
+DetailForm : ERXWOForm {
+	id = "CompetenceDetailId";
+	embedded = true;
+	multipleSubmit = true;
+	action = submit;
+	onSubmit = "return false;";
+}
+
+
+//                          <webobject name = "Tabs">
+ //                           <webobject name = "repeatTabbedPanelTab">
+//                              <webobject name = "DynamiqueTab"><webobject name = "template" /></webobject>
+//                            </webobject>
+//                          </webobject>
+
+Tabs : AjaxTabbedPanel {
+    id = tabsId;
+}
+
+repeatTabbedPanelTab : WORepetition {
+	list = competences;
+	item = competenceItem;
+	index = indexCompetences;
+}
+
+DynamiqueTab : AjaxTabbedPanelTab {
+    name = libelle;
+    isSelected = false;
+    id = dynaTabId;
+}
+
+template : WOSwitchComponent {
+    WOComponentName = selectedTabsWOComponent;
+	competence = selectedTabCompetence;
+	domaine = selectedTabDomaine;
+	editingContext = selectedTabContext; 
+	updateContainerID = TRComponentId;
+	formID = "formTierId";
+}
+
+dynamicTab : CCTabPanel {
+    id = "DynamicTabsId";
+    selectedTab = tabSelection;
+    tabs = tabs;
+    tabNameKey = "tabLabel";
+    useFormSubmit = true;
+}
+
+compUpdate : AjaxUpdateContainer {
+	id = ^ContainerAssistantMenu;
+}
+
+IsGenTab : WOConditional {
+	condition = genTab.isSelected;
+}

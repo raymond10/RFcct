@@ -1,0 +1,15 @@
+To do list
+
+- Page D'acceuil
+  --> Compétence par type de tiers selon domaine
+  --> Compétence par domaine
+- Label dynamique (matière, capacité, terrain) en fonction du domaine.
+- Affichage arbre par domaine, entrée Type tiers, matière, terrain
+- Enlever le témoin obligatoire de la capacité.
+- Asap -- Vérifier que le tier n'ai pas déjà de compétence
+       synoptique de vérification
+               --> Prendre le domaine
+               --> vérifier le tier dans le domaine
+               --> vérifier la matiere, le terrain et la compétence dans le domaine
+               Si tier et compétence connus, pas d'enregistrement mais message indiquant 'la compétence que vous voulez créer existe déjà pour ce tier'
+               sinon créer.

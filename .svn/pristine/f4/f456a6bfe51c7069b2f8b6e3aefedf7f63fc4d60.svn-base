@@ -1,0 +1,10 @@
+<webobject name = "ContainerGroupeTreeView">
+  <webobject name = "ContainerAjaxTree">
+    <div style = "width:100%;">
+    <webobject name = "UnAjaxTree">
+    <webobject name = "IsAutorise"><webobject name = "GroupeLink" /></webobject>
+    <webobject name = "IsNotAutorise"><webobject name = "GroupeLibelle" /></webobject>
+    </webobject>
+    </div>
+  </webobject>
+</webobject>

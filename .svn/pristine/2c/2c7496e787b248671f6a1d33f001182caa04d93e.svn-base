@@ -1,0 +1,200 @@
+package org.utt.rfcct.serveur.components.assistants.modules;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOTypeTiers;
+import org.utt.rfcct.serveur.components.assistants.Assistant;
+import org.utt.rfcct.serveur.components.controlers.ModuleAdminTypeTierCtrl;
+import org.utt.rfcct.serveur.utils.NettoieEOEditingContext;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.eoaccess.EOUtilities;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOGlobalID;
+import com.webobjects.eocontrol.EOKeyGlobalID;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSLog;
+import com.webobjects.foundation.NSTimestamp;
+
+import er.ajax.AjaxUpdateContainer;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 8 nov. 2013
+ * 
+ */
+@SuppressWarnings("all")
+public class ModuleAdminTypeTier extends ModuleAssistant {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7315335948816634534L;
+	private ModuleAdminTypeTierCtrl ctrl = null;
+	private Boolean creationTypeTier= null;
+	private Boolean droitTout = null;
+
+	public ModuleAdminTypeTier(WOContext context) {
+        super(context);
+		NSLog.out.appendln("ModuleAdminTypeTier");
+        mySession().addSimpleInfoMessage("ATTENTION", "L'ajout ou la modification d'un type de tier implique la modification de certains codes.\n Modification a effectué par l'admin en accord avec le développeur.\n");
+    }
+
+	/**
+	 * @return the droitTout
+	 */
+	public Boolean droitTout() {
+		if (droitTout == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				droitTout = myGdUser().getCompetenceAutorisationCache()
+						.gDRfcctSuperUser();
+			} else {
+				droitTout = myJefyUser().hasDroitSuperUser();
+			}
+		}
+		return droitTout;
+	}
+
+	/**
+	 * @param droitTout
+	 *            the droitTout to set
+	 */
+	public void setDroitTout(Boolean droitTout) {
+		this.droitTout = droitTout;
+	}
+
+	/**
+	 * @return the ctrl
+	 */
+	public ModuleAdminTypeTierCtrl ctrl() {
+		if (ctrl == null)
+			ctrl = new ModuleAdminTypeTierCtrl(this);
+		return ctrl;
+	}
+
+	/**
+	 * @param ctrl
+	 *            the ctrl to set
+	 */
+	public void setCtrl(ModuleAdminTypeTierCtrl ctrl) {
+		this.ctrl = ctrl;
+	}
+
+	public void onPrecedent() {
+	}
+
+	public void onSuivant() {
+	}
+
+	// Vérification des different champs avant Enregistrement
+	public boolean validerTypeTier() {
+		boolean validate = false;
+		NSArray<String> failureMessages = new NSArray<String>();
+		Assistant assistant = (Assistant) parent();
+		EOTypeTiers typeTier = typeTier();
+		if (typeTier != null && assistant != null) {
+			if (typeTier.libelle() == null || typeTier.libelle().equals("")) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("Le Libellé");
+			}
+
+			if (typeTier.tableCible() == null || typeTier.tableCible().equals("")) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("La table cible");
+			}
+
+			if (typeTier.id() == null || typeTier.id().equals("")) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("Le(s) ID de la table cible (séparés par une virgule)");
+			}
+
+			if (failureMessages.count() == 0) {
+				validate = true;
+				assistant.setFailureMessage(null);
+			} else {
+				assistant.setFailureMessage("Veuillez renseigner "
+						+ failureMessages.componentsJoinedByString(", ") + ".");
+			}
+
+		} else {
+			assistant
+					.setFailureMessage("Veuillez renseigner les champs obligatoires du domaine (en rouge).");
+		}
+		if (validate) {
+			mySession().getUiMessages().removeAllObjects();
+			setTypeTier(typeTier);
+		}
+		return validate;
+	}
+
+	// Boutons enregistrer
+	public WOActionResults unTypeTierEnregistrer() {
+		EOEditingContext ec = typeTier().editingContext();
+		try {
+			if (validerTypeTier()) {
+				// En modification?
+				if (EOUtilities.primaryKeyForObject(ec, typeTier()) != null) {
+					typeTier().setDateModif(new NSTimestamp());
+					typeTier().setPersIdModif(utilisateurPersId());
+					ec = NettoieEOEditingContext.cleanEC(ec);
+					ec.saveChanges();
+					resetTypeTierField();
+					ctrl().editTypeTier();
+					mySession().addSimpleInfoMessage("Confirmation",
+							"Type de Tier modifié dans le référentiel");
+				} else {
+					//Nouvelle insertion
+					if (ec.hasChanges()) {
+						ec.saveChanges();
+						resetTypeTierField();
+						ctrl().editTypeTier();
+						mySession().addSimpleInfoMessage("Confirmation",
+								"Type de tier enregistré dans le référentiel");
+					}
+				}
+				context().response().setStatus(500);
+				AjaxUpdateContainer.updateContainerWithID(myApp()
+						.messageContainerID(), context());
+			} else {
+				context().response().setStatus(500);
+				AjaxUpdateContainer.updateContainerWithID(myApp()
+						.messageContainerID(), context());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			mySession().addSimpleErrorMessage("ALERTE", e.toString());
+			context().response().setStatus(500);
+			AjaxUpdateContainer.updateContainerWithID(myApp()
+					.messageContainerID(), context());
+			return null;
+		}
+		return null;
+	}
+
+	public void resetTypeTierField() {
+		ctrl().setSelectedTypeTier(null);
+		ctrl().setLesTypesTiers(null);
+	}
+
+	public NSTimestamp typeTierDateFin() {
+		return typeTier().dateFin();
+	}
+
+	public void setTypeTierDateFin(NSTimestamp date) {
+		try {
+			typeTier().setDateFin(date);
+		} catch (ValidationException e) {
+			mySession().addSimpleErrorMessage("RFCCT", e.getMessage());
+		}
+	}
+
+	public boolean isCreationTypeTierEnabled() {
+		if (creationTypeTier == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				creationTypeTier = myGdUser().getCompetenceAutorisationCache()
+						.gDRfcctCreationDomaine() || droitTout();
+			} else {
+				creationTypeTier = myJefyUser().hasDroitCreationDomaine()
+						|| droitTout();
+			}
+		}
+		return creationTypeTier;
+	}
+}

@@ -1,0 +1,78 @@
+Wrapper : Wrapper {
+	
+}
+
+ContainerSchemaCompetence : AjaxUpdateContainer {
+	id = "ContainerSchemaCompetence";
+	class = "containerSchemaCompetence";
+}
+
+ContainerMenuSchema : AjaxUpdateContainer {
+	id = "ContainerMenuSchema";
+	class = "menuSchemaCompetence";
+}
+
+SimpleMenu : CktlAjaxSimpleMenu {
+	buttonText = "Imprimer";
+}
+
+ImpCompEdit : AjaxUpdateLink {
+	action = doNothing;
+	title = "Impression détaillée de la compétence affichée";
+	text = "la compétence";
+	dialogIDForOpen = "PrintCompModalBox";
+	//disabled = true;
+	onSuccess = "function() {openCAW_PrintCompModalBox('La compétence');}";
+	onComplete = "function() {menu.hideMenu();}";
+}
+
+ImpComp : AjaxUpdateLink {
+	action = doNothing;
+	title = "Impression détaillée de toutes les compétences valides";
+	text = "les compétences détaillées";
+	//disabled = true;
+	onSuccess = "function() {openCAW_PrintCompsModalBox('les compétences détaillées');menu.hideMenu();}";
+    updateContainerID = "ContainerDetail"; 
+}
+
+ContainerDetail : AjaxUpdateContainer {
+	id = "ContainerDetail";
+	class = "competenceDetail";
+}
+
+IsAfficherDetailCompetence : WOConditional {
+	condition = isAfficherDetailCompetence;
+}
+
+competenceDetail : DetailCompetence {
+	competence = competence;
+}
+
+PrintCompModalBox: CktlAjaxWindow {
+    id = "PrintCompModalBox";
+    closable = true;
+    showOpener = false; 
+    title = "Imprimer la compétence";
+    linkTitle = "Imprimer la compétence";
+    width = 391;
+    height = 71;
+}
+
+PrintCompsModalBox: CktlAjaxWindow { 
+    id = "PrintCompsModalBox";
+    closable = true;
+    showOpener = false; 
+    title = "Imprimer les compétences";
+    linkTitle = "Imprimer les compétences";
+    width = 391;
+    height = 71;
+}
+
+ReportingMonitor : CktlReportingExecMonitor {
+    id = "ReportingMonitor";
+    reporter = reporter;
+    reporterProgress = reporterProgress;
+    resultFileName = reportFilename;
+    resultMimeType = "application/pdf";
+    refreshTime = 1000;
+} 

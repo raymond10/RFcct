@@ -1,0 +1,645 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+package org.utt.rfcct.serveur;
+
+import org.cocktail.fwkcktlajaxwebext.serveur.CocktailAjaxSession;
+import org.cocktail.fwkcktlajaxwebext.serveur.component.CktlAjaxWindow;
+import org.cocktail.fwkcktldroitsutils.common.util.MyDateCtrl;
+import org.cocktail.fwkcktljefyadmin.common.metier.EOUtilisateur;
+import org.cocktail.fwkcktlwebapp.common.util.StringCtrl;
+import org.utt.fwkuttcompetences.serveur.CompetenceApplicationUser;
+import org.utt.fwkuttcompetences.serveur.RFcctApplicationUser;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOCapacite;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOCompetence;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EODomaine;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOMatiere;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOTerrain;
+import org.utt.fwkuttcompetences.serveur.utils.tiers.Tiers;
+import org.utt.rfcct.serveur.components.Competence;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOApplication;
+import com.webobjects.appserver.WOComponent;
+import com.webobjects.eoaccess.EODatabaseChannel;
+import com.webobjects.eoaccess.EODatabaseContext;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSDictionary;
+import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSNotification;
+import com.webobjects.foundation.NSNotificationCenter;
+import com.webobjects.foundation.NSSelector;
+import com.webobjects.foundation.NSTimestamp;
+
+import er.extensions.appserver.ERXDisplayGroup;
+
+@SuppressWarnings("all")
+public class Session extends CocktailAjaxSession {
+	private static final long serialVersionUID = 1L;
+	public static NSTimestamp TODAY = MyDateCtrl.now();
+	private static final int DatabaseChannelCountMax = 3;
+	private EOUtilisateur utilisateur = null;
+	private NSDictionary exceptionInfos;
+	private String messageErreur;
+	private String generalErrorMessage;
+	private CompetenceApplicationUser applicationUser = null;
+	private RFcctApplicationUser GdApplicationUser = null;
+	private String pageName;
+	//Liste des tiers
+	private NSMutableArray<Tiers> listTiers;
+	private ERXDisplayGroup tiersDg = new ERXDisplayGroup();
+	private Tiers leTier;
+	//Liste des capacites
+	private NSMutableArray<EOCapacite> listCaps;
+	private ERXDisplayGroup capDg = new ERXDisplayGroup();
+	// Assistant
+	private EOCompetence competence = null;
+	private NSMutableArray<EOCompetence> competences;
+	private EODomaine domaine = null;
+	private EOMatiere matiere = null;
+	private EOTerrain terrain = null;
+	private EOCapacite capacite = null;
+	private Integer indexModuleActifCreationCompetence = null;
+	private Integer indexModuleActifCreationTier = null;
+	private Integer indexModuleActifGestionTerrainCapacite = null;
+	private Integer indexModuleActifGestionAdministration = null;
+	// Module
+	private NSArray modulesCreationCompetence;
+	private NSArray modulesGestionAdministration;
+	// Competence
+	Competence pageCompetence = null;
+	//DomaineSelectionnee
+	private EODomaine DomaineSelectionnee = null;
+	//temoin
+	private Boolean temcreate;
+	private Boolean temupdate;
+
+	public Session() {
+		super();
+		// sauvegarde des IDs de session dans un cookie
+		setStoresIDsInCookies(true);
+		setStoresIDsInURLs(false);
+		NSNotificationCenter.defaultCenter().addObserver(
+				this,
+				new NSSelector("registerNewDatabaseChannel",
+						new Class[] { NSNotification.class }),
+				EODatabaseContext.DatabaseChannelNeededNotification, null);
+		// Initialisation du theme applique a toutes les fenetres gerees via
+		// CktlAjaxWindow
+		setWindowsClassName(CktlAjaxWindow.WINDOWS_CLASS_NAME_GREYLIGHTING);
+	}
+
+	public void registerNewDatabaseChannel(NSNotification notification) {
+		EODatabaseContext databaseContext = (EODatabaseContext) notification
+				.object();
+		if (databaseContext.registeredChannels().count() < DatabaseChannelCountMax) {
+			EODatabaseChannel channel = new EODatabaseChannel(databaseContext);
+			databaseContext.registerChannel(channel);
+		}
+	}
+
+	public void terminate() {
+		NSMutableArray users = ((Application) WOApplication.application())
+				.utilisateurs();
+		if (users != null && users.count() > 0) {
+			if (applicationUser() != null
+					&& applicationUser().getEmails() != null) {
+				users.removeObjectsInArray(applicationUser().getEmails());
+			}
+		}
+		super.terminate();
+	}
+
+	public WOActionResults onQuitter() {
+		return goToMainSite();
+	}
+
+	public void reset() {
+		if (defaultEditingContext() != null) {
+			defaultEditingContext().revert();
+		}
+		setCompetence(null);
+		setCompetences(null);
+		setDomaine(null);
+		setMatiere(null);
+		setTerrain(null);
+		setCapacite(null);
+		setIndexModuleActifCreationCompetence(null);
+		setIndexModuleActifGestionAdministration(null);
+		setIndexModuleActifCreationTier(null);
+		setModulesCreationCompetence(null);
+		setModulesGestionAdministration(null);
+		setExceptionInfos(null);
+		setMessageErreur(null);
+		setListTiers(null);
+		setListCaps(null);
+		setTiersDg(null);
+		setLeTier(null);
+		setCapDg(null);
+		setTemcreate(null);
+		setTemupdate(null);
+	}
+	
+	/**
+	 * @return the temcreate
+	 */
+	public Boolean getTemcreate() {
+		return temcreate;
+	}
+
+	/**
+	 * @param temcreate the temcreate to set
+	 */
+	public void setTemcreate(Boolean temcreate) {
+		this.temcreate = temcreate;
+	}
+
+	/**
+	 * @return the temupdate
+	 */
+	public Boolean getTemupdate() {
+		return temupdate;
+	}
+
+	/**
+	 * @param temupdate the temupdate to set
+	 */
+	public void setTemupdate(Boolean temupdate) {
+		this.temupdate = temupdate;
+	}
+
+	public void resetModule() {
+		if (defaultEditingContext() != null) {
+			defaultEditingContext().revert();
+		}
+		setIndexModuleActifCreationCompetence(null);
+		setIndexModuleActifGestionAdministration(null);
+		setIndexModuleActifCreationTier(null);
+	}
+
+	public String getPageName() {
+		return pageName;
+	}
+
+	public void setPageName(String pageName) {
+		this.pageName = pageName;
+	}
+
+	/**
+	 * @return the utilisateur
+	 */
+	public EOUtilisateur utilisateur() {
+		return utilisateur;
+	}
+
+	/**
+	 * @param utilisateur
+	 *            the utilisateur to set
+	 */
+	public void setUtilisateur(EOUtilisateur utilisateur) {
+		this.utilisateur = utilisateur;
+		// NSLog.out.appendln("Instance Utilisateur - "+utilisateur);
+	}
+
+	public NSDictionary exceptionInfos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * @param exceptionInfos
+	 *            the exceptionInfos to set
+	 */
+	public void setExceptionInfos(NSDictionary exceptionInfos) {
+		this.exceptionInfos = exceptionInfos;
+	}
+
+	/**
+	 * @return the messageErreur
+	 */
+	public String messageErreur() {
+		if (messageErreur != null) {
+			messageErreur = StringCtrl.trimText(messageErreur);
+		}
+		return messageErreur;
+	}
+
+	/**
+	 * @param messageErreur
+	 *            the messageErreur to set
+	 */
+	public void setMessageErreur(String messageErreur) {
+		this.messageErreur = messageErreur;
+		if(messageErreur != null)
+			super.addSimpleErrorMessage("RFCCT", messageErreur);
+	}
+
+	public String getGeneralErrorMessage() {
+		return generalErrorMessage;
+	}
+
+	public void setGeneralErrorMessage(String generalErrorMessage) {
+		this.generalErrorMessage = generalErrorMessage;
+	}
+
+	/**
+	 * @return the modulesCreationCompetence
+	 */
+	public NSArray getModulesCreationCompetence() {
+		return modulesCreationCompetence;
+	}
+
+	/**
+	 * @param modulesCreationCompetence
+	 *            the modulesCreationCompetence to set
+	 */
+	public void setModulesCreationCompetence(NSArray modulesCreationCompetence) {
+		this.modulesCreationCompetence = modulesCreationCompetence;
+	}
+
+	/**
+	 * @return the indexModuleActifCreationCompetence
+	 */
+	public Integer indexModuleActifCreationCompetence() {
+		if (indexModuleActifCreationCompetence == null) {
+			indexModuleActifCreationCompetence = new Integer(0);
+		}
+		return indexModuleActifCreationCompetence;
+	}
+
+	/**
+	 * @param indexModuleActifCreationCompetence
+	 *            the indexModuleActifCreationCompetence to set
+	 */
+	/**
+	 * @param indexModuleActifCreationCompetence
+	 */
+	public void setIndexModuleActifCreationCompetence(
+			Integer indexModuleActifCreationCompetence) {
+		this.indexModuleActifCreationCompetence = indexModuleActifCreationCompetence;
+	}
+
+	/**
+	 * @return the indexModuleActifCreationTier
+	 */
+	public Integer indexModuleActifCreationTier() {
+		if(indexModuleActifCreationTier == null)
+			indexModuleActifCreationTier = new Integer(0);
+		return indexModuleActifCreationTier;
+	}
+
+	/**
+	 * @param indexModuleActifCreationTier the indexModuleActifCreationTier to set
+	 */
+	public void setIndexModuleActifCreationTier(Integer indexModuleActifCreationTier) {
+		this.indexModuleActifCreationTier = indexModuleActifCreationTier;
+	}
+
+	/**
+	 * @return the indexModuleActifGestionTerrainCapacite
+	 */
+	public Integer indexModuleActifGestionTerrainCapacite() {
+		if(indexModuleActifGestionTerrainCapacite == null) {
+			indexModuleActifGestionTerrainCapacite = new Integer(0);
+		}
+		return indexModuleActifGestionTerrainCapacite;
+	}
+
+	/**
+	 * @param indexModuleActifGestionTerrainCapacite the indexModuleActifGestionTerrainCapacite to set
+	 */
+	public void setIndexModuleActifGestionTerrainCapacite(
+			Integer indexModuleActifGestionTerrainCapacite) {
+		this.indexModuleActifGestionTerrainCapacite = indexModuleActifGestionTerrainCapacite;
+	}
+
+	/**
+	 * @return the indexModuleActifGestionAdministration
+	 */
+	public Integer indexModuleActifGestionAdministration() {
+		if (indexModuleActifGestionAdministration == null) {
+			indexModuleActifGestionAdministration = new Integer(0);
+		}
+		return indexModuleActifGestionAdministration;
+	}
+
+	/**
+	 * @param indexModuleActifGestionAdministration
+	 *            the indexModuleActifGestionAdministration to set
+	 */
+	public void setIndexModuleActifGestionAdministration(
+			Integer indexModuleActifGestionAdministration) {
+		this.indexModuleActifGestionAdministration = indexModuleActifGestionAdministration;
+	}
+
+	/**
+	 * @return the modulesGestionAdministration
+	 */
+	public NSArray modulesGestionAdministration() {
+		return modulesGestionAdministration;
+	}
+
+	/**
+	 * @param modulesGestionAdministration
+	 *            the modulesGestionAdministration to set
+	 */
+	public void setModulesGestionAdministration(
+			NSArray modulesGestionAdministration) {
+		this.modulesGestionAdministration = modulesGestionAdministration;
+	}
+
+	/**
+	 * @return the competence
+	 */
+	public EOCompetence competence() {
+		return competence;
+	}
+
+	/**
+	 * @param competence
+	 *            the competence to set
+	 */
+	public void setCompetence(EOCompetence competence) {
+		this.competence = competence;
+	}
+
+	/**
+	 * @return the competences
+	 */
+	public NSMutableArray<EOCompetence> competences() {
+		if(competences == null)
+			competences = new NSMutableArray<EOCompetence>();
+		return competences;
+	}
+
+	/**
+	 * @param competences the competences to set
+	 */
+	public void setCompetences(NSMutableArray<EOCompetence> competences) {
+		this.competences = competences;
+	}
+
+	/**
+	 * @return the domaine
+	 */
+	public EODomaine domaine() {
+		return domaine;
+	}
+
+	/**
+	 * @param domaine
+	 *            the domaine to set
+	 */
+	public void setDomaine(EODomaine domaine) {
+		this.domaine = domaine;
+	}
+
+	/**
+	 * @return the matiere
+	 */
+	public EOMatiere matiere() {
+		return matiere;
+	}
+
+	/**
+	 * @param matiere
+	 *            the matiere to set
+	 */
+	public void setMatiere(EOMatiere matiere) {
+		this.matiere = matiere;
+	}
+
+	/**
+	 * @return the terrain
+	 */
+	public EOTerrain terrain() {
+		return terrain;
+	}
+
+	/**
+	 * @param terrain
+	 *            the terrain to set
+	 */
+	public void setTerrain(EOTerrain terrain) {
+		this.terrain = terrain;
+	}
+
+	/**
+	 * @return the capacite
+	 */
+	public EOCapacite capacite() {
+		return capacite;
+	}
+
+	/**
+	 * @param capacite
+	 *            the capacite to set
+	 */
+	public void setCapacite(EOCapacite capacite) {
+		this.capacite = capacite;
+	}
+
+	/**
+	 * @return the listTiers
+	 */
+	public NSMutableArray<Tiers> listTiers() {
+		return listTiers;
+	}
+
+	/**
+	 * @param listTiers
+	 *            the listTiers to set
+	 */
+	public void setListTiers(NSMutableArray<Tiers> listTiers) {
+		this.listTiers = listTiers;
+	}
+
+	/**
+	 * @return the leTier
+	 */
+	public Tiers leTier() {
+		return leTier;
+	}
+
+	/**
+	 * @param leTier the leTier to set
+	 */
+	public void setLeTier(Tiers leTier) {
+		this.leTier = leTier;
+	}
+
+	/**
+	 * @return the listCaps
+	 */
+	public NSMutableArray<EOCapacite> listCaps() {
+		return listCaps;
+	}
+
+	/**
+	 * @param listCaps the listCaps to set
+	 */
+	public void setListCaps(NSMutableArray<EOCapacite> listCaps) {
+		this.listCaps = listCaps;
+	}
+
+	public String setConnectedUser(String arg0) {
+		String str = super.setConnectedUser(arg0);
+		if (connectedUserInfo() != null) {
+			if (connectedUserInfo().email() != null) {
+				if (((Application) WOApplication.application()).utilisateurs()
+						.indexOfIdenticalObject(connectedUserInfo().email()) == NSArray.NotFound)
+					((Application) WOApplication.application()).utilisateurs()
+							.addObject(connectedUserInfo().email());
+				System.out.println("----Connexion de "
+						+ connectedUserInfo().nomEtPrenom() + " (noIndividu ="
+						+ connectedUserInfo().noIndividu() + ") le "
+						+ (new NSTimestamp()) + " depuis IP : "
+						+ cktlApp.getRequestIPAddress(context().request()));
+			} else {
+				str = "Veuillez renseigner votre adresse email avant de vous connecter.";
+			}
+		}
+
+		return str;
+	}
+
+	public void setApplicationUser(CompetenceApplicationUser appUser) {
+		this.applicationUser = appUser;
+		if (appUser != null) {
+			NSArray emails = appUser.getEmails();
+			if (emails != null && emails.count() > 0) {
+				((Application) application()).utilisateurs()
+						.addObjectsFromArray(emails);
+			}
+		}
+	}
+
+	public CompetenceApplicationUser applicationUser() {
+		return applicationUser;
+	}
+
+	/**
+	 * @return the gdApplicationUser
+	 */
+	public RFcctApplicationUser gdApplicationUser() {
+		return GdApplicationUser;
+	}
+	
+
+	
+	public String nomAndPrenom() {
+		String user = null;
+		if(((Application) application()).newGestionDroitsEnabled()) {
+			user = gdApplicationUser().getNomAndPrenom();			
+		} else {
+			user = applicationUser().getNomAndPrenom();			
+		}
+		return user;
+	}
+	
+	public Integer persId() {
+		Integer persId = null;
+		if(((Application) application()).newGestionDroitsEnabled()) {
+			persId = gdApplicationUser().getPersId();			
+		} else {
+			persId = applicationUser().getPersId();			
+		}
+		return persId;
+	}
+
+	/**
+	 * @param gdApplicationUser the gdApplicationUser to set
+	 */
+	public void setGdApplicationUser(RFcctApplicationUser gdApplicationUser) {
+		GdApplicationUser = gdApplicationUser;
+		if (gdApplicationUser != null) {
+			NSArray emails = gdApplicationUser.getEmails();
+			if (emails != null && emails.count() > 0) {
+				((Application) application()).utilisateurs()
+						.addObjectsFromArray(emails);
+			}
+		}
+	}
+
+	/**
+	 * @return the pageCompetence
+	 */
+	public Competence getPageCompetence() {
+		return pageCompetence;
+	}
+
+	/**
+	 * @param pageCompetence the pageCompetence to set
+	 */
+	public void setPageCompetence(Competence pageCompetence) {
+		this.pageCompetence = pageCompetence;
+	}
+
+	/**
+	 * @return the domaineSelectionnee
+	 */
+	public EODomaine getDomaineSelectionnee() {
+		return DomaineSelectionnee;
+	}
+
+	/**
+	 * @param domaineSelectionnee the domaineSelectionnee to set
+	 */
+	public void setDomaineSelectionnee(EODomaine domaineSelectionnee) {
+		DomaineSelectionnee = domaineSelectionnee;
+	}
+
+	/**
+	 * @return the tiersDg
+	 */
+	public ERXDisplayGroup tiersDg() {
+		return tiersDg;
+	}
+
+	/**
+	 * @param tiersDg the tiersDg to set
+	 */
+	public void setTiersDg(ERXDisplayGroup tiersDg) {
+		this.tiersDg = tiersDg;
+	}
+
+	/**
+	 * @return the capDg
+	 */
+	public ERXDisplayGroup capDg() {
+		return capDg;
+	}
+
+	/**
+	 * @param capDg the capDg to set
+	 */
+	public void setCapDg(ERXDisplayGroup capDg) {
+		this.capDg = capDg;
+	}
+}

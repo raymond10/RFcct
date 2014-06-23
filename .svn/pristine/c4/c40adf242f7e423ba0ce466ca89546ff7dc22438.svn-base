@@ -1,0 +1,237 @@
+ContainerTemplate : AjaxUpdateContainer {
+	id = ^TRComponentId;
+	class = classeCss;
+	style = styleCss;
+}
+
+FormTemplate : ERXWOForm {
+  id = "detailCompetenceId";
+  name ="detailCompetenceName";
+  action = submit;
+  multipleSubmit = true;
+  embedded = true;
+  onsubmit = "return false;";
+}
+
+domaine : WOString {
+	value = domaine.lblLong;
+}
+
+TRMatiere : AjaxUpdateContainer {
+	id = TRMatiereId;
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreMatiere : WOPopUpButton {
+	id = "CentreMatiere";
+	name = "CentreMatiereName";
+	list = ctrl.lesMatieres;
+	item = ctrl.uneMatiere;
+	selection = ctrl.leCentreMatiere;
+	displayString = ctrl.uneMatiere.lblLong;
+	noSelectionString = " ";
+	otherTagString = "required";
+	disabled = enabled;
+}
+
+ObserverCentreMatiere : AjaxObserveField {
+	fullSubmit = true;
+	observeFieldID = "CentreMatiere";
+	action = refreshSousMat;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRMatiereUpdate(); TRSMatiereUpdate();}";
+}
+
+selectMatiere : WOConditional {
+	condition = ctrl.leCentreMatiere;
+}
+
+laSelectionMatiere : WOTextField {
+    id = "laSelectionMatiere";
+	value = ctrl.leCentreMatiere.lblLong;
+	disabled = true;
+	escapeHTML = false;
+	size = ctrl.leCentreMatiere.lblLong.length;
+}
+
+TRSMatiere : AjaxUpdateContainer {
+	id = TRSMatiereId;
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreSousMatiere : WOPopUpButton {
+	id = "CentreSousMatiere";
+	name = "CentreSousMatiereName";
+	list = ctrl.lesSousMatieres;
+	item = ctrl.uneSousMatiere;
+	selection = ctrl.leSousCentreMatiere;
+	displayString = ctrl.uneSousMatiere.lblLong;
+	noSelectionString = " ";
+	disabled = enabled;
+}
+
+ObserverCentreSousMatiere : AjaxObserveField {
+	fullSubmit = true;
+	observeFieldID = "CentreSousMatiere";
+	action = ctrl.actSmatComp;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRSMatiereUpdate();}";
+}
+
+selectSMatiere : WOConditional {
+	condition = ctrl.leSousCentreMatiere;
+}
+
+laSelectionSMatiere : WOTextField {
+    id = "laSelectionSMatiere";
+	value = ctrl.leSousCentreMatiere.lblLong;
+	disabled = true;
+	escapeHTML = false;
+	size = ctrl.leSousCentreMatiere.lblLong.length;
+}
+
+TRTerrain : AjaxUpdateContainer {
+	id = TRTerrainId;
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreTerrain : WOPopUpButton {
+	id = "CentreTerrain";
+	name = "CentreTerrainName";
+	list = ctrl.lesTerrains;
+	item = ctrl.unTerrain;
+	selection = ctrl.leCentreTerrain;
+	displayString = ctrl.unTerrain.lblLong;
+	noSelectionString = " ";	
+	otherTagString = "required";
+	disabled = enabled;
+}
+
+ObserverCentreTerrain : AjaxObserveField {
+	fullSubmit = true;
+	observeFieldID = "CentreTerrain";
+	action = refreshSousTerr;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRTerrainUpdate(); TRSTerrainUpdate(); }";
+}
+
+selectTerrain : WOConditional {
+	condition = ctrl.leCentreTerrain;
+}
+
+laSelectionTerrain : WOTextField {
+    id = "laSelectionTerrain";
+	value = ctrl.leCentreTerrain.lblLong;
+	disabled = true;
+	escapeHTML = false;
+	size = ctrl.leCentreTerrain.lblLong.length;
+}
+
+TRSTerrain : AjaxUpdateContainer {
+	id = TRSTerrainId;
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreSousTerrain : WOPopUpButton {
+	id = "CentreSousTerrain";
+	name = "CentreSousTerrainName";
+	list = ctrl.lesSousTerrains;
+	item = ctrl.uneSousTerrain;
+	selection = ctrl.leSousCentreTerrain;
+	displayString = ctrl.uneSousTerrain.lblCourt;
+	noSelectionString = " ";
+	disabled = enabled;
+}
+
+ObserverCentreSousTerrain : AjaxObserveField {
+	fullSubmit = true;
+	observeFieldID = "CentreSousTerrain";
+	action = ctrl.actSterrComp;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRSTerrainUpdate();}";
+}
+
+selectSousTerrain : WOConditional {
+	condition = ctrl.leSousCentreTerrain;
+}
+
+laSelectionSousTerrain : WOTextField {
+    id = "leSousCentreTerrain";
+	value = ctrl.leSousCentreTerrain.lblLong;
+	disabled = true;
+	escapeHTML = false;
+	size = ctrl.leSousCentreTerrain.lblLong.length;
+}
+
+TRCapacite : AjaxUpdateContainer {
+	id = TRCapaciteId;
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreCapacite : WOPopUpButton {
+	id = "CentreCapacite";
+	name = "CentreCapaciteName";
+	list = ctrl.lesCapacites;
+	item = ctrl.uneCapacite;
+	displayString = ctrl.uneCapacite.lblLong;
+	selection = ctrl.leCentreCapacite;
+	noSelectionString = " ";
+	disabled = enabled;
+}
+
+CentreCapaciteObserver : AjaxObserveField {
+	observeFieldID = "CentreCapacite";
+	action = submit;
+	fullSubmit = true;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRCapaciteUpdate();}";
+}
+
+selectCapacite : WOConditional {
+	condition = ctrl.leCentreCapacite;
+}
+
+laSelectionCapacite : WOTextField {
+    id = "laSelectionCapacite";
+	value = ctrl.leCentreCapacite.lblLong;
+	disabled = true;
+	escapeHTML = false;
+	size = ctrl.leCentreCapacite.lblLong.length;
+}
+
+TRAutreInfo : AjaxUpdateContainer {
+	id = "TRAutreInfo";
+	elementName = "tr";
+	class = "decale";
+} 
+
+DateFinCompetence : CktlAjaxDatePicker {
+	id = "DateFinCompetence";
+	dateValue = competenceDateFin;
+	updateContainerID = "TRAutreInfo";
+	disabled = enabled;
+}
+
+DateFinCompetenceObserver : AjaxObserveField {
+	observeFieldID = "DateFinCompetence";
+	action = submit;
+} 
+
+CommentairesCompetence : WOText {
+    id = "CommentairesCompetence";
+	value = competence.comm;
+  	rows = "2";  	
+  	style = "width:96%;";
+  	placeholder="Inserer votre commentaire ici";
+	disabled = enabled;
+}
+
+CommentairesCompetenceObserver : AjaxObserveField {
+	observeFieldID = "CommentairesCompetence";
+	action = submit;
+}

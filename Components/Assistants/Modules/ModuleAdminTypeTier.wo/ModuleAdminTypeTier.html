@@ -1,0 +1,96 @@
+<webobject name = "ContainerTypeTiers">
+  <center>
+    <webobject name = "FormAdminOne">
+      <table width = "100%" cellpadding = "0" cellspacing = "0" align = "center">
+        <tbody>
+          <tr valign = "middle">
+            <td>
+              <table border = "0" width = "100%" height = "25%">
+                <tbody>
+                  <tr>
+                    <td colspan = "4">
+                      <span>
+                        <h4>D&eacute;finition d'un type de tier</h4>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id = "sauts"></div>
+              <table border = "0" width = "100%" height = "25%">
+                <tbody>
+                  <webobject name = "TRTypeTier">
+                    <td width = "50%" align = "center">
+                      <label for = "TypeTiers" class = "etiquette" style = "font-weight: bold">Type de Tier&nbsp;</label>
+                      <webobject name = "TypeTiers" />
+                      <webobject name = "typeTiersObserver" />
+                    </td>
+                    <td class = "verticalLine"></td>
+                    <webobject name = "typTierCreateEnabled">
+                      <td>
+                        <table cellpadding = "0" cellspacing = "0">
+                          <th>
+                            <td>
+                              <span>
+                                <h2>Cr&eacute;er un nouveau type de tier</h2>
+                              </span>
+                            </td>
+                          </th>
+                          <th> </th>
+                          <tr>
+                            <td class = "etiquette obligatoire">&nbsp;Libell&eacute;&nbsp;</td>
+                            <td>
+                              <webobject name = "unTypeTierlbl" />
+                              <webobject name = "unTypeTierlblObserver" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class = "etiquette obligatoire">&nbsp;Table cible&nbsp;</td>
+                            <td>
+                              <webobject name = "unTypeTierTableCible" />
+                              <webobject name = "unTypeTierTableCibleObserver" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class = "etiquette obligatoire">&nbsp;ID table cible&nbsp;</td>
+                            <td>
+                              <webobject name = "unId" />
+                              <webobject name = "unIdObserver" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class = "etiquette obligatoire">&nbsp;Date&nbsp;de&nbsp;cr&eacute;ation&nbsp;</td>
+                            <td class = "etiquette"> <webobject name = "unTypeTierdateCrea" /> </td>
+                          </tr>
+                          <tr>
+                            <td class = "etiquette" style = "font-weight: bold">&nbsp;Date&nbsp;de&nbsp;fin&nbsp;</td>
+                            <td class = "etiquette">
+                              <webobject name = "unTypeTierdateFin" />
+                              <webobject name = "unTypeTierdateFinObserver" />
+                            </td>
+                          </tr>
+                        </table>
+                        <br />
+                        <table class = "etiquette" align = "center">
+                          <tr>
+                            <td><webobject name = "unTypeTierEnregistrer" /></td>
+                            <webobject name = "afficherTypeTierEdit">
+                              <td><webobject name = "unTypeTierEditer" /></td>
+                              <td><webobject name = "unTypeTierDelete" /></td>
+                              <td><webobject name = "unTypeTierAnnuler" /></td>
+                            </webobject>
+                          </tr>
+                        </table>
+                        <br />
+                      </td>
+                    </webobject>
+                  </webobject>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </webobject>
+  </center>
+</webobject>

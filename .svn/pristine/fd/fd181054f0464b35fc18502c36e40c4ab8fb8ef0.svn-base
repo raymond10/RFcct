@@ -1,0 +1,117 @@
+ContainerGroupeTreeView : AjaxUpdateContainer {
+    id = componentId;
+    evalScripts = true; 
+}
+
+ContainerAjaxTree : AjaxUpdateContainer {
+    id = containerAjaxTreeID;   
+}
+
+UnAjaxTree : CktlAjaxTree {
+    id = unAjaxTreeID;
+    class = "tree whitespace-nowrap";
+    root = ctrl.rootGroupe;
+    item = ctrl.unGroupe;
+    delegate = ctrl.delegate;
+    allExpanded = allExpanded;
+    showRoot = showRoot;
+    collapsedImage = treeCollapsedImage;
+    collapsedImageFramework = treeCollapsedImageFramework;
+    expandedImage = treeExpandedImage;
+    expandedImageFramework = treeExpandedImageFramework;
+    leafImage = treeLeafImage;
+    leafImageFramework = treeLeafImageFramework; 
+    cache = false;
+    treeModel = ctrl.myTreeModel;  
+    itemClass = ctrl.cssItemTree; 
+    index = groupeIndex;
+    style = "max-height:458px; overflow:scroll"; 
+}
+
+IsAutorise : WOConditional {
+  condition = isGroupeSelectionnable;
+}
+
+GroupeLink : CktlAjaxUpdateLink {
+	id = groupeLinkId;
+    string = ctrl.unGroupeLibelle;
+    action = selectionner;
+    updateContainerID = ^containerGroupeSelectionneId;
+    onClickBefore = selectionOnClickBefore;
+    class = cssClassForSelectedLink;
+    onComplete = onCompleteGroupeSelection;
+    style = "width:700px;";
+}
+
+IsNotAutorise : WOConditional {
+  condition = isGroupeSelectionnable;
+  negate = true;
+}
+
+
+GroupeLibelle : WOString {
+    value = ctrl.unGroupeLibelle;
+    maxlength = "700";
+}
+
+//En attente d'implementation
+/*    
+*/  
+Filtre : WOPopUpButton {
+    id = filtrePopUpID;
+    list = filtres.allKeys;
+    item = unFiltre;
+    noSelectionString = "Tous";
+    selection = unFiltreSelectionne;
+}
+
+
+FiltreObserver : CktlAjaxObserveField {
+    observeFieldID = filtrePopUpID;
+    formID = ^userFiltersFormID;
+    action = filtrer;
+    updateContainerID = containerAjaxTreeID;
+}
+
+FiltreTexteObserver : CktlAjaxObserveField {
+    observeFieldID = "filtretexte";
+    formID = ^userFiltersFormID;
+    action = filtrer;
+    updateContainerID = containerAjaxTreeID;
+}
+
+RechercherSubmitFunction : AjaxSubmitButton {
+  updateContainerID = containerAjaxTreeID;
+  action = filtrer;
+//  onSuccess = onSrchObserverSuccess;
+  functionName = "performRechercherGroupes";
+}
+
+IsFiltrageAvailable : WOConditional {
+    condition = isFiltrageAvailable;
+}
+
+IsFiltrageTexteAvailable : WOConditional {
+	condition = ^filtreTexte;
+}
+
+IsFiltrageTexteNotAvailable : WOConditional {
+	condition = ^filtreTexte;
+	negate = true;
+}
+
+ResetButton : CktlAjaxSubmitButton {
+    action = resetFilters;
+    updateContainerID = componentId;
+    type = "reset";
+    title = "Recharger tous les groupes (annule le filtre)";
+}
+
+FiltreTexte : WOTextField {
+	value = filtreTexte;
+	style = "width:100px;";
+	id = "filtretexte";
+	onKeyPress="if (event.keyCode == 13) {performRechercherGroupes();return false;}";
+	title = "filtre en cours d'implémentation";
+	placeholder = "filtre en cours d'implémentation";
+}

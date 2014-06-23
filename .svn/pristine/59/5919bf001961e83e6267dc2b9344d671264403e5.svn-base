@@ -1,0 +1,87 @@
+Wrapper : Wrapper {
+	onloadJS = onloadJS;
+}
+
+Form : WOForm {
+	id = "groupeForm";
+	multipleSubmit = true;
+}
+
+HasDroitConsultation : WOConditional {
+	condition = isConsultationEnabled;
+}
+
+GroupesTree : CompetencesAjaxGroupeTreeView {
+	id = "groupeTree";
+	selection = dataTree;
+	editingContext = edc;
+	label = "Donnée parente";
+	treeViewTitle = "Sélectionnez la donnée parente";    
+    treeViewWidth = 600; 
+    treeViewHeight = 250;
+    userFiltersFormID = "groupeForm";
+    userFiltersDictionary = filters;
+    cssSelectedGroupe = "selected";
+    onSuccessSelect = onSelectGroupe;
+    filtreTexte = false;
+    expandToLevel = 1;
+}
+
+TableViewCompetencesToolBar : CktlAjaxSimpleTableViewToolbar {
+}
+
+CompTabView : CktlButton {
+	action = accueil;
+	text = "tableau";
+	type = "view_document";
+	title = "Voir les compétences dans un tableau";
+}
+
+CreerComp : CktlButton {
+    action = creerCompetence;
+    disabled = isCreerUneCompetenceDisabled;
+    text = "Compétence pour des tiers";
+    type = "add";
+    title = "Créer une compétence pour des tiers";
+}
+
+CreerTierComp : CktlButton {
+    action = creerTiersCompetences;
+    disabled = isCreerUneCompetenceDisabled;
+    text = "Compétences d'un tiers";
+    type = "add";
+    title = "Créer les compétences d'un tiers";
+}
+
+Administration : CktlButton {
+    action = doNothing;
+    disabled = isAccessBackOfficeDisabled;
+    text = "Administration";
+    type = "etoile";
+    title = "Accéder à l'administration de l'application";
+}
+
+RechercheAvancee : CktlButton {
+    action = doNothing;
+    disabled = isRechercheAvanceDisabled;
+    text = "Recherche avancée";
+    type = "find";
+    title = "Recherche par filtre";
+}
+
+Imprimer : CktlButton {
+    action = doNothing;
+    text = "Editions";
+    type = "print";
+}
+
+Outils : CktlButton {
+	action = doNothing;
+	text = "Outils";
+	type = "process";
+}
+
+HasNoDroitConsultation : WOConditional {
+	condition = isConsultationEnabled;
+	negate = true;
+}

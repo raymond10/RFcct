@@ -1,0 +1,159 @@
+ContainerCapacites : AjaxUpdateContainer {
+	id = containerId;
+	class = classeCss;
+	style = styleCss;
+}
+
+FormAdminFour : WOForm {
+  id = "FormAdminFour";
+  name ="FormAdminNameFour";
+  action = submit;
+  multipleSubmit = true;
+  onsubmit = "return false;";
+}
+
+TRCapacite : AjaxUpdateContainer {
+	id = "TRCapacite";
+	elementName = "tr";
+}
+
+Capacites : WOPopUpButton {
+	id = "capacitesId";
+	list = ctrl.lesCapacites;
+	item = ctrl.uneCapacite;
+	displayString = ctrl.uneCapacite.lblCourt;
+	selection = ctrl.selectedCapacite;
+	noSelectionString = " ";
+}
+
+CapacitesObserver : AjaxObserveField {
+	observeFieldID = "capacitesId";
+	action = ctrl.editCapacite;
+	fullSubmit = false;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRCapaciteUpdate();}";
+}
+
+createCapaciteWdows : CktlAjaxButton {
+    dialogIDForOpen = dialogcreateCapaciteId;
+    text = "Définir nouvelle capacite";
+    title = "Nouvelle capacite";
+    type = "new";
+    enabled = isCreationCapaciteEnabled;
+}
+
+DialogcreateCapacite : CktlAjaxWindow {
+    id = dialogcreateCapaciteId;
+    action = openCreateCapaciteWdows;
+    width = 670;
+    height = 500;
+    slideDownDuration = 0;
+    slideUpDuration = 0;
+    onClose = refreshCapacites;
+    resizable = false;
+    closable = false;
+    closeUpdateContainerID = "TRCapacite";
+}
+
+capaciteCreateEnabled : WOConditional {
+	condition = isCreationCapaciteEnabled;
+}
+
+uneCapacitelblLong : WOTextField {
+	id = "uneCapacitelblLong";
+	value = capacite.lblLong;
+	maxlength = "80";
+	disabled = ctrl.lockFieldCapacite;
+	otherTagString = "required";
+	placeholder="Libelle capacite long ici";
+}
+
+uneCapacitelblLongObserver : AjaxObserveField {
+	observeFieldID = "uneCapacitelblLong";
+	action = submit;
+}
+
+uneCapacitelblCourt : WOTextField {
+	id = "uneCapacitelblCourt";
+	value = capacite.lblCourt;
+	maxlength = "20";
+	disabled = ctrl.lockFieldCapacite;
+	otherTagString = "required";
+	placeholder="Libelle capacite court ici";
+}
+
+uneCapacitelblCourtObserver : AjaxObserveField {
+	observeFieldID = "uneCapacitelblCourt";
+	action = submit;
+}
+
+uneCapacitedateCrea : WOTextField {
+	value = capacite.dateCrea;
+	disabled = true;
+	dateformat = "%d/%m/%Y";
+}
+
+uneCapacitedateFin : CktlAjaxDatePicker {
+	id = "uneCapacitedateFin";
+	dateValue = capaciteDateFin;
+	disabled = ctrl.lockFieldCapacite;
+	updateContainerID = "TRCapacite";
+}
+
+uneCapacitedateFinObserver : AjaxObserveField {
+	observeFieldID = "uneCapacitedateFin";
+	action = submit;
+}
+
+lesCapaciteDomaine : WORepetition {
+	list = ctrl.lesDomaines;
+	item = ctrl.itemDomaine;
+}
+
+uneCapaciteDomaine : WOCheckBox {
+  checked = ctrl.domaineSelected;
+  disabled = ctrl.lockFieldCapacite;
+}
+
+lblDomaine : WOString {
+	value = ctrl.itemDomaine.lblCourt;
+	class = "etiquette";
+}
+
+uneCapaciteDomaineObserver : AjaxObserveField {
+    id = "checkId";
+    elementName = "span";
+    fullSubmit = true;
+	action = submit;
+}
+
+uneCapaciteEnregistrer : CktlAjaxSubmitButton {
+	action = uneCapaciteEnregistrer;
+    text = "Enregistrer";
+    type = "validate";
+    title = "Créer et enregistrer une capacité dans le référentiel";
+    formName = "FormAdminNameFour";
+	onComplete = "function() {TRCapaciteUpdate();}";
+}
+
+afficherCapaciteEdit : WOConditional {
+	condition = ctrl.activUpdateCapacite;
+}
+
+uneCapaciteEditer : CktlAjaxSubmitButton {
+	action = ctrl.editCapaciteFiled;
+    text = "Modifier";
+    type = "edit";
+    title = "Modifier la capacité sélectionnée";
+    formName = "FormAdminNameFour";
+	onComplete = "function() {TRCapaciteUpdate();}";
+}
+
+uneCapaciteAnnuler : CktlAjaxSubmitButton {
+	action = ctrl.annulerCapaciteFiled;
+    text = "Annuler";
+    type = "cancel";
+    title = "Annuler la modification de la capacité";
+    formName = "FormAdminNameFour";
+	onComplete = "function() {TRCapaciteUpdate();}";
+}

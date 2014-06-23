@@ -1,0 +1,879 @@
+@CHARSET "UTF-8";
+/* (c) UTT                                           */
+/**********************************************************/
+/* Feuille de style de l'application rfcct             */
+/**********************************************************/
+
+/* ------------------------- Page d'accueil---------------------------------- */
+.hide {
+	display: none;
+}
+
+.checkBox {
+	display: inline-table;
+	width: 50%;
+}
+
+.logo {
+	margin-left: auto;
+	margin-right: auto;
+	width: 970px;
+	z-index: 1;
+	font-size: 12px;
+}
+
+.logo h1 {
+	font: bold 42px "Lucida Grande";
+	position: relative;
+	color: #9EADC4;
+	/*#4E80C0*/
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #140C9E;
+	text-decoration: none;
+	/*font-weight: bold;*/
+}
+
+a:active {
+	color: white;
+	text-decoration: none;
+	/*font-weight: bold;*/
+}
+
+a:hover {
+}
+
+.decale {
+	pading: 0.5em;
+	text-indent: 2em
+}
+
+/* firefox; multiple color stops */
+/* background-image:-moz-linear-gradient(#9EADC4,#F2F4F7);*/
+/* chrome 10+, safari 5.1+ */
+/* background-image: -webkit-linear-gradient(#9EADC4,#F2F4F7);*/
+/* ie10 */
+/* background-image: -ms-linear-gradient(#9EADC4,#F2F4F7);*/
+/* opera 11.1 */
+/* background-image: -o-linear-gradient(#9EADC4,#F2F4F7);*/
+/* The "standard" */
+/* background-image: linear-gradient(#9EADC4,#F2F4F7);*/
+.logo h1 .gloss {
+	background: url(img/gradient-glossy.png) repeat-x;
+	position: absolute;
+	display: block;
+	width: 100%;
+	height: 31px;
+}
+
+.logo h1 .orange {
+	color: purple;
+}
+
+.signature {
+	font-size: 12px;
+	color: #9EADC4;
+}
+
+.userLogin {
+	font-size: 11px;
+	color: black;
+}
+
+.col1 {
+	float: left;
+	width: 390px;
+	margin-right: 20px;
+	margin-top: 20px;
+}
+
+.col2 {
+	float: left;
+	width: 390px;
+	margin-top: 20px;
+}
+
+.menu {
+	padding-left: 20px;
+}
+
+th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11pt;
+	text-align: left;
+	color: #000000;
+	font-weight: bold;
+}
+
+td {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+}
+
+input,select,textarea {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+.menu li {
+	list-style-type: none;
+	display: block;
+	padding: 5px;
+	margin-top: 10px;
+	background-color: #E5EDFA;
+	/*#6699CC*/
+	color: white;
+	font-weight: bold;
+	width: 250px;
+}
+
+.menu a {
+	color: white;
+	display: block;
+}
+
+.menu .disabled {
+	background-color: #e1e1e1;
+}
+
+.menu li.menuIndividu {
+	background-color: orange;
+}
+
+li.recherche {
+	background-color: transparent;
+	color: #9EADC4;
+	border: 1px dotted #9EADC4;
+	width: auto;
+}
+
+#main {
+	border: 0;
+	width: 100%;
+	/*text-align: center;*/
+}
+
+.infoTitle {
+	background-color: #FFE5BE;
+	background-image: url(img/fileopen.png);
+	background-position: 0.5em 0.2em;
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+	vertical-align: middle;
+	border: 1px solid black;
+	height: 1.8em;
+	padding-top: 0.3em;
+	margin: -1px;
+}
+
+.info {
+	margin: 0 auto;
+	min-height: 10px;
+	clear: both;
+	border-collapse: collapse;
+	padding: 0px 0px 10px 0px;
+	-moz-border-radius: 20px;
+	border: 1px solid black;
+	background-color: #F1F1F1;
+}
+
+.notetip,.warning,.confirm {
+	margin: 5px auto;
+	min-height: 10px;
+	clear: both;
+	text-align: center;
+	font-weight: bold;
+	vertical-align: middle;
+	border-collapse: collapse;
+	padding: 10px 15px 10px 40px;
+	background-repeat: no-repeat;
+	-moz-border-radius: 20px;
+}
+
+.confirm {
+	font-weight: normal;
+	background-color: #FFE5BE;
+	background-image: url(img/confirm.png);
+	background-position: 10px 10px;
+	border: 1px solid black;
+}
+
+.notetip {
+	background-color: #DDE9FB;
+	background-image: url(img/info.gif);
+	background-position: 10px 10px;
+	border: 1px solid #345EE4;
+}
+
+.warning {
+	background-color: #FFEAEA;
+	background-image: url(img/warning.gif);
+	background-position: 10px 10px;
+	border: 1px solid rgb(255, 0, 0);
+}
+
+.aide {
+	text-align: justify;
+	border: 1px solid #345EE4;
+	background-color: #DDE9FB;
+	padding: 0.5em 1em 0.5em 30px;
+	-moz-border-radius: 10px;
+	margin-top: -25px;
+}
+
+.buttonlink {
+	width: 35em;
+	padding: 1em 2em 1em 3em;
+	background-position: 0.5em 0.2em;
+	background-repeat: no-repeat;
+	margin: 0 auto;
+	min-height: 10px;
+	clear: both;
+	border-collapse: collapse;
+	-moz-border-radius: 20px;
+	border: 1px solid black;
+	background-color: #F1F1F1;
+	cursor: pointer;
+}
+
+.loginboxlink {
+	width: 35em;
+	padding: 1em 2em 1em 3em;
+	background-position: 0.5em 0.2em;
+	background-repeat: no-repeat;
+	background-image: url("img/enter.png");
+	margin: 0 auto;
+	min-height: 10px;
+	clear: both;
+	border-collapse: collapse;
+	-moz-border-radius: 20px;
+	border: 1px solid black;
+	background-color: #F1F1F1;
+	cursor: pointer;
+}
+
+.lostpasswordboxlink {
+	width: 35em;
+	padding: 1em 2em 1em 3em;
+	background-position: 0.5em 0.2em;
+	background-repeat: no-repeat;
+	background-image: url("img/pwd.png");
+	margin: 0 auto;
+	min-height: 10px;
+	clear: both;
+	border-collapse: collapse;
+	-moz-border-radius: 20px;
+	border: 1px solid black;
+	background-color: #F1F1F1;
+	cursor: pointer;
+}
+
+/*
+surcharge de styles de CktlCommon.css
+*/
+.login_label,.login_input,.login_error {
+	padding: 0px;
+}
+
+/* --------------------------------------------------------------------------- */
+/* Classes du wrapper horizontal */
+.cktl_container_principal {
+	width: 970px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	float: inherit;
+}
+
+.cktl_entete_wrapper_horizontal {
+	width: 970px;
+	height: 30px;
+	position: relative;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	font-size: 16pt;
+	display: block;
+	color: #000000;
+	font-weight: bold;
+	padding: 0;
+}
+
+.cktl_copyright_wrapper_horizontal {
+	width: 970px;
+	height: 15px;
+	position: relative;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	display: block;
+	color: #000000;
+	font-weight: bold;
+}
+
+.cktl_copyright_wrapper_horizontal a {
+	text-decoration: none;
+}
+
+.cktl_accueil_wrapper_horizontal {
+	width: 800px;
+	height: 550px;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	text-align: left;
+	margin: 0 auto 0 auto;
+	padding: 0;
+	font-size: 12px;
+}
+
+.cktl_accueil_wrapper_horizontal h3 {
+	color: #9EADC4;
+	text-align: left;
+	padding-left: 5px;
+	padding-bottom: 2px;
+	margin: 0px;
+	margin-top: 1px;
+	font-size: large;
+	border-bottom: 1px solid #9EADC4;
+}
+
+/* -----------------------------------ModuleAssistance-------------------------------------- */
+.assistantEtapes,.containerSchemaCompetence {
+	width: 190px;
+	float: left;
+}
+
+.schemaCompetence {	
+}
+
+.menuSchemaCompetence {
+	text-align: left;
+	top: inherit;
+	height: 28px;
+	background-color: white;
+	position: relative;
+}
+
+.assistantEtapes {
+	float: left;
+}
+
+.assistantEtapes table {
+	text-align: center;
+	width: 100%;
+}
+
+.assistantEtapes table tbody tr td {
+	margin: 0px 10px;
+}
+
+.assistantMenu {
+	top: inherit;
+	height: 38px;
+	background-color: white;
+	position: relative;
+}
+
+.assitantModuleContainer {
+	min-height: 520px;
+}
+
+.assistantEtapes .etapes {
+	vertical-align: top;
+	height: 30px;
+}
+
+.assistantEtapes a .etapes {
+	vertical-align: top;
+	height: 30px;
+}
+
+.assistantEtapes .etape {
+	height: auto;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: left;
+	padding-left: 20px;
+	width: 130px;
+}
+
+.assistantEtapes a .etape {
+	height: auto;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: left;
+	padding-left: 20px;
+	width: 130px;
+}
+
+.assistantEtapes .selected {
+	background: url("img/gradient-glossy.png") repeat-x scroll 0 0
+		transparent;
+	font-weight: bold;
+}
+
+.assistantEtapes .passed {
+	font-weight: bold;
+}
+
+.assistantContent,.competenceDetail {
+	padding: 0px;
+	margin-left: 195px;
+	position: relative;
+}
+
+.assistantAlerte {
+	height: 15px;
+	position: relative;
+	padding: 2px;
+	font-size: 13px;
+}
+
+.assistantModule {
+	min-height: 520px;
+}
+
+.assitantModuleContainer h4,.assistantModule h4,.assistantEtapes h4,.schemaCompetence h4,.cktl_accueil_wrapper_horizontal h4,.boxTitre,.assistantAdministrateurContainer h4
+	{
+	text-align: left;
+	padding-left: 4px;
+	/*5*/
+	padding-bottom: 2px;
+	margin: 0px;
+	margin-top: 1px;
+	font-size: medium;
+}
+
+#sauts {
+	height: 100px;
+	display: block;
+}
+
+.verticalLine {
+	border-left: 1px solid #6C6C6C;
+	padding-left: 5px;
+	margin-left: 50px;
+}
+
+.assistantAdministrateurContainer h2,.assitantModuleContainer h2 {
+	text-align: left;
+	padding-left: 2px;
+	padding-bottom: 2px;
+	margin: 0px;
+	margin-top: 1px;
+	font-size: small;
+}
+
+#ContainerAssistantEtapes.assistantEtapes  div.etape.passed a {
+	font-weight: bold;
+}
+
+h4.tbvTitle {
+	border-bottom: none;
+	padding-bottom: 0;
+	font-size: small;
+}
+
+.assistantMenu {
+	top: inherit;
+	height: 28px;
+	background-color: white;
+	position: relative;
+}
+
+.cktlAjaxToolbar {
+	background: white;
+	text-align: left;
+	height: 22px;
+}
+
+.montant {
+	text-align: right;
+}
+
+/* --------------------------------- Tabs ------------------------------------*/
+.ajaxTabbedPanel {
+	width: auto;
+	/*padding: 10px 0 0 20px;*/
+	margin: 0;
+}
+
+.ajaxTabbedPanelTab-selected {
+	display: inline;
+	padding: 3px 7px 1px 7px;
+	/*006699*/
+	-moz-border-radius-topright: 5px;
+	-moz-border-radius-topleft: 5px;
+}
+
+.ajaxTabbedPanelTab-unselected {
+	display: inline;
+	padding: 2px 7px 0 7px;
+	/*background: #f0f0f0;*/
+	border-bottom: 0;
+	-moz-border-radius-topright: 5px;
+	-moz-border-radius-topleft: 5px;
+}
+
+.ajaxTabbedPanelTab-selected a {
+	font-weight: bold;
+	font-size: 12px;
+	padding: 6px;
+}
+
+.ajaxTabbedPanelTab-unselected a {
+	padding: 6px;
+	font-size: 12px;
+	/*color: #a0a0a0;*/
+}
+
+.ajaxTabbedPanelPanes {
+	padding-left: 0px;
+	margin: 0;
+	min-height: 555px;
+	border: 0;
+}
+
+.ajaxTabbedPanelPane-selected {
+	list-style-type: none;
+	display: block;
+	padding: 10px;
+}
+
+.ajaxTabbedPanelPane-selected .ajaxTabbedPanelPane-selected {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.ajaxTabbedPanelPane-unselected {
+	list-style-type: none;
+	display: none;
+}
+
+.ajaxTabbedPanelPanes#TabbedPanelDetailPartenaire_panecontrol {
+	min-height: 260px;
+	border-left: 0px;
+}
+
+.ajaxTabbedPanelPanes#TabbedPanelDetailTranche_panecontrol {
+	min-height: 260px;
+	border-left: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+}
+
+.ajaxTabbedPanelPanes#TabbedPanelDetailAvenant_panecontrol {
+	min-height: 530px;
+}
+
+/* --------------------------------- Tabs non ajax ------------------------------------*/
+.Tabs {
+	width: auto;
+	/*padding: 10px 0 0 20px;*/
+	margin: 0;
+}
+
+.Tab {
+	display: inline;
+	padding: 2px 7px 0 7px;
+	/*background: #f0f0f0;*/
+	border-bottom: 0;
+	-moz-border-radius-topright: 5px;
+	-moz-border-radius-topleft: 5px;
+}
+
+.TPTab_Selected {
+	display: inline;
+	padding: 3px 7px 1px 7px;
+	-moz-border-radius-topright: 5px;
+	-moz-border-radius-topleft: 5px;
+}
+
+.TPTab_Selected span {
+	font-weight: bold;
+	font-size: 12px;
+	padding: 6px;
+}
+
+.Tab a {
+	padding: 6px;
+	font-size: 12px;
+	/*color: #a0a0a0;*/
+}
+
+.TabItemsList {
+	margin-bottom: 0;
+}
+
+.TabPanelContent {
+	padding-left: 0px;
+	margin: 0;
+	min-height: 555px;
+	padding: 10px 5px 10px 5px;
+}
+
+.TabPanelContent {
+	padding-left: 0px;
+	margin: 0;
+	min-height: 255px;
+	padding: 10px 5px 10px 5px;
+}
+/* --------------------------------- ? ------------------------------------*/
+#SchemaCompetence dt {
+	text-align: left;
+	cursor: pointer;
+}
+
+#SchemaCompetence dt.selected {
+	background-position: right;
+	background-image: url(img/ico_node_collapsed_rouge_16.png);
+	background-repeat: no-repeat;
+	font-weight: bold;
+	color: red;
+}
+
+#SchemaCompetence dd {
+	text-align: left;
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+#SchemaCompetence dd.selected {
+	font-weight: bold;
+	color: red;
+}
+
+table.progressBarContainer {
+	width: 100%;
+	border-spacing: 0px;
+}
+
+table.progressBarContainer td {
+	font-family: Helvetica;
+	font-size: 8pt;
+	padding: 2px;
+}
+
+table.progressBarContainer td.progressValue {
+	white-space: nowrap;
+}
+
+.progressBar {
+	border: 1px solid black;
+}
+
+.progressBar td.percentageFinished {
+	background-image: url(img/progress-bar.gif);
+	background-repeat: repeat-x;
+}
+
+table.progressBar td.percentageFinished.done {
+	background-image: url(img/progress-bar.gif);
+	background-repeat: repeat-x;
+}
+
+table.progressBar td.percentageUnfinished {
+	background-image: url(img/progress-remainder.gif);
+	background-repeat: repeat-x;
+}
+
+table.progressBarContainer td.progressMaximum {
+	white-space: nowrap;
+}
+
+.etiquette {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-style: normal;
+	line-height: 13px;
+	text-decoration: none;
+	font-variant: normal;
+	text-align: justify;
+}
+
+.obligatoire {
+	color: #FF0000;
+}
+
+#RfcctContainerRecherche {
+	text-align: left;
+	height: 555px;
+	float: left;
+	left: 420px;
+}
+
+#RfcctQBERecherche {
+	padding: 5px;
+	height: 505px;
+	width: 420px;
+}
+
+#RfcctContainerRechercheMenu {
+	width: auto;
+	height: 40px;
+}
+
+#RfcctContainerRechercheResultats {
+	margin-left: 420px;
+	width: 480px;
+	height: 555px;
+}
+
+.finances {
+	border-collapse: collapse;
+}
+
+.total td {
+	border-top: 1px dotted #9EADC4;
+}
+
+.reparts {
+	background-color: white;
+	border: 1px dotted #9EADC4;
+}
+
+.pub {
+	color: green;
+	font-weight: bold;
+}
+
+.priv {
+	font-weight: normal;
+}
+
+.obligatoire {
+	color: inherit;
+	font-weight: bold;
+}
+
+.obligatoire:after {
+	color: red;
+	content: '*';
+}
+
+/* --------------------------------- Restyling des TBV ------------------------------------*/
+.cktlajaxtableview>div.cktlAjaxTableView_DivHeaderAndBody table thead tr th
+	{
+	background: url("img/gradient.png") repeat-x scroll 0 0 transparent;
+	height: 23px;
+}
+
+.cktlajaxtableview .triable {
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.cktlajaxtableview tr {
+	cursor: pointer;
+}
+
+.cktlajaxtableview {
+	border: none;
+	padding: none;
+}
+
+/* ---------------------------------- Restyling des reports --------------------------------*/
+.FwkCktlReportingGuiAjax_ProgressAmount {
+	background-color: #E5EDFA !important;
+}
+
+.FwkCktlReportingGuiAjax_RapExecMonitor {
+	background-color: transparent !important;
+}
+
+/* ---------------------------------- Styles de la grille de report --------------------------------*/
+.report .cktlajaxtableview>div.cktlAjaxTableView_DivHeaderAndBody table tbody tr:hover
+	{
+	color: white;
+	background: none;
+}
+
+/** Restyling de la modal window */
+.greylighting_s,.greylighting_n,.greylighting_e,.greylighting_w,.greylighting_ne,.greylighting_sizer,.greylighting_nw,.greylighting_sw
+	{
+	background-image: none;
+	background-color: none;
+}
+
+.greylighting_s,.greylighting_n,.greylighting_e,.greylighting_w,.greylighting_ne,.greylighting_sizer,.greylighting_nw,.greylighting_sw
+	{
+	background-image: none;
+	background-color: none;
+}
+
+.greylighting_se,.greylighting_sizer {
+	background: none;
+}
+
+.greylighting_w,.greylighting_e {
+	width: 9px;
+}
+
+.greylighting_content { /*background-color: #F1F6FB;*/
+	/*#E4F1FF;*/
+	border: 1px solid #ccc;
+}
+
+.greylighting_title {
+	color: black;
+	text-shadow: 1px 1px rgba(255, 255, 255, 0.95);
+	font-size: 12px;
+}
+
+.table_window {
+	background: none;
+}
+
+.top {
+	border-top: 1px solid rgba(0, 0, 0, 0.5);
+	border-left: 1px solid rgba(0, 0, 0, 0.5);
+	border-right: 1px solid rgba(0, 0, 0, 0.5);
+	background-color: #eff3ff;
+	background: -moz-linear-gradient(white, #eff3ff 50%, #eff3ff) repeat
+		scroll 0 0 transparent;
+	background: -webkit-linear-gradient(white, #eff3ff 50%, #eff3ff) repeat
+		scroll 0 0 transparent;
+}
+
+.mid {
+	border-left: 1px solid rgba(0, 0, 0, 0.5);
+	border-right: 1px solid rgba(0, 0, 0, 0.5);
+	background-color: #eff3ff;
+}
+
+.bot {
+	border-left: 1px solid rgba(0, 0, 0, 0.5);
+	border-right: 1px solid rgba(0, 0, 0, 0.5);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+	background-color: #eff3ff;
+}
+
+.dialog {
+	-moz-box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------------------------------- Styles de la page Domaine --------------------------------*/
+.menuConv .cktl_simplemenu {
+	margin-left: 40px;
+	width: 200px;
+}
+
+.menuConv .menuitem {
+	font-size: 14px;
+	border-bottom: 1px solid #ccc;
+}
+
+/*--------Test formulaire HTML5--------*/
+form {
+  /*margin:auto;*/
+  /*margin-top:4%;*/
+  /*width:800px;*/
+  /*box-shadow: 4px 4px 14px #aaa;*/
+  /*border-radius:8px;/*
+  /*backgound:#ffffff;*/
+  border:none;
+}
+/*----------------------------------------*/

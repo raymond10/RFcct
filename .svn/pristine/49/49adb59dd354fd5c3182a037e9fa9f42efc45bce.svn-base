@@ -1,0 +1,66 @@
+ContainerResume : AjaxUpdateContainer {
+	id = "ContainerResume";
+}
+
+FormResume : ERXWOForm {
+  id = "FormResume";
+  name ="FormResume";
+  action = submit;
+  multipleSubmit = true;
+  onsubmit = "return false;";
+}
+
+compDomaine : WOString {
+	value = competence.domaine.lblLong;
+	escapeHTML = false;
+	class = "etiquette";
+}
+
+tiersTBV : CktlAjaxTableView {
+    id = tiersTbvId;
+    dg = mySession.tiersDg;
+    colonnes = colonnes;
+    item = currentTiers;
+    selectionMultipleEnabled = false;
+    selectionEnabled = false;
+    height = tbvHeight;
+    width = tbvWidth;
+    updateContainerID = ^updateContainerID;
+    callbackOnSelectionner = refreshToolbar;
+    forceUniqueSelection = false;
+    shouldDisplayHeader = true;
+}
+
+compMatiere : WOString {
+	value = competence.matiere.lblLong;
+	escapeHTML = false;
+	class = "etiquette";
+}
+
+compTerrain : WOString {
+	value = competence.terrain.lblLong;
+	escapeHTML = false;
+	class = "etiquette";
+}
+
+compCapacite : WOString {
+	value = competence.capacite.lblLong;
+	escapeHTML = false;
+	class = "etiquette";
+}
+
+DateFinCompetence : WOTextField {
+	value = competence.dateFin;
+	disabled = true;
+	dateformat = "%d/%m/%Y";
+}
+
+compCommentaire : WOText {
+    id = "compCommentaire";
+	value = competence.comm;
+	disabled = true;
+	class = "etiquette";
+	style = "width:96%;";
+	rows = 2;
+	resize = false;
+}

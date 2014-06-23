@@ -1,0 +1,176 @@
+Wrapper : Wrapper {
+	
+}
+
+FormRecherche : WOForm {
+	id = "FormRecherche";
+	name = "FormRecherche";
+	action = rechercher;
+}
+
+ContainerRecherche : AjaxUpdateContainer {
+	id = "RfcctContainerRecherche";
+}
+
+HiddenSubmitButton : AjaxDefaultSubmitButton {
+	action = rechercher;
+  	updateContainerID = "RfcctContainerRechercheResultats";  
+}
+
+CodeClassification : WOTextField {
+  value = codeClassification;
+  style = "text-align:center;";
+}
+
+NumeroCompetence : WOTextField {
+  id = "NumeroCompetence";
+  value = filtre.filtreCompId; // VALID
+  size = "6";
+  numberformat = "#0";
+  style = "text-align:center;";
+}
+
+Domaines : WOPopUpButton {
+    id = "domaineDefinition";
+	list = lesDomaines;
+	item = currentDomaineDefinition;
+	displayString = currentDomaineDefinition.libelle;
+	selection = filtre.selectedDomaine; // VALID
+	noSelectionString = " ";
+	style = "width:140px;";
+}
+
+GestionMatiere : WOPopUpButton {
+	id = "GestionMatiere";
+	list = lesMatieres;
+	item = currentMatiere;
+	displayString = currentMatiere.libelle;
+	selection = filtre.selectedMatiere; // VALID
+	noSelectionString = " ";
+    style = "width:140px;";
+}
+
+GestionTerrain : WOPopUpButton {
+	id = "GestionTerrain";
+	list = lesTerrains;
+	item = currentTerrain;
+	displayString = currentTerrain.libelle;
+	selection = filtre.selectedTerrain; // VALID
+	noSelectionString = " ";
+    style = "width:140px;";
+}
+
+GestionCapacite : WOPopUpButton {
+	id = "GestionCapacite";
+    list = lesCapacites;
+    item = currentCapacite;
+    displayString = currentCapacite.libelle;
+    selection = filtre.selectedCapacite; // VALID	
+    noSelectionString = " ";
+    style = "width:140px;";
+}
+
+GestionTiers : WOTextField {
+	id = "GestionTiers";
+	value = filtre.filtreLeTier; // VALID
+	class = "useMaxWidth";
+}
+
+GestionComm : WOTextField {
+	id = "GestionComm";
+	value = filtre.filtreCommentaire; // VALID
+	class = "useMaxWidth";
+}
+
+//DateDebutMin : CktlAjaxDatePicker {
+//	id = "DateDebutMin";
+//	dateValue = bindings.DateDebutMin; // VALID
+//}
+
+//DateDebutMax : CktlAjaxDatePicker {
+//	id = "DateDebutMax";
+//	dateValue = bindings.DateDebutMax; // VALID
+//}
+
+//DateFinMin : CktlAjaxDatePicker {
+//	id = "DateFinMin";
+//	dateValue = bindings.DateFinMin; // VALID
+//}
+
+//DateFinMax : CktlAjaxDatePicker {
+//	id = "DateFinMax";
+//	dateValue = bindings.DateFinMax; // VALID
+//}
+
+ContainerRechercheMenu : AjaxUpdateContainer {
+	id = "RfcctContainerRechercheMenu";
+}
+Nettoyer : CktlAjaxButton {
+	action = nettoyer;
+  	onSuccess = "function (){RfcctContainerRechercheUpdate(); RfcctContainerRechercheResultatsUpdate();}";
+	text = "Nettoyer";
+	type = "cancel";
+	title = "Nettoyer les critères de recherche";
+}
+
+Rechercher : CktlAjaxSubmitButton {
+	action = rechercher;
+  	updateContainerID = "RfcctContainerRechercheResultats";  
+	text = "Rechercher";
+	type = "find";
+	title = "Lancer la recherche";
+	showBusyImage = true;
+}
+
+ContainerResultats : AjaxUpdateContainer {
+	id = "RfcctContainerRechercheResultats";
+	style = "margin-left:420px;width:auto;height:555px;";
+}
+
+TableViewCompetences : CktlAjaxSimpleTableView {
+    id = "TableViewCompetences";
+	displayGroup = dgCompetences;
+	item = unDicoCompetence;
+    height = "515px";
+    cssClassForTr = cssClassForUnDicoCompetence;
+    onSelect = consulterCompetence;
+}
+
+NumeroCol : CktlAjaxSimpleTableViewColumn {
+	label = "Numéro";
+	sortKeypath = "NUMERO";
+	width = "30%";
+}
+
+CommCol : CktlAjaxSimpleTableViewColumn {
+	label = "Commentaire";
+	sortKeypath = "COMMENTAIRE";
+	width = "40%";
+}
+
+TierLibCol : CktlAjaxSimpleTableViewColumn {
+	label = "Tiers";
+	sortKeypath = "TIERS";
+	width = "30%";
+}
+
+Header : CktlAjaxSimpleTableViewHeader {
+	
+}
+
+Body : CktlAjaxSimpleTableViewBody {
+	
+}
+
+NumCell : WOString {
+	value = unDicoCompetence.numero; // VALID
+}
+
+CommCell : WOString {
+	value = unDicoCompetence.commentaire; // VALID
+}
+
+TierLibCell : WOString {
+    value = unDicoCompetence.tier.tierLibelle; // VALID	
+}
+

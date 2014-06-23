@@ -1,0 +1,39 @@
+<webobject name = "Wrapper">
+  <table width = "100%">
+    <tr>
+      <td id = "main" valign = "top" align = "center">
+        <table cellpadding = "0" cellspacing = "0" width = "100%" style = "background-color:white;">
+          <tbody>
+            <tr>
+              <td>
+                <div class = "cktl_accueil_wrapper_horizontal">
+                  <webobject name = "HasDroitConsultation">
+                    <br />
+                    <h4>Liste des comp&eacute;tences consultables </h4>
+                    <webobject name = "Form"><webobject name = "GroupesTree" /></webobject>
+                    <webobject name = "TableViewCompetencesToolBar">
+                        <webobject name = "CompTabView"/>
+                      <webobject name = "CreerComp" />
+                      <webobject name = "CreerTierComp" />
+                      <div style = "float:right;">
+                        <webobject name = "Administration" />
+                        <webobject name = "RechercheAvancee" />
+                        <div class = "hide">
+                          <webobject name = "Imprimer" />
+                          <webobject name = "Outils" />
+                        </div>
+                      </div>
+                    </webobject>
+                  </webobject>
+                </div>
+                <webobject name = "HasNoDroitConsultation">
+                  <div class = "ui-state-error"> Vous n'avez pas le droit de consulter les comp&eacute;tences </div>
+                </webobject>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </table>
+</webobject>

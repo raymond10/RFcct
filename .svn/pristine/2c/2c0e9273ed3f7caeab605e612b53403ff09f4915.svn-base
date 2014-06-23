@@ -1,0 +1,10 @@
+<webobject name = "Wrapper">
+  <webobject name = "PersonneMultipleContainer">
+    <webobject name = "Form">
+      <webobject name = "MultiplePersSrch">
+        <webobject name = "Annuler" />
+        <webobject name = "AjouterPersonnes" />
+      </webobject>
+    </webobject>
+  </webobject>
+</webobject>

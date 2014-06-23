@@ -1,0 +1,246 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+package org.utt.rfcct.serveur.components;
+
+import java.text.Format;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOCapacite;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EODomaine;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOMatiere;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOTerrain;
+import org.utt.rfcct.serveur.components.assistants.ApresEnregistrement;
+import org.utt.rfcct.serveur.components.controlers.GestionAdministrationCtrl;
+import org.utt.rfcct.serveur.components.windows.CreerDomaine;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSTimestampFormatter;
+
+import er.extensions.eof.ERXEC;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 28 mars 2013
+ */
+@SuppressWarnings("all")
+public class GestionAdministration extends BaseComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2560791779785567711L;
+	private GestionAdministrationCtrl ctrl;
+	private EOEditingContext editingContext;
+	private NSArray<String> modules;
+	private NSArray<String> etapes;
+	private EODomaine domaine;
+	private EOMatiere matiere;
+	private EOTerrain terrain;
+	private EOCapacite capacite;
+
+	public GestionAdministration(WOContext context) {
+		super(context);
+		ctrl = new GestionAdministrationCtrl(this);
+	}
+
+	public String idAssistantAdministration() {
+		// TODO
+		return "AssistantAdministrateurContainer";
+	}
+
+	/**
+	 * @return the ctrl
+	 */
+	public GestionAdministrationCtrl ctrl() {
+		return ctrl;
+	}
+
+	/**
+	 * @param ctrl
+	 *            the ctrl to set
+	 */
+	public void setCtrl(GestionAdministrationCtrl ctrl) {
+		this.ctrl = ctrl;
+	}
+
+	/**
+	 * @return the domaine
+	 */
+	public EODomaine getDomaine() {
+		return domaine;
+	}
+
+	/**
+	 * @param domaine
+	 *            the domaine to set
+	 */
+	public void setDomaine(EODomaine domaine) {
+		this.domaine = domaine;
+	}
+
+	/**
+	 * @return the matiere
+	 */
+	public EOMatiere getMatiere() {
+		return matiere;
+	}
+
+	/**
+	 * @param matiere
+	 *            the matiere to set
+	 */
+	public void setMatiere(EOMatiere matiere) {
+		this.matiere = matiere;
+	}
+
+	/**
+	 * @return the terrain
+	 */
+	public EOTerrain getTerrain() {
+		return terrain;
+	}
+
+	/**
+	 * @param terrain
+	 *            the terrain to set
+	 */
+	public void setTerrain(EOTerrain terrain) {
+		this.terrain = terrain;
+	}
+
+	/**
+	 * @return the capacite
+	 */
+	public EOCapacite getCapacite() {
+		return capacite;
+	}
+
+	/**
+	 * @param capacite
+	 *            the capacite to set
+	 */
+	public void setCapacite(EOCapacite capacite) {
+		this.capacite = capacite;
+	}
+
+	/**
+	 * @return the editingContext
+	 */
+	public EOEditingContext editingContext() {
+		if (editingContext == null) {
+			editingContext = ERXEC.newEditingContext();
+		}
+		return editingContext;
+	}
+
+	/**
+	 * @param editingContext
+	 *            the editingContext to set
+	 */
+	public void setEditingContext(EOEditingContext editingContext) {
+		this.editingContext = editingContext;
+	}
+
+	public String moduleName() {
+		String moduleName = null;
+		if (modules() != null && modules().count() > 0) {
+			moduleName = (String) modules()
+					.objectAtIndex(
+							mySession().indexModuleActifCreationCompetence()
+									.intValue());
+		}
+		return moduleName;
+	}
+
+	/**
+	 * @return the modules
+	 */
+	public NSArray<String> modules() {
+		if (droitTout()) {
+			modules = new NSArray<String>(new String[] { "ModuleAdminDomaine",
+					"ModuleAdminMatiere", "ModuleAdminTerrain",
+					"ModuleAdminCapacite" });
+			mySession().setModulesCreationCompetence(modules);
+		}
+
+		if (peutAdminRfcct()) {
+			modules = new NSArray<String>(new String[] { "ModuleAdminMatiere",
+					"ModuleAdminTerrain", "ModuleAdminCapacite" });
+			mySession().setModulesCreationCompetence(modules);
+		}
+		return modules;
+	}
+
+	/**
+	 * @param modules
+	 *            the modules to set
+	 */
+	public void setModules(NSArray<String> modules) {
+		this.modules = modules;
+		mySession().setModulesCreationCompetence(modules);
+	}
+
+	/**
+	 * @return the etapes
+	 */
+	public NSArray<String> etapes() {
+		if (etapes == null) {
+			if (droitTout()) {
+				etapes = new NSArray<String>(new String[] { "Domaine",
+						"Mati&egrave;re", "Terrain", "Capacit&eacute;" });
+			}
+
+			if (peutAdminRfcct()) {
+				etapes = new NSArray<String>(new String[] { "Mati&egrave;re",
+						"Terrain", "Capacit&eacute;" });
+			}
+		}
+		return etapes;
+	}
+
+	public WOActionResults terminer() {
+		mySession().setIndexModuleActifGestionAdministration(null);
+		return null;
+	}
+
+	public WOActionResults annuler() {
+		Accueil nextPage = (Accueil) pageWithName(Accueil.class.getName());
+		if (editingContext() != null) {
+			editingContext().revert();
+		}
+		mySession().setIndexModuleActifGestionAdministration(null);
+		mySession().getUiMessages().removeAllObjects();
+		return nextPage;
+	}
+
+	public String messageContainerID() {
+		return uniqueDomId() + "_GestAdmin_rfcct_MessageContainer";
+	}
+}

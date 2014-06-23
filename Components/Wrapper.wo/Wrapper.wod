@@ -1,0 +1,105 @@
+//icon
+shortcut_icon : WOGenericElement {
+	elementName = "link";
+	href = icon;
+	type = "image/x-icon";
+	rel = "shortcut icon";
+}
+
+icon : WOGenericElement {
+	elementName = "link";
+	href = icon;
+	type = "image/x-icon";
+	rel = "icon";
+}
+
+Titre : WOString {
+	value = titre;
+}
+
+Body : WOBody {
+	onload = onloadJS;
+	style = "direction :ltr;";
+}
+
+ContainerPrincipal : AjaxUpdateContainer {
+	id = "ContainerPrincipal";
+	class = "cktl_container_principal";	
+}
+BtnAccueil : WOImage {	
+	border = 0;
+	framework = "FwkCktlThemes";
+	filename = "images/24x24/001_20_24x24.png";
+}
+LinkAccueil : WOHyperlink {
+	action = tree;
+	onClick = "if (confirm('Voulez-vous vraiment revenir sur la page d''accueil ?')) {return true;} else {return false;}";
+	title = "Revenir à l'accueil";
+	disabled = btActif;
+}
+AjaxIndicator : AjaxBusyIndicator {
+	divID = "busy";
+}
+IndicateurBusy : WOImage {
+	border = 0;
+	filename = "img/ajax-loader_blanc.gif";
+	framework = "FwkCktlThemes";
+	style = "display:none;";
+	id = "busy";
+	width = "16px";
+	height = "16px";
+}
+
+NomUtilisateur : WOString {
+	value = nomAndPrenom;
+	valueWhenEmpty = "Aucun nom d'utilisateur";
+}
+
+BtnQuitter : WOImage {	
+	border = 0;
+	filename = "images/24x24/logout_24x24.png";
+	framework = "FwkCktlThemes";
+}
+
+LinkQuitter : WOHyperlink {
+	directActionName = "quitter";
+	onClick = "if (confirm('Voulez-vous vraiment quitter cette application ?')) {return true;} else {return false;}";
+	title = "Quitter l'application";
+	disabled = btActif;
+}
+
+Contenu : WOComponentContent {
+	
+}
+Copyright : WOString {
+	value = myApp.copyright;
+	escapeHTML = false;
+}
+Version : WOString {
+	value = version;
+	escapeHTML = false;
+}
+ServerId : WOString {
+	value = serverId;
+	escapeHTML = false;
+}
+
+ContainerMessage : CktlAjaxUiMessageContainer {
+	id = myApp.messageContainerID;
+}
+
+Busy: AjaxBusyIndicator {
+	divID = "busy";
+}
+BusyImage : WOImage {
+  border = 0;
+  filename = "img/indicator_big.gif";
+  id = "busy1";
+}
+WOLToolBar: WOLToolBar {
+
+}
+
+TestNavigateur : WOConditional {
+	condition = mySession.browser.iE;
+}

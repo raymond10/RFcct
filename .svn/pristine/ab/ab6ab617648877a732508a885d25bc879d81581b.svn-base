@@ -1,0 +1,67 @@
+<webobject name = "Wrapper">
+  <table width = "100%">
+    <tr>
+      <td id = "main" valign = "top" align = "center">
+        <table cellpadding = "0" cellspacing = "0" width = "100%" style = "background-color:white;">
+          <tbody>
+            <tr>
+              <td>
+                <br />
+                <br />
+                <div class = "cktl_accueil_wrapper_horizontal">
+                  <webobject name = "HasDroitConsultation">
+                    <h4>Acc&egrave;s rapide par num&eacute;ro</h4>
+                    <webobject name = "FormRechercher">
+                      <webobject name = "CodeClassification" />-<webobject name = "NumeroCompetence" />
+                      <webobject name = "Rechercher" />
+                    </webobject>
+                    <br />
+                    <h4>Liste des comp&eacute;tences consultables </h4>
+                    <webobject name = "TableViewCompetences">
+                      <webobject name = "Header">
+                        <webobject name = "NumeroCol" />
+                        <webobject name = "CommCol" />
+                        <webobject name = "TiersCol" />
+                      </webobject>
+                      <webobject name = "Body">
+                        <td class = "alignToLeft"><webobject name = "NumCell" /></td>
+                        <td class = "alignToLeft"><webobject name = "CommCell" /></td>
+                        <td><webobject name = "TiersCell" /></td>
+                      </webobject>
+                      <webobject name = "TableViewCompetencesToolBar">
+                        <webobject name = "CreerComp" />
+                        <webobject name = "CreerTierComp" />
+                        <div style = "float:right;">
+                        <webobject name = "Administration" />
+                          <webobject name = "RechercheAvancee" />
+                          <div class = "hide">
+                          <webobject name = "Imprimer" />
+                          <webobject name = "Outils" />
+                          </div>
+                        </div>
+                      </webobject>
+                    </webobject>
+                  </webobject>
+                </div>
+                <webobject name = "HasNoDroitConsultation">
+                  <div class = "ui-state-error"> Vous n'avez pas le droit de consulter les comp&eacute;tences </div>
+                </webobject>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <webobject name = "ExceptionModalDialog">
+          <webobject name = "ExceptionInfos" />
+          <p style = "text-align:justify;font-size-adjust:.5;margin-left:10px;margin-right:10px;">
+            Afin de la prendre en compte dans les plus brefs d&eacutelais, 
+            un mail contenant le message d'erreur sera envoy&eacute; au(x) 
+            responsable(s) de l'application.
+            <br />
+            Veuillez nous excuser pour ce d&eacute;sagr&eacute;ment. 
+          </p>
+          <div style = "margin-left:200px;"> <webobject name = "RetourAccueil" /> </div>
+        </webobject>
+      </td>
+    </tr>
+  </table>
+</webobject>

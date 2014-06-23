@@ -1,0 +1,13 @@
+Wrapper : Wrapper {
+	
+}
+
+AssistantCompetence : AssistantCompetenceTier {
+	modules = modules;
+	indexModuleActif = mySession.indexModuleActifCreationTier;
+	competences = myCompetences;
+	etapes = etapes;
+	utilisateurPersId = persId;
+	editingContext = editingContext;
+	terminer = terminer;
+}

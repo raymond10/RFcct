@@ -1,0 +1,222 @@
+<webobject name = "ContainerDomaines">
+  <center>
+    <webobject name = "FormDomaine">
+      <table width = "100%" cellpadding = "0" cellspacing = "0">
+        <tbody>
+          <tr>
+            <td>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "4">
+                      <span>
+                        <h4>Domaine</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRDomaine">
+                    <td class = "decale">
+                      <label for = "CentreDomaine" class = "etiquette obligatoire" style = "text-align:center;">Domaine</label>
+                      <webobject name = "CentreDomaine" />
+                      <webobject name = "ObserverCentreDomaine" />
+                    </td>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "5">
+                      <span>
+                        <webobject name = "TierH4u">
+                          <h4><webobject name = "TierLbl" /></h4>
+                        </webobject>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRTiers">
+                    <td class = "decale">
+                      <label for = "TiersDomaine" class = "etiquette obligatoire"><webobject name = "lalbelTier" /> </label>
+                      <webobject name = "TiersDomaineSelect" />
+                      <webobject name = "DialogPersonnes" />
+                      <webobject name = "ObserverTiersDomaine" />
+                    </td>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "6">
+                      <span>
+                        <webobject name = "listTierH4u">
+                          <h4>Liste des 
+                            <webobject name = "listTierH4" />s s&eacute;lectionn&eacute;s</h4>
+                        </webobject>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRTiersSelection">
+                    <td class = "decale">
+                      <webobject name = "tiersTBV">
+                        <webobject name = "TableViewTiersToolBar"><webobject name = "HLSupprimerTiers" /></webobject>
+                      </webobject>
+                    </td>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%" height = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "5">
+                      <span>
+                        <webobject name = "matiereH4u">
+                          <h4><webobject name = "matiereH4" /></h4>
+                        </webobject>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRMatiere">
+                    <td width = "5%">
+                      <label for = "CentreMatiere" class = "etiquette obligatoire">Libell&eacute;</label>
+                    </td>
+                    <td>
+                      <webobject name = "CentreMatiere" />
+                      <webobject name = "ObserverCentreMatiere" />
+                    </td>
+                    <webobject name = "selectMatiere">
+                      <td>
+                        <label for = "laSelectionMatiere"><webobject name = "matiereH4" /> s&eacute;lectionn&eacute;(e)</label>
+                        <webobject name = "laSelectionMatiere" />
+                      </td>
+                    </webobject>
+                  </webobject>
+                  <webobject name = "TRSMatiere">
+                    <webobject name = "sMatiereView">
+                      <td width = "5%">
+                        <label for = "CentreSousMatiere" class = "etiquette" style = "font-weight: bold">Sous-Libell&eacute;</label>
+                      </td>
+                      <td>
+                        <webobject name = "CentreSousMatiere" />
+                        <webobject name = "ObserverCentreSousMatiere" />
+                      </td>
+                      <webobject name = "selectSMatiere">
+                        <td>
+                          <label for = "laSelectionSMatiere"><webobject name = "matiereH4" /> secondaire s&eacute;lectionn&eacute;(e)</label>
+                          <webobject name = "laSelectionSMatiere" />
+                        </td>
+                      </webobject>
+                    </webobject>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%" height = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "6">
+                      <span>
+                        <webobject name = "TerrainH4u">
+                          <h4><webobject name = "TerrainH4" /></h4>
+                        </webobject>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRTerrain">
+                    <td width = "5%">
+                      <label for = "CentreTerrain" class = "etiquette obligatoire">Libell&eacute;</label>
+                    </td>
+                    <td>
+                      <webobject name = "CentreTerrain" />
+                      <webobject name = "ObserverCentreTerrain" />
+                    </td>
+                    <webobject name = "selectTerrain">
+                      <td>
+                        <label for = "laSelectionTerrain"><webobject name = "TerrainH4" /> s&eacute;lectionn&eacute;(e)</label>
+                        <webobject name = "laSelectionTerrain" />
+                      </td>
+                    </webobject>
+                  </webobject>
+                  <webobject name = "TRSTerrain">
+                    <webobject name = "sTerrainView">
+                      <td width = "5%">
+                        <label for = "CentreSousTerrain" class = "etiquette obligatoire">Sous-Libell&eacute;</label>
+                      </td>
+                      <td>
+                        <webobject name = "CentreSousTerrain" />
+                        <webobject name = "ObserverCentreSousTerrain" />
+                      </td>
+                      <webobject name = "selectSousTerrain">
+                        <td>
+                          <label for = "leSousCentreTerrain"><webobject name = "TerrainH4" /> secondaire s&eacute;lectionn&eacute;(e)</label>
+                          <webobject name = "laSelectionSousTerrain" />
+                        </td>
+                      </webobject>
+                    </webobject>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "4">
+                      <span>
+                        <h4>Capacit&eacute;</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRCapacite">
+                    <td width = "50%">
+                      <label for = "CentreCapacite" class = "etiquette obligatoire">Libell&eacute;</label>
+                      <webobject name = "CentreCapacite" />
+                      <webobject name = "CentreCapaciteObserver" />
+                    </td>
+                    <webobject name = "selectCapacite">
+                      <td>
+                        <label for = "laSelectionCapacite">Capacit&eacute; s&eacute;lectionn&eacute;</label>
+                        <webobject name = "laSelectionCapacite" />
+                      </td>
+                    </webobject>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "6">
+                      <span>
+                        <h4>Autres informations</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRAutreInfo">
+                    <td valign = "top" width = "10%">
+                      <label for = "DateFinCompetence" class = "etiquette">Date de fin</label>
+                    </td>
+                    <td colspan = "5" style = "padding-right: 10px;">
+                      <webobject name = "DateFinCompetence" />
+                      <webobject name = "DateFinCompetenceObserver" />
+                    </td>
+                  </webobject>
+                  <tr class = "decale">
+                    <td valign = "top" width = "10%">
+                      <label for = "compCommentaire" class = "etiquette">Commentaires</label>
+                    </td>
+                    <td colspan = "5" style = "padding-right: 10px;">
+                      <webobject name = "CommentairesCompetence" />
+                      <webobject name = "CommentairesCompetenceObserver" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <webobject name = "IsNotModeAssistant"> <webobject name = "Enregistrement" /></webobject>
+      <br />
+      <br />
+      <br />
+    </webobject>
+  </center>
+</webobject>
+<webobject name = "refresh" />

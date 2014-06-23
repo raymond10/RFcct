@@ -1,0 +1,27 @@
+<webobject name = "ContainerGroupeTreeView">
+  <webobject name = "IsFiltrageTexteNotAvailable">
+    <table>
+      <tr>
+        <td>Type deTiers :</td>
+        <td>
+          <webobject name = "listTypeTiers" />
+          <webobject name = "listTypeTiersObserver" />
+        </td>
+        <td>Domaine :</td>
+        <td>
+          <webobject name = "ContainerAjaxDomaine"><webobject name = "listDomaines" /> </webobject>
+        </td>
+        <td><webobject name = "lancerFiltre" /></td>
+        <td><webobject name = "ResetButton" /></td>
+      </tr>
+    </table>
+  </webobject>
+  <webobject name = "ContainerAjaxTree">
+    <div style = "width:100%;">
+      <webobject name = "UnAjaxTree">
+        <webobject name = "IsAutorise"><webobject name = "GroupeLink" /></webobject>
+        <webobject name = "IsNotAutorise"><webobject name = "GroupeLibelle" /></webobject>
+      </webobject>
+    </div>
+  </webobject>
+</webobject>

@@ -1,0 +1,190 @@
+ContainerCapacite : AjaxUpdateContainer {
+	id = ContainerCapaciteCommentaireId;
+}
+
+FormCapacite : ERXWOForm {
+  id = "CapaciteCommentaire";
+  name ="CapaciteCommentaireName";
+  action = submit;
+  multipleSubmit = true;
+  onsubmit = "return false;";
+}
+
+TRTerrain : AjaxUpdateContainer {
+	id = TRTerrainId;
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreTerrain : WOPopUpButton {
+	id = "CentreTerrain";
+	list = ctrl.lesTerrains;
+	item = ctrl.unTerrain;
+	selection = ctrl.leCentreTerrain;
+	displayString = ctrl.unTerrain.lblCourt;
+	noSelectionString = " ";	
+	otherTagString = "required";
+	disabled = enabled;
+}
+
+ObserverCentreTerrain : AjaxObserveField {
+	fullSubmit = true;
+	observeFieldID = "CentreTerrain";
+	action = refreshSousTerr;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRTerrainUpdate(); TRSTerrainUpdate(); }";
+}
+
+selectTerrain : WOConditional {
+	condition = ctrl.leCentreTerrain;
+}
+
+laSelectionTerrain : WOTextField {
+    id = "laSelectionTerrain";
+	value = ctrl.leCentreTerrain.lblCourt;
+	disabled = true;
+	escapeHTML = false;
+}
+
+TRSTerrain : AjaxUpdateContainer {
+	id = TRSTerrainId;
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreSousTerrain : WOPopUpButton {
+	id = "CentreSousTerrain";
+	list = ctrl.lesSousTerrains;
+	item = ctrl.uneSousTerrain;
+	selection = ctrl.leSousCentreTerrain;
+	displayString = ctrl.uneSousTerrain.lblCourt;
+	noSelectionString = " ";
+	disabled = enabled;
+}
+
+ObserverCentreSousTerrain : AjaxObserveField {
+	fullSubmit = false;
+	observeFieldID = "CentreSousTerrain";
+	action = ctrl.actSterrComp;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRSTerrainUpdate();}";
+}
+
+selectSousTerrain : WOConditional {
+	condition = ctrl.leSousCentreTerrain;
+}
+
+laSelectionSousTerrain : WOTextField {
+    id = "leSousCentreTerrain";
+	value = ctrl.leSousCentreTerrain.lblCourt;
+	disabled = true;
+	escapeHTML = false;
+}
+
+TRCapacite : AjaxUpdateContainer {
+	id = TRCapaciteId;
+	elementName = "tr";
+	class = "decale";
+}
+
+CentreCapacite : WOPopUpButton {
+	id = "CentreCapacite";
+	list = ctrl.lesCapacites;
+	item = ctrl.uneCapacite;
+	displayString = ctrl.uneCapacite.lblCourt;
+	selection = ctrl.leCentreCapacite;
+	noSelectionString = " ";
+	disabled = enabled;
+}
+
+CentreCapaciteObserver : AjaxObserveField {
+	observeFieldID = "CentreCapacite";
+	action = ctrl.actCap;
+	fullSubmit = false;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRCapaciteSelectionUpdate();}";
+}
+
+TRCapaciteSelection : AjaxUpdateContainer {
+	id = TRCapaciteSelectionId;
+	elementName = "tr";
+	class = "decale";
+}
+
+capaciteTBV : CktlAjaxTableView {
+    id = capTbvId;
+    dg = capDisplayGroup;
+    colonnes = colonnes;
+    item = currentCap;
+    selectionMultipleEnabled = true;
+    selectionEnabled = true;
+    height = tbvHeight;
+    width = tbvWidth;
+    updateContainerID = ^updateContainerID;
+    callbackOnSelectionner = refreshToolbar;
+    forceUniqueSelection = true;
+    shouldDisplayHeader = true;
+}
+
+TableViewTiersToolBar : CktlAjaxToolbar {
+}
+
+HLSupprimerCap : CktlAjaxButton {
+	id = "HLSupprimerCap";
+	title = "Supprimer la capacité sélectionnée";
+	type = "delete";
+	onClickBefore = "confirm('Etes-vous sûr de vouloir supprimer cette capacité ?')";
+	action = supprimerUneCap;
+	enabled = enabled;
+	//updateContainerID = "ContainerCapaciteCommentaire";
+	onComplete = "function (){TRCapaciteSelectionUpdate(); ContainerAssistantMenuUpdate();}";
+}
+
+TRAutreInfo : AjaxUpdateContainer {
+	id = "TRAutreInfo";
+	elementName = "tr";
+	class = "decale";
+} 
+
+DateFinCompetence : CktlAjaxDatePicker {
+	id = "DateFinCompetence";
+	dateValue = competenceDateFin;
+	updateContainerID = "TRAutreInfo";
+	disabled = enabled;
+}
+
+DateFinCompetenceObserver : AjaxObserveField {
+	observeFieldID = "DateFinCompetence";
+	action = submit;
+} 
+
+CommentairesCompetence : WOText {
+    id = "CommentairesCompetence";
+	value = competence.comm;
+  	rows = "2";  	
+  	style = "width:96%;";
+  	placeholder="Inserer votre commentaire ici";
+	disabled = enabled;
+}
+
+CommentairesCompetenceObserver : AjaxObserveField {
+	observeFieldID = "CommentairesCompetence";
+	action = submit;
+}
+
+IsNotModeAssistant : WOConditional {
+	condition = isStandAlone;
+}
+
+Enregistrement : EnregistrementModuleBar {
+	competence = competence;
+	accueil = accueil;
+	consulter = consulter;
+	enregistrer = enregistrer;
+	enabled = enabled;
+	updateContainerID = myApp.messageContainerID;
+}
+
+refresh : WOJavaScript {
+  scriptString = globalRefresh;
+}

@@ -1,0 +1,432 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+/**
+ * 
+ */
+package org.utt.rfcct.serveur.components.controlers;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EODomaine;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOMatiere;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EORepartDomMatiere;
+import org.utt.fwkuttcompetences.serveur.utils.factory.FactoryMatiere;
+import org.utt.rfcct.serveur.components.assistants.modules.ModuleAdminMatiere;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.eoaccess.EOUtilities;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSMutableArray;
+
+import er.extensions.eof.ERXEC;
+import er.extensions.foundation.ERXArrayUtilities;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 16 mai 2013
+ */
+@SuppressWarnings("all")
+public class ModuleAdminMatiereCtrl extends ModuleCtrl<ModuleAdminMatiere> {
+
+	EOEditingContext ec;
+	// Les domaines
+	private NSArray<EODomaine> lesDomaines;
+	private EODomaine itemDomaine;
+	private NSMutableArray<EODomaine> checkDomaines;
+	private NSMutableArray<EODomaine> removedDomaines;
+	// Matiere
+	private NSArray lesMatieres;
+	private EOMatiere uneMatiere;
+	private EOMatiere selectedMatiere;
+	// Matiere Pere
+	private EOMatiere uneMatierePere;
+	private EOMatiere selectedMatierePere;
+
+	// Activiter modification
+	private boolean activUpdateMatiere = false;
+	private boolean lockFieldMatiere = false;
+	private Integer persId = null;
+
+	/**
+	 * @param component
+	 */
+	public ModuleAdminMatiereCtrl(ModuleAdminMatiere component) {
+		super(component);
+		// TODO Auto-generated constructor stub
+		ec = ERXEC.newEditingContext();
+	}
+
+	/**
+	 * @return the lesDomaines
+	 */
+	public NSArray<EODomaine> lesDomaines() {
+		if (lesDomaines == null) {
+			lesDomaines = EODomaine.fetchDomaines(ec, wocomponent().mySession().TODAY);
+			if (!wocomponent().droitTout())
+				lesDomaines = filtreDomaine(lesDomaines).immutableClone();
+		}
+		return lesDomaines;
+	}
+
+	/**
+	 * @param lesDomaines
+	 *            the lesDomaines to set
+	 */
+	public void setLesDomaines(NSArray<EODomaine> lesDomaines) {
+		this.lesDomaines = lesDomaines;
+	}
+
+	/**
+	 * @return the itemDomaine
+	 */
+	public EODomaine itemDomaine() {
+		return itemDomaine;
+	}
+
+	/**
+	 * @param itemDomaine
+	 *            the itemDomaine to set
+	 */
+	public void setItemDomaine(EODomaine itemDomaine) {
+		this.itemDomaine = itemDomaine;
+	}
+
+	/**
+	 * @return the checkDomaines
+	 */
+	public NSMutableArray<EODomaine> checkDomaines() {
+		if (checkDomaines == null)
+			checkDomaines = new NSMutableArray<EODomaine>();
+		return checkDomaines;
+	}
+
+	/**
+	 * @param checkDomaines
+	 *            the checkDomaines to set
+	 */
+	public void setCheckDomaines(NSMutableArray<EODomaine> checkDomaines) {
+		this.checkDomaines = checkDomaines;
+	}
+
+	/**
+	 * @return the removedDomaines
+	 */
+	public NSMutableArray<EODomaine> removedDomaines() {
+		if (removedDomaines == null)
+			removedDomaines = new NSMutableArray<EODomaine>();
+		return removedDomaines;
+	}
+
+	/**
+	 * @param removedDomaines
+	 *            the removedDomaines to set
+	 */
+	public void setRemovedDomaines(NSMutableArray<EODomaine> removedDomaines) {
+		this.removedDomaines = removedDomaines;
+	}
+
+	// Activ/Desactiv le checkBox
+	public void setDomaineSelected(boolean selected) {
+		if (selected) {
+			checkDomaines().addObject(itemDomaine());
+			removedDomaines().removeObject(itemDomaine());
+		} else {
+			checkDomaines().removeObject(itemDomaine());
+			removedDomaines().addObject(itemDomaine());
+		}
+	}
+
+	public boolean isDomaineSelected() {
+		return checkDomaines().containsObject(itemDomaine());
+	}
+
+	/**
+	 * @return the lesMatieres
+	 */
+	public NSArray lesMatieres() {
+		if (lesMatieres == null) {
+			NSMutableArray<EOMatiere> tmp = new NSMutableArray<EOMatiere>();
+			NSMutableArray<EOMatiere> tmp2 = new NSMutableArray<EOMatiere>();
+			NSArray<EODomaine> domaines = null;
+			NSArray<EORepartDomMatiere> rdms = null;
+			domaines = EODomaine.fetchDomaines(ec, wocomponent().mySession().TODAY);
+			if (!wocomponent().droitTout())
+				domaines = filtreDomaine(domaines).immutableClone();
+			domaines = ERXArrayUtilities.arrayWithoutDuplicateKeyValue(
+					domaines, EODomaine.REPART_DOM_MATIERES_KEY);
+			rdms = (NSArray<EORepartDomMatiere>) domaines
+					.valueForKey(EODomaine.REPART_DOM_MATIERES_KEY);
+			rdms = ERXArrayUtilities.arrayWithoutDuplicateKeyValue(rdms,
+					EORepartDomMatiere.MATIERE_KEY);
+			if (rdms != null && rdms.count() > 0 && verif(rdms)) {
+				NSArray tt = (NSArray<EOMatiere>) rdms
+						.valueForKey(EORepartDomMatiere.MATIERE_KEY);
+				for (int t = 0; t < tt.count(); t++) {
+					Object obj = (NSMutableArray) tt.objectAtIndex(t);
+					// Correction bug plusieurs objets dans un objet
+					if (((NSMutableArray) obj).count() > 1) {
+						for (Object ob : (NSMutableArray) obj) {
+							EOMatiere m = (EOMatiere) ob;
+							if (m != null)
+								tmp2.addObject(m);
+						}
+					} else {
+						EOMatiere m = (EOMatiere) ((NSMutableArray) obj)
+								.lastObject();
+						if (m != null)
+							tmp2.addObject(m);
+					}
+				}
+				NSArray tmp3 = tmp2.immutableClone();
+				tmp.addObjectsFromArray(tmp3);
+			} else {
+				tmp.addObjectsFromArray(EOMatiere.fetchLesMatieres(ec, wocomponent().mySession().TODAY));
+			}
+			EOMatiere uneMatiere = selectedMatiere();
+			if (uneMatiere != null && !tmp.contains(uneMatiere)) {
+				tmp.addObject(uneMatiere);
+			}
+			if (tmp != null && tmp.count() > 0) {
+				ERXArrayUtilities
+						.sortArrayWithKey(tmp, EOMatiere.LBL_COURT_KEY);
+				lesMatieres = ERXArrayUtilities.arrayWithoutDuplicates(tmp);
+			}
+		}
+		return lesMatieres;
+	}
+
+	/**
+	 * @param lesMatieres
+	 *            the lesMatieres to set
+	 */
+	public void setLesMatieres(NSArray lesMatieres) {
+		this.lesMatieres = lesMatieres;
+	}
+
+	/**
+	 * @return the uneMatiere
+	 */
+	public EOMatiere uneMatiere() {
+		return uneMatiere;
+	}
+
+	/**
+	 * @param uneMatiere
+	 *            the uneMatiere to set
+	 */
+	public void setUneMatiere(EOMatiere uneMatiere) {
+		this.uneMatiere = uneMatiere;
+	}
+
+	/**
+	 * @return the selectedMatiere
+	 */
+	public EOMatiere selectedMatiere() {
+		return selectedMatiere;
+	}
+
+	/**
+	 * @param selectedMatiere
+	 *            the selectedMatiere to set
+	 */
+	public void setSelectedMatiere(EOMatiere selectedMatiere) {
+		this.selectedMatiere = selectedMatiere;
+	}
+
+	/**
+	 * @return the uneMatierePere
+	 */
+	public EOMatiere uneMatierePere() {
+		return uneMatierePere;
+	}
+
+	/**
+	 * @param uneMatierePere
+	 *            the uneMatierePere to set
+	 */
+	public void setUneMatierePere(EOMatiere uneMatierePere) {
+		this.uneMatierePere = uneMatierePere;
+	}
+
+	/**
+	 * @return the selectedMatierePere
+	 */
+	public EOMatiere selectedMatierePere() {
+		return selectedMatierePere;
+	}
+
+	/**
+	 * @param selectedMatierePere
+	 *            the selectedMatierePere to set
+	 */
+	public void setSelectedMatierePere(EOMatiere selectedMatierePere) {
+		this.selectedMatierePere = selectedMatierePere;
+	}
+
+	/**
+	 * @return the activUpdateMatiere
+	 */
+	public boolean isActivUpdateMatiere() {
+		return activUpdateMatiere;
+	}
+
+	/**
+	 * @param activUpdateMatiere
+	 *            the activUpdateMatiere to set
+	 */
+	public void setActivUpdateMatiere(boolean activUpdateMatiere) {
+		this.activUpdateMatiere = activUpdateMatiere;
+	}
+
+	/**
+	 * @return the lockFieldMatiere
+	 */
+	public boolean isLockFieldMatiere() {
+		return lockFieldMatiere;
+	}
+
+	/**
+	 * @param lockFieldMatiere
+	 *            the lockFieldMatiere to set
+	 */
+	public void setLockFieldMatiere(boolean lockFieldMatiere) {
+		this.lockFieldMatiere = lockFieldMatiere;
+	}
+
+	// Edit Matiere
+	public WOActionResults editMatiere() {
+		if (selectedMatiere() != null) {
+			checkDomaines = null;
+			removedDomaines = null;
+			wocomponent().setMatiere(selectedMatiere());
+			EOMatiere matiere = wocomponent().matiere();
+			setSelectedMatierePere(matiere.matierePere());
+			if (matiere.repartDomMatieres().count() > 0) {
+				for (EORepartDomMatiere rdm : matiere.repartDomMatieres()) {
+					checkDomaines().addObject(rdm.domaine());
+				}
+			}
+			setActivUpdateMatiere(true);
+			setLockFieldMatiere(true);
+		} else {
+			FactoryMatiere fm = new FactoryMatiere(wocomponent().edc());
+			EOMatiere matiere = fm.creerMatiereVierge(persId());
+			wocomponent().resetUneMatiereField();
+			wocomponent().setMatiere(matiere);
+			setActivUpdateMatiere(false);
+			setLockFieldMatiere(false);
+			checkDomaines = null;
+			removedDomaines = null;
+		}
+		return null;
+	}
+
+	// Editer domaine champs actif
+	public WOActionResults editMatiereFiled() {
+		setLockFieldMatiere(false);
+		EOMatiere matiere = wocomponent().matiere();
+		// setSelectedDomaineMatiere(matiere
+		// .repartDomMatieres(EORepartDomMatiere.MATIERE.eq(matiere))
+		// .lastObject().domaine());
+		return null;
+	}
+
+	// Annuler domaine champs actif
+	public WOActionResults annulerMatiereFiled() {
+		lockFieldMatiere = true;
+		EOMatiere matiere = wocomponent().matiere();
+		// setSelectedDomaineMatiere(matiere
+		// .repartDomMatieres(EORepartDomMatiere.MATIERE.eq(matiere))
+		// .lastObject().domaine());
+		return null;
+	}
+
+	protected boolean verif(NSArray rdms) {
+		boolean retour = false;
+		NSArray tt = (NSArray<EOMatiere>) rdms
+				.valueForKey(EORepartDomMatiere.MATIERE_KEY);
+		for (int t = 0; t < tt.count(); t++) {
+			EOMatiere m = (EOMatiere) ((NSMutableArray) tt.objectAtIndex(t))
+					.lastObject();
+			retour = m != null;
+			break;
+		}
+		return retour;
+	}
+
+	/**
+	 * @return the persId
+	 */
+	public Integer persId() {
+		if (persId == null) {
+			if (wocomponent().myApp().newGestionDroitsEnabled()) {
+				persId = wocomponent().myGdUser().getPersId();
+			} else {
+				persId = wocomponent().myJefyUser().getPersId();
+			}
+		}
+		return persId;
+	}
+
+	/**
+	 * @param persId
+	 *            the persId to set
+	 */
+	public void setPersId(Integer persId) {
+		this.persId = persId;
+	}
+
+	protected NSMutableArray<EODomaine> filtreDomaine(
+			NSArray<EODomaine> Domaines) {
+		NSMutableArray<EODomaine> domaines = new NSMutableArray<EODomaine>();
+		for (EODomaine domaine : Domaines) {
+			if (wocomponent().accesDomaineEnseignement()
+					&& domaine.isEnseignant()) {
+				if (!domaines.contains(domaine))
+					domaines.addObject(domaine);
+			}
+
+			if (wocomponent().accesDomaineRecherche() && domaine.isChercheur()) {
+				if (!domaines.contains(domaine))
+					domaines.addObject(domaine);
+			}
+
+			if (wocomponent().accesDomaineEntreprise() && domaine.isPartenaire()) {
+				if (!domaines.contains(domaine))
+					domaines.addObject(domaine);
+			}
+
+			if (wocomponent().accesDomaineUv() && domaine.isEnseignement()) {
+				if (!domaines.contains(domaine))
+					domaines.addObject(domaine);
+			}
+		}
+		return domaines;
+	}
+
+}

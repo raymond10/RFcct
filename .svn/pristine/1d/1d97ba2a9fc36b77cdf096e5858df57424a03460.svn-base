@@ -1,0 +1,314 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+package org.utt.rfcct.serveur.components.assistants.modules;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EODomaine;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOMatiere;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EORepartDomMatiere;
+import org.utt.fwkuttcompetences.serveur.utils.factory.FactoryDomaineMatiere;
+import org.utt.rfcct.serveur.components.Accueil;
+import org.utt.rfcct.serveur.components.assistants.Assistant;
+import org.utt.rfcct.serveur.components.controlers.ModuleAdminMatiereCtrl;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.eoaccess.EOUtilities;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSTimestamp;
+import com.webobjects.foundation.NSValidation.ValidationException;
+
+import er.ajax.AjaxUpdateContainer;
+import er.extensions.appserver.ERXRedirect;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 16 mai 2013
+ */
+@SuppressWarnings("all")
+public class ModuleAdminMatiere extends ModuleAssistant {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5681939129194874358L;
+	private ModuleAdminMatiereCtrl ctrl = null;
+	private boolean isResetDialogcreateMatiere;
+	private NSMutableArray matiereDomaines;
+	private Boolean creationMatiereEnabled = null;
+
+	public ModuleAdminMatiere(WOContext context) {
+		super(context);
+	}
+
+	/**
+	 * @return the ctrl
+	 */
+	public ModuleAdminMatiereCtrl ctrl() {
+		if (ctrl == null)
+			ctrl = new ModuleAdminMatiereCtrl(this);
+		return ctrl;
+	}
+
+	/**
+	 * @param ctrl
+	 *            the ctrl to set
+	 */
+	public void setCtrl(ModuleAdminMatiereCtrl ctrl) {
+		this.ctrl = ctrl;
+	}
+
+	public boolean validerMatiere() {
+		boolean validate = false;
+		NSArray<String> failureMessages = new NSArray<String>();
+		Assistant assistant = (Assistant) parent();
+		EOMatiere matiere = matiere();
+		if (matiere != null && assistant != null) {
+			if (ctrl().lesDomaines().isEmpty()) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("Le(s) domaine(s) de définition");
+			}
+
+			if (ctrl().selectedMatierePere() != null)
+				matiere.setMatierePere(ctrl().selectedMatierePere()
+						.localInstanceIn(matiere.editingContext()));
+
+			if (matiere.lblLong() == null || matiere.lblLong().equals("")) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("Le Libellé long");
+			}
+
+			if (matiere.lblCourt() == null || matiere.lblCourt().equals("")) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("Le Libellé court");
+			}
+
+			if (failureMessages.count() == 0) {
+				validate = true;
+				assistant.setFailureMessage(null);
+			} else {
+				assistant.setFailureMessage("Veuillez renseigner "
+						+ failureMessages.componentsJoinedByString(", ") + ".");
+			}
+
+		} else {
+			assistant
+					.setFailureMessage("Veuillez renseigner les champs obligatoires du domaine (en rouge).");
+		}
+		if (validate) {
+			mySession().getUiMessages().removeAllObjects();
+			setMatiere(matiere);
+		}
+		return validate;
+	}
+
+	public WOActionResults uneMatiereEnregistrer() {
+		currentDomaineMatieres();
+		EOMatiere matiere = matiere();
+		EOEditingContext ec = matiere.editingContext();
+		boolean modification = false;
+		int tmp = 0;
+		try {
+			if (validerMatiere()) {
+				// En modification?
+				if (EOUtilities.primaryKeyForObject(ec, matiere) != null) {
+					modification = true;
+					matiere.setDateModif(new NSTimestamp());
+					matiere.setPersIdModif(utilisateurPersId());
+				}
+
+				if (ctrl().selectedMatierePere() != null)
+					matiere.setMatierePere(ctrl().selectedMatierePere());
+				if (ec.hasChanges()) {
+					ec.saveChanges();
+					try {
+						if (modification) {
+							if(matiereDomaines().count() > ctrl().checkDomaines().count()) {
+								for(EODomaine domaine : ctrl().removedDomaines()) {
+									//On retire les domaines deselectionnes
+									matiereDomaines().removeObject(domaine);
+								}
+								tmp = matiereDomaines().count();
+							}
+							for (EODomaine domaine : ctrl().checkDomaines()) {
+								if(matiereDomaines().contains(domaine)) {
+									FactoryDomaineMatiere fdm = new FactoryDomaineMatiere(
+											ec, true);
+									fdm.enregistrementDomaineMatiere(domaine,
+											matiere);
+									matiereDomaines().removeObject(domaine);
+								} else {
+									if(tmp != 0 && matiereDomaines().count() == 1) {
+										domaine = matiereDomaines().lastObject();
+									}
+									FactoryDomaineMatiere fdm = new FactoryDomaineMatiere(
+											ec, true);
+									fdm.supressionDomaineMatiere(domaine,
+											matiere);
+								}
+								if(ctrl().removedDomaines() != null && ctrl().removedDomaines().count() != 0) {
+									for(EODomaine domaineToRemove : ctrl().removedDomaines()) {
+										FactoryDomaineMatiere fdm = new FactoryDomaineMatiere(ec, true);
+										fdm.suprimerLeDomaineMatiere(domaineToRemove,
+											matiere);
+									}
+									ctrl().removedDomaines().removeAllObjects();
+								}
+							}
+
+						} else {
+
+							for (EODomaine domaine : ctrl().checkDomaines()) {
+								FactoryDomaineMatiere fdm = new FactoryDomaineMatiere(
+										ec, true);
+								fdm.enregistrementDomaineMatiere(domaine,
+										matiere);
+							}
+						}
+					} catch (Exception e) {
+						myLogger().error(e.getMessage(), e);
+						mySession().addSimpleErrorMessage(
+								e.getLocalizedMessage(), e);
+						context().response().setStatus(500);
+						AjaxUpdateContainer.updateContainerWithID(myApp()
+								.messageContainerID(), context());
+						return null;
+					}
+					resetUneMatiereField();
+					ctrl().editMatiere();
+					mySession().addSimpleInfoMessage("Confirmation",
+							"Matière enregistrée dans le référentiel");
+				}
+				context().response().setStatus(500);
+				AjaxUpdateContainer.updateContainerWithID(myApp()
+						.messageContainerID(), context());
+			} else {
+				context().response().setStatus(500);
+				AjaxUpdateContainer.updateContainerWithID(myApp()
+						.messageContainerID(), context());
+				return null;
+			}
+		} catch (Exception e) {
+			ec.deletedObjects();
+			e.printStackTrace();
+			mySession().addSimpleErrorMessage("ALERTE", e.toString());
+			context().response().setStatus(500);
+			AjaxUpdateContainer.updateContainerWithID(myApp()
+					.messageContainerID(), context());
+			return null;
+		}
+		return null;
+	}
+
+	public void resetUneMatiereField() {
+		ctrl().setSelectedMatiere(null);
+		ctrl().setSelectedMatierePere(null);
+		ctrl().setCheckDomaines(null);
+		ctrl().setRemovedDomaines(null);
+		ctrl().setLesDomaines(null);
+		ctrl().setLesMatieres(null);
+	}
+
+	public NSTimestamp matiereDateFin() {
+		return matiere().dateFin();
+	}
+
+	public void setMatiereDateFin(NSTimestamp date) {
+		try {
+			matiere().setDateFin(date);
+		} catch (ValidationException e) {
+			mySession().addSimpleErrorMessage("RFCCT", e.getMessage());
+		}
+	}
+
+	// Id de la fenêtre creer matiere
+	public String dialogcreateMatiereId() {
+		return "DialogcreateMatiere_" + uniqueDomId();
+	}
+
+	/**
+	 * @return the isResetDialogcreateMatiere
+	 */
+	public boolean isResetDialogcreateMatiere() {
+		return isResetDialogcreateMatiere;
+	}
+
+	/**
+	 * @param isResetDialogcreateMatiere
+	 *            the isResetDialogcreateMatiere to set
+	 */
+	public void setResetDialogcreateMatiere(boolean isResetDialogcreateMatiere) {
+		this.isResetDialogcreateMatiere = isResetDialogcreateMatiere;
+	}
+
+	// Affichage de la fenêtre creation matiere
+	public WOActionResults openCreateMatiereWdows() {
+		setResetDialogcreateMatiere(true);
+		return null;
+	}
+
+	public WOActionResults refreshMatieres() {
+		return null;
+	}
+
+	/**
+	 * @return the matiereDomaines
+	 */
+	public NSMutableArray<EODomaine> matiereDomaines() {
+		if (matiereDomaines == null)
+			matiereDomaines = new NSMutableArray();
+		return matiereDomaines;
+	}
+
+	/**
+	 * @param matiereDomaines
+	 *            the matiereDomaines to set
+	 */
+	public void setMatiereDomaines(NSMutableArray<EODomaine> matiereDomaines) {
+		this.matiereDomaines = matiereDomaines;
+	}
+
+	public NSMutableArray<EODomaine> currentDomaineMatieres() {
+		EOMatiere matiere = matiere();
+		if (matiere.repartDomMatieres().count() > 0) {
+			for (EORepartDomMatiere rdm : matiere.repartDomMatieres()) {
+				if(!matiereDomaines().containsObject(rdm.domaine()))
+					matiereDomaines().addObject(rdm.domaine());
+			}
+		}
+		return matiereDomaines();
+	}
+	
+	public boolean isCreationMatiereEnabled() {
+		if(creationMatiereEnabled == null) {
+			creationMatiereEnabled = creerUneMatier() || droitTout();
+		}
+		return creationMatiereEnabled;
+	}
+}

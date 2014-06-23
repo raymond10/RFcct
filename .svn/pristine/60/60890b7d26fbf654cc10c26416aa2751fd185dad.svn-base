@@ -1,0 +1,424 @@
+/**
+ * 
+ */
+package org.utt.rfcct.serveur.components.controlers;
+
+import java.util.Enumeration;
+
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOVDataRealCompTree;
+import org.utt.rfcct.serveur.components.commons.EODataForGroupeSpec;
+import org.utt.rfcct.serveur.components.tree.CompetencesAjaxGroupeTreeView;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.eocontrol.EOAndQualifier;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOKeyValueQualifier;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSKeyValueCoding;
+import com.webobjects.foundation.NSMutableArray;
+
+import er.ajax.AjaxTreeModel;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 19 août 2013
+ */
+@SuppressWarnings("all")
+public class CompetencesAjaxGroupeTreeViewCtrl {
+
+	private CompetencesAjaxGroupeTreeView wocomponent;
+
+	private Object _delegate;
+	private GroupeNode rootGroupe;
+	private GroupeNode unGroupe;
+	private AjaxTreeModel myTreeModel = new AjaxTreeModel();
+	
+	private boolean flag = true;
+
+	/**
+	 * 
+	 */
+	public CompetencesAjaxGroupeTreeViewCtrl(
+			CompetencesAjaxGroupeTreeView component) {
+		// TODO Auto-generated constructor stub
+		wocomponent = component;
+	}
+
+	private EOEditingContext edc() {
+		return getWocomponent().edc();
+	}
+	
+	public WOActionResults afficherGroupeSelectionne() {
+		GroupeNode node = unGroupe();
+		if (node != null && node != rootGroupe()) {
+			EOVDataRealCompTree groupe = (EOVDataRealCompTree) node.object();
+			((CompetencesAjaxGroupeTreeView) getWocomponent()).setSelection(groupe);
+		}
+		return null;
+	}
+
+	/**
+	 * @return the rootGroupe
+	 */
+	public GroupeNode rootGroupe() {
+		if (rootGroupe == null ||
+				(getWocomponent().treeRootObject() != null && rootGroupe.object() instanceof EmptyRootObject) ||
+				(getWocomponent().treeRootObject() == null && !(rootGroupe.object() instanceof EmptyRootObject))) {
+			if (getWocomponent().treeRootObject() != null) {
+				rootGroupe = new GroupeNode(null, getWocomponent().treeRootObject());
+			}
+			else {
+				rootGroupe = new GroupeNode(null, new EmptyRootObject());
+			}
+		}
+		return rootGroupe;
+	}
+
+	/**
+	 * @param rootGroupe the rootGroupe to set
+	 */
+	public void setRootGroupe(GroupeNode rootGroupe) {
+		this.rootGroupe = rootGroupe;
+	}
+
+	/**
+	 * @return the unGroupe
+	 */
+	public GroupeNode unGroupe() {
+		return unGroupe;
+	}
+
+	/**
+	 * @param unGroupe the unGroupe to set
+	 */
+	public void setUnGroupe(GroupeNode unGroupe) {
+		this.unGroupe = unGroupe;
+	}
+	
+	public String unGroupeLibelle() {
+		NSKeyValueCoding obj = unGroupe().object();
+		return (String) obj.valueForKey(EOVDataRealCompTree.COMPX_LIBELLE_KEY);
+	}
+
+	/**
+	 * @return the myTreeModel
+	 */
+	public AjaxTreeModel getMyTreeModel() {
+		return myTreeModel;
+	}
+
+	/**
+	 * @param myTreeModel the myTreeModel to set
+	 */
+	public void setMyTreeModel(AjaxTreeModel myTreeModel) {
+		this.myTreeModel = myTreeModel;
+	}
+
+	public CompetencesAjaxGroupeTreeView getWocomponent() {
+		return wocomponent;
+	}
+
+	public void setWocomponent(CompetencesAjaxGroupeTreeView wocomponent) {
+		this.wocomponent = wocomponent;
+	}
+	
+	public GroupeNode selectObjectInTree(GroupeNode node, EOVDataRealCompTree groupe) {
+		GroupeNode newSelectedNode = null;
+		if (node.object().equals(groupe)) {
+			newSelectedNode = node;
+		}
+		else {
+			Enumeration en = node.children().objectEnumerator();
+			while (newSelectedNode == null && en.hasMoreElements()) {
+				GroupeNode tmpNode = (GroupeNode) en.nextElement();
+				newSelectedNode = selectObjectInTree(tmpNode, groupe);
+			}
+		}
+		if (newSelectedNode != null) {
+			myTreeModel.setExpanded(node, true);
+		}
+		return newSelectedNode;
+	}
+	
+	/**
+	 * Ouvre tous les noeuds jusqu'au niveau donné compris.<br/>
+	 * Exemple : <br/>
+	 *     <pre>
+	 *         expandAllNodesToLevel(1); 
+	 *     </pre>
+	 *     Va Ouvrir la racine (level = 0), puis les fils de la racine (level = 1)
+	 * @param maxLevel le niveau jusqu'où on ouvre les noeuds
+	 */
+	public void expandAllNodesToLevel(int maxLevel) {
+	    _expandAllNodesToLevel(rootGroupe(), 0, maxLevel);
+	}
+	
+	private void _expandAllNodesToLevel(GroupeNode node, int currentLevel, int maxLevel) {
+	    getMyTreeModel().setExpanded(node, true);
+	    if (currentLevel < maxLevel) {
+	        for (Object child : node.children()) {
+	            currentLevel = currentLevel + 1;
+	            _expandAllNodesToLevel((GroupeNode)child, currentLevel, maxLevel);
+	        }
+	    }
+	}
+	
+	/**
+	 * 
+	 * Cette méthode filtre les nodes affichées dans l'arbre selon le qualifier.
+	 * L'algo est le suivant :
+	 * - Premier parcours de l'arbre "depthFirst"
+	 *     - Si une node satisfait le filtre, on l'enregistre dans un tableau ainsi que tous ses parents
+	 *       (pour que son affichage soit garantie)
+	 *     - Sinon on l'ajoute dans un tableau
+	 * - On parcourt le tableau des nodes à supprimer et on réorganise l'arbre en fonction (suppression 
+	 *     de la node du tableau des enfants de son parent (ouf).
+	 *     
+	 *  Cette méthode n'est pas utilisée pour l'instant...  
+	 *     
+	 */
+	private void filterTree() {
+	    if (getWocomponent().getQualifier() != null) {
+	        Enumeration<GroupeNode> enumeration = myTreeModel.depthFirstEnumeration(rootGroupe, false);
+	        NSMutableArray<GroupeNode> nodesToPrune = new NSMutableArray<CompetencesAjaxGroupeTreeViewCtrl.GroupeNode>();
+	        NSMutableArray<GroupeNode> nodesToKeep = new NSMutableArray<CompetencesAjaxGroupeTreeViewCtrl.GroupeNode>();
+	        // On parcours les nodes affichées et on marque au fur et à mesure celles à garder selon le filtre
+	        // Et celles à enlever
+	        while (enumeration.hasMoreElements()) {
+	            GroupeNode node = enumeration.nextElement();
+	            if (!(node.object instanceof EmptyRootObject) &&
+	                    !getWocomponent().getQualifier().evaluateWithObject(node.object)) {
+	                nodesToPrune.addObject(node);
+	            } else {
+	                // On rajoute la node dans les nodes à garder et on enlève ses parents
+	                // des nodes à enlever
+	                removeFromNodeToPruneAndAddToNodeToKeep(node, nodesToPrune, nodesToKeep);
+	            }
+	        }
+	        // On parcours les nodes à enlever, et on réorganise l'arbre
+	        for (GroupeNode node : nodesToPrune) {
+	            if (!nodesToKeep.contains(node) && node.parent() != null && !(node.object instanceof EmptyRootObject)) {
+	                NSMutableArray<GroupeNode> childrenMut = node.parent().children().mutableClone();
+	                childrenMut.removeObject(node);
+	                node.parent().children = childrenMut.immutableClone();
+	            }
+	        }
+	    } else {
+	        setRootGroupe(null);
+	    }
+	}
+	   
+    private void removeFromNodeToPruneAndAddToNodeToKeep(GroupeNode node, 
+            NSMutableArray<GroupeNode> nodesToPrune, 
+            NSMutableArray<GroupeNode> nodesToKeep) {
+        nodesToPrune.removeObjectsInArray(node.parents());
+        nodesToPrune.removeObject(node);
+        nodesToKeep.addObject(node);
+        nodesToKeep.addObjectsFromArray(node.parents());
+    }
+	
+	public Object delegate() {
+		if (_delegate == null) {
+			_delegate = new CompetencesAjaxGroupeTreeViewCtrl.Delegate();
+		}
+		return _delegate;
+
+	}
+
+	public class Delegate implements AjaxTreeModel.Delegate {
+
+		public NSArray childrenTreeNodes(Object node) {
+			if (node != null) {
+				return ((GroupeNode) node).children();
+			}
+			return NSArray.EmptyArray;
+		}
+
+		public boolean isLeaf(Object node) {
+			if (node != null) {
+				return ((GroupeNode) node).isLeaf();
+			}
+			return true;
+		}
+
+		public Object parentTreeNode(Object node) {
+			if (node != null) {
+				return ((GroupeNode) node).parent();
+			}
+			return null;
+		}
+	}
+
+	public class GroupeNode {
+
+		NSArray children;
+		GroupeNode parent;
+		NSKeyValueCoding object;
+
+		public GroupeNode(GroupeNode parent, NSKeyValueCoding obj) {
+			this.parent = parent;
+			object = obj;
+		}
+
+		public NSArray children() {
+			if (children == null) {
+				NSArray res = NSArray.EmptyArray;
+				if (object() instanceof EmptyRootObject) {
+					res = EODataForGroupeSpec.getGroupesRacine(edc());
+				} else {
+					NSMutableArray array = new NSMutableArray();
+					array.addObject(EODataForGroupeSpec.QUAL_NOT_PERE);
+					array.addObject(new EOKeyValueQualifier(
+							EOVDataRealCompTree.COMPX_ID_PERE_KEY,
+							EOKeyValueQualifier.QualifierOperatorEqual,
+							object().valueForKey(EOVDataRealCompTree.COMPX_ID_KEY)));
+					if (getWocomponent().getQualifier() != null)
+						array.addObject(getWocomponent().getQualifier());
+					res = EODataForGroupeSpec.rechercherGroupes(edc(), new EOAndQualifier(array), 0);
+					//Récupérer les enfants du filtre qui n'ont pas de id_pere null
+					if(getWocomponent().getQualifier() != null && res.count() == 0) {
+						res = childOfChildren(object());
+					}
+				}
+				NSMutableArray res2 = new NSMutableArray();
+				for (int i = 0; i < res.count(); i++) {
+					//verifier si objet dans liste exclusions
+					if (getWocomponent().getTreeExclusions() == null || getWocomponent().getTreeExclusions().indexOf(res.objectAtIndex(i)) == NSArray.NotFound) {
+						EOVDataRealCompTree dataTree = (EOVDataRealCompTree) res.objectAtIndex(i);
+						GroupeNode node = new GroupeNode(this, dataTree);
+						res2.addObject(node);
+					}
+				}
+				children = res2.immutableClone();
+			}
+			return children;
+		}
+		
+		protected NSArray childOfChildren(Object obj) {
+			NSMutableArray result = new NSMutableArray();
+			NSArray res = NSArray.EmptyArray;
+			//Récupère l'id père principal
+			String id = (String) object().valueForKey(EOVDataRealCompTree.COMPX_ID_KEY);
+			NSMutableArray array = new NSMutableArray();
+			array.addObject(EODataForGroupeSpec.QUAL_NOT_PERE);
+			array.addObject(new EOKeyValueQualifier(
+					EOVDataRealCompTree.COMPX_ID_PERE_KEY,
+					EOKeyValueQualifier.QualifierOperatorEqual,id));
+			//Récupérer les ids pères secondaires
+			res = EODataForGroupeSpec.rechercherGroupes(edc(), new EOAndQualifier(array), 0);
+			for (int i = 0; i < res.count(); i++) {
+				NSMutableArray array2 = new NSMutableArray();
+				EOVDataRealCompTree dataTree = (EOVDataRealCompTree) res.objectAtIndex(i);
+				array2.addObject(new EOKeyValueQualifier(
+						EOVDataRealCompTree.COMPX_ID_PERE_KEY,
+						EOKeyValueQualifier.QualifierOperatorEqual,dataTree.compxId()));
+				array2.addObject(getWocomponent().getQualifier());
+				NSArray reso = EODataForGroupeSpec.rechercherGroupes(edc(), new EOAndQualifier(array2), 0);
+				if(reso.count() == 1)
+					result.addObject(reso.lastObject());
+			}
+			return result.immutableClone();
+		}
+
+		public void setChildren(NSArray children) {
+			this.children = children;
+		}
+
+		public boolean isLeaf() {
+			return (children().count() == 0);
+		}
+
+		public GroupeNode parent() {
+			return parent;
+		}
+
+		public void setParent(GroupeNode node) {
+			parent = node;
+		}
+
+		public NSKeyValueCoding object() {
+			return object;
+		}
+
+		public NSArray<GroupeNode> parents() {
+			NSMutableArray<GroupeNode> _parents = new NSMutableArray<CompetencesAjaxGroupeTreeViewCtrl.GroupeNode>();
+			_parentsRecurs(this, _parents);
+			return _parents.immutableClone();
+		}
+
+		private void _parentsRecurs(GroupeNode node,
+				NSMutableArray<GroupeNode> parents) {
+			if (node.parent() != null) {
+				parents.addObject(node.parent());
+				_parentsRecurs(node.parent, parents);
+			}
+		}
+
+		@Override
+		public String toString() {
+			return object != null ? object.toString() : super.toString();
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result
+					+ ((object == null) ? 0 : object.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			GroupeNode other = (GroupeNode) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (object == null) {
+				if (other.object != null)
+					return false;
+			} else if (!object.equals(other.object))
+				return false;
+			return true;
+		}
+
+		public CompetencesAjaxGroupeTreeViewCtrl getOuterType() {
+			return CompetencesAjaxGroupeTreeViewCtrl.this;
+		}
+	}
+
+	public class EmptyRootObject implements NSKeyValueCoding {
+
+		public EmptyRootObject() {
+		}
+
+		public void takeValueForKey(Object arg0, String arg1) {
+
+		}
+
+		public Object valueForKey(String arg0) {
+			return "root";
+		}
+
+	}
+
+	public String cssItemTree() {
+		String styleCSS = new String();
+
+		if ((getWocomponent().getGroupeIndex() % 2) == 0) {
+			// styleCSS = "ValiditeFondBlanc";
+			styleCSS = "even";
+		} else {
+			// styleCSS = "InvaliditeFondGris";
+			styleCSS = "odd";
+		}
+		return styleCSS;
+	}
+
+}

@@ -1,0 +1,261 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+package org.utt.rfcct.serveur.components;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOCompetence;
+import org.utt.fwkuttcompetences.serveur.utils.factory.FactoryCompetenceTiers;
+import org.utt.rfcct.serveur.components.assistants.ApresEnregistrement;
+import org.utt.rfcct.serveur.components.assistants.Assistant;
+
+import com.webobjects.appserver.WOComponent;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSForwardException;
+import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSValidation.ValidationException;
+
+import er.extensions.appserver.ERXDisplayGroup;
+import er.extensions.appserver.ERXRedirect;
+import er.extensions.eof.ERXEC;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 29 mai 2013
+ */
+@SuppressWarnings("all")
+public class GestionCompetencesTiers extends BaseComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6614723435742800268L;
+	private EOEditingContext editingContext;
+	private EOCompetence competence;
+	private NSArray<String> modules;
+	private NSArray<String> etapes;
+
+	public GestionCompetencesTiers(WOContext context) {
+		super(context);
+	}
+
+	public WOActionResults submit() {
+		return null;
+	}
+
+	public String idAssistantCompetence() {
+		return "AssistantCompetenceContainer";
+	}
+
+	/**
+	 * @return the competence
+	 */
+	public EOCompetence competence() {
+		// if (competence == null)
+		// competence = mySession().competence();
+		return competence;
+	}
+
+	/**
+	 * @param competence
+	 *            the competence to set
+	 */
+	public void setCompetence(EOCompetence competence) {
+		this.competence = competence;
+	}
+
+	/**
+	 * @return the editingContext
+	 */
+	public EOEditingContext editingContext() {
+		if (editingContext == null) {
+			editingContext = ERXEC.newEditingContext();
+		}
+		return editingContext;
+	}
+
+	/**
+	 * @param editingContext
+	 *            the editingContext to set
+	 */
+	public void setEditingContext(EOEditingContext editingContext) {
+		this.editingContext = editingContext;
+	}
+
+	public String moduleName() {
+		String moduleName = null;
+		if (modules() != null && modules().count() > 0) {
+			moduleName = (String) modules()
+					.objectAtIndex(
+							mySession().indexModuleActifCreationCompetence()
+									.intValue());
+		}
+		return moduleName;
+	}
+
+	/**
+	 * @return the modules
+	 */
+	public NSArray<String> modules() {
+		if (competence() != null) {
+			modules = new NSArray<String>(
+					new String[] { "ModuleCompetenceTiersPrincipale" });
+		}
+		mySession().setModulesCreationCompetence(modules);
+		return modules;
+	}
+
+	/**
+	 * @param modules
+	 *            the modules to set
+	 */
+	public void setModules(NSArray<String> modules) {
+		this.modules = modules;
+		mySession().setModulesCreationCompetence(modules);
+	}
+
+	/**
+	 * @return the etapes
+	 */
+	public NSArray<String> etapes() {
+		if (etapes == null) {
+			etapes = new NSArray<String>(new String[] { "Comp&eacute;tences" });
+		}
+		return etapes;
+	}
+
+	public WOActionResults annuler() {
+		Accueil nextPage = (Accueil) pageWithName(Accueil.class.getName());
+		if (editingContext() != null) {
+			editingContext().revert();
+		}
+		mySession().setIndexModuleActifCreationTier(null);
+		mySession().getUiMessages().removeAllObjects();
+		return nextPage;
+	}
+
+	public WOActionResults apresTerminer() {
+		ApresEnregistrement nextPage = (ApresEnregistrement) pageWithName(ApresEnregistrement.class
+				.getName());
+		nextPage.setCompetence(competence());
+		return nextPage;
+	}
+
+	public boolean validerCompetences() {
+		boolean validate = false;
+		for (EOCompetence competence : myCompetences()) {
+			NSArray<String> failureMessages = new NSArray<String>();
+			if (competence != null) {
+				if (competence.domaine() == null) {
+					failureMessages = failureMessages
+							.arrayByAddingObject("Le domaine de compétence");
+				}
+
+				if (competence.matiere() == null) {
+					failureMessages = failureMessages
+							.arrayByAddingObject("La matière de compétence");
+				}
+
+				if (competence.terrain() == null) {
+					failureMessages = failureMessages
+							.arrayByAddingObject("Le terrain de compétence");
+				}
+
+				if (competence.capacite() == null) {
+					failureMessages = failureMessages
+							.arrayByAddingObject("La capacité de compétence");
+				}
+
+				if (failureMessages.count() == 0) {
+					validate = true;
+					mySession().addSimpleErrorMessage("", "");
+				} else {
+					mySession().addSimpleErrorMessage(
+							competence.domaine().lblCourt(),
+							"Veuillez renseigner "
+									+ failureMessages
+											.componentsJoinedByString(", ")
+									+ ".");
+				}
+
+			} else {
+				mySession()
+						.addSimpleErrorMessage("Erreur",
+								"Veuillez renseigner les champs obligatoires (en rouge).");
+			}
+			if (validate)
+				mySession().getUiMessages().removeAllObjects();
+		}
+		return validate;
+	}
+
+	public WOActionResults terminer() {
+		WOComponent accueil = null;
+		ERXRedirect redirect = (ERXRedirect) pageWithName(ERXRedirect.class
+				.getName());
+		if (validerCompetences()) {
+			for (EOCompetence competence : myCompetences()) {
+				mySession().getUiMessages().removeAllObjects();
+				EOEditingContext ec = competence.editingContext();
+				boolean isCreation = competence.primaryKey() == null;
+				try {
+					if (ec.hasChanges()) {
+						ec.saveChanges();
+						// Enregistrement du tier
+						FactoryCompetenceTiers fct = new FactoryCompetenceTiers(
+								ec, true);
+						fct.enregistrerCompetenceUnTier(competence, mySession()
+								.leTier(), mySession().dataBus());
+					}
+				} catch (Exception e) {
+					mySession()
+							.addSimpleErrorMessage(
+									"Une erreur est survenue lors de l'enregistrement en base",
+									e);
+					context().response().setStatus(500);
+					e.printStackTrace();
+					return accueil;
+				}
+			}
+			accueil = pageWithName(Accueil.class.getName());
+			redirect.setComponent(accueil);
+			mySession().reset();
+			mySession().addSimpleInfoMessage("RFCCT",
+					"Les compétences du tier ont bien été créées");
+			context().response().setStatus(500);
+			return redirect;
+		}
+		context().response().setStatus(500);
+		return accueil;
+	}
+
+	public String messageContainerID() {
+		return uniqueDomId() + "_GestComptence_rfcct_MessageContainer";
+	}
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Detail>
+	<Competence CompId="1">
+		<titre>Compétence pour plusieurs tiers</titre>
+		<domaine>Relations avec les entreprises</domaine>
+		<Tiers>
+			<numero>25913</numero>
+			<libelle>ROPER SCIENTIFIC</libelle>
+		</Tiers>
+		<Tiers>
+			<numero>30440</numero>
+			<libelle>BUROR</libelle>
+		</Tiers>
+		<matiere>Accueil stagiaires</matiere>
+		<smatiere>Accueil stagiaires TN09</smatiere>
+		<terrain>Accueil stagiaires</terrain>
+		<sterrain></sterrain>
+		<capacite>Prospect possible</capacite>
+		<Info>
+			<dateFin>30/10/2016</dateFin>
+			<commentaire></commentaire>
+		</Info>
+	</Competence>
+</Detail>

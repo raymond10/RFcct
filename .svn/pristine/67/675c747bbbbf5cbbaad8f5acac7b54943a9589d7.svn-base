@@ -1,0 +1,83 @@
+<webobject name = "Wrapper">
+  <webobject name = "FormRecherche">
+    <webobject name = "ContainerRecherche">
+      <div id = "RfcctQBERecherche">
+        <webobject name = "HiddenSubmitButton" />
+        <table>
+          <tbody>
+            <tr>
+              <td class = "useMinWidth nowrap">
+                <label for = "Exercice" class = "etiquette">Num&eacute;ro</label>
+              </td>
+              <td>
+                <webobject name = "CodeClassification" />-<webobject name = "NumeroCompetence" />
+              </td>
+            </tr>
+            <tr>
+              <td class = "useMinWidth nowrap">
+                <label for = "domaineDefinition" class = "etiquette">Domaine</label>
+              </td>
+              <td> <webobject name = "Domaines" /> </td>
+            </tr>
+            <tr>
+              <td class = "useMinWidth nowrap ">
+                <label for = "GestionMatiere" class = "etiquette">Mati&egrave;re</label>
+              </td>
+              <td> <webobject name = "GestionMatiere" /> </td>
+            </tr>
+            <tr>
+              <td class = "useMinWidth nowrap">
+                <label for = "GestionTerrain" class = "etiquette">Terrain</label>
+              </td>
+              <td> <webobject name = "GestionTerrain" /> </td>
+            </tr>
+            <tr>
+              <td class = "useMinWidth nowrap ">
+                <label for = "GestionCapacite" class = "etiquette">Capacit&eacute;</label>
+              </td>
+              <td class = "nowrap"> <webobject name = "GestionCapacite" /> </td>
+            </tr>
+            <tr>
+              <td class = "useMinWidth nowrap">
+                <label for = "GestionTiers" class = "etiquette">Tiers</label>
+              </td>
+              <td><webobject name = "GestionTiers" /></td>
+            </tr>
+            <tr>
+              <td class = "useMinWidth nowrap">
+                <label for = "GestionComm" class = "etiquette">Commentaire</label>
+              </td>
+              <td><webobject name = "GestionComm" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <webobject name = "ContainerRechercheMenu">
+        <center>
+          <table width = "100%" style = "padding:5px;">
+            <tbody>
+              <tr height = "100%">
+                <td width = "55%" align = "center"><webobject name = "Nettoyer" /></td>
+                <td width = "50%" align = "center"><webobject name = "Rechercher" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </center>
+      </webobject>
+    </webobject>
+    <webobject name = "ContainerResultats">
+      <webobject name = "TableViewCompetences">
+        <webobject name = "Header">
+          <webobject name = "NumeroCol" />
+          <webobject name = "ObjetCol" />
+          <webobject name = "CentreGestCol" />
+        </webobject>
+        <webobject name = "Body">
+          <td class = "alignToLeft"><webobject name = "NumCell" /></td>
+          <td class = "alignToLeft"><webobject name = "ObjetCell" /></td>
+          <td><webobject name = "CentreGestCell" /></td>
+        </webobject>
+      </webobject>
+    </webobject>
+  </webobject>
+</webobject>

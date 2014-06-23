@@ -1,0 +1,171 @@
+Wrapper : Wrapper {
+	onloadJS = onloadJS;
+}
+
+FormRechercher : WOForm {
+	id = "FormRechercher";
+	action = rechercherUneCompetence;
+	// onsubmit = "$('busyLocal1').show();";
+}
+
+CodeClassification : WOTextField {
+  value = codeClassification;
+  style = "text-align:center;";
+}
+
+NumeroCompetence : WOTextField {
+  value = filtre.filtreCompId;
+  size = "4";
+  numberformat = "#0";
+  style = "text-align:center;";
+}
+
+Rechercher : CktlSubmitButton {
+	action = rechercherUneCompetence;
+	type = "find";
+	title = "Rechercher une convention par son numéro";
+	// disabled = isRechercherDisabled;
+}
+
+ExceptionModalDialog: CktlAjaxWindow {
+	id = "ExceptionModalDialog";
+	title = "Une erreur inattendue est survenue";
+	minWidth = 500;
+	// height = 200;
+	resizable = true;
+	minimizable = false;
+	closable = false;
+	maximizable = false;
+	draggable = true;
+	centerVertically = true;
+	open = isOpenFenetreException;
+	showOpener = false;
+}
+
+HasDroitConsultation : WOConditional {
+	condition = isConsultationEnabled;
+}
+
+HasNoDroitConsultation : WOConditional {
+	condition = isConsultationEnabled;
+	negate = true;
+}
+
+RetourAccueil : CktlButton {
+    action = retourAccueil;
+    text = "Fermer";
+    type = "cancel";
+    target = "_top";
+}
+
+ExceptionInfos : WOText {
+    value = mySession.generalErrorMessage; 
+    style = "width:494px;";
+    rows = "8";
+}
+
+TableViewCompetences : CktlAjaxSimpleTableView {
+    id = "TableViewCompetences";
+    displayGroup = dgCompetences;
+    item = currentCompetence;
+    height = "300px";
+    cssClassForTr = cssClassForCurrentCompetence;
+    showToolbar = true;
+    onSelect = consulterCompetence;
+    triMultiColonneEnabled = true;
+}
+
+NumeroCol : CktlAjaxSimpleTableViewColumn {
+    label = "Numéro";
+    sortKeypath = numeroSortKeyPath;
+    width = "12%";
+}
+
+CommCol : CktlAjaxSimpleTableViewColumn {
+    label = "Commentaire";
+    sortKeypath = commentSortKeyPath;
+    width = "58%";
+}
+
+TiersCol : CktlAjaxSimpleTableViewColumn {
+    label = "Tiers";
+    sortKeypath = tierLibelleSortKeyPath;
+    width = "30%";
+}
+
+Header : CktlAjaxSimpleTableViewHeader {
+    
+}
+
+Body : CktlAjaxSimpleTableViewBody {
+    
+}
+
+NumCell : WOString {
+    value = currentCompetence.numero; // VALID
+    escapeHTML = false;
+}
+
+CommCell : WOString {
+    value = currentCompetence.commentaire; // VALID
+    escapeHTML = false;
+}
+
+TiersCell : WOString {
+    value = currentCompetence.tier.tierLibelle; // VALID
+    escapeHTML = false;   
+}
+
+TableViewCompetencesToolBar : CktlAjaxSimpleTableViewToolbar {
+}
+
+CreerComp : CktlButton {
+    action = creerCompetence;
+    disabled = isCreerUneCompetenceDisabled;
+    text = "Compétence pour des tiers";
+    type = "add";
+    title = "Créer une compétence pour des tiers";
+}
+
+CreerTierComp : CktlButton {
+    action = creerTiersCompetences;
+    disabled = isCreerUneCompetenceDisabled;
+    text = "Compétences d'un tiers";
+    type = "add";
+    title = "Créer les compétences d'un tiers";
+}
+
+Administration : CktlButton {
+    action = accederAdmin;
+    disabled = isAccessBackOfficeDisabled;
+    text = "Administration";
+    type = "etoile";
+    title = "Accéder à l'administration de l'application";
+}
+
+testGroupe : CktlButton {
+	action = treeGroupe;
+	text = "Voir groupe";
+	type = "view_document";
+}
+
+RechercheAvancee : CktlButton {
+    action = afficherRechercheAvancee;
+    disabled = isRechercheAvanceDisabled;
+    text = "Recherche avancée";
+    type = "find";
+    title = "Recherche par filtre";
+}
+
+Imprimer : CktlButton {
+    action = afficherLesEditions;
+    text = "Editions";
+    type = "print";
+}
+
+Outils : CktlButton {
+	action = afficherLesOutils;
+	text = "Outils";
+	type = "process";
+}
+

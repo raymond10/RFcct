@@ -1,0 +1,139 @@
+ContainerTypeTiers : AjaxUpdateContainer {
+	id = "ContainerTypeTiers";
+	class = classeCss;
+	style = styleCss;
+}
+
+FormAdminOne : WOForm {
+  id = "FormAdminOne";
+  name ="FormAdminNameOne";
+  action = submit;
+  multipleSubmit = true;
+  onsubmit = "return false;";
+}
+
+TRTypeTier : AjaxUpdateContainer {
+	id = "TRTypeTier";
+	elementName = "tr";
+}
+
+TypeTiers : WOPopUpButton {
+	id = "typeTiersId";
+	list = ctrl.lesTypesTiers;
+	item = ctrl.unTypeTier;
+	displayString = ctrl.unTypeTier.libelle;
+	selection = ctrl.selectedTypeTier;
+	noSelectionString = " ";
+}
+
+typeTiersObserver : AjaxObserveField {
+	observeFieldID = "typeTiersId";
+	action = ctrl.editTypeTier;
+	fullSubmit = true;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRTypeTierUpdate();}";
+}
+
+typTierCreateEnabled : WOConditional {
+	condition = isCreationTypeTierEnabled;
+}
+
+unTypeTierlbl : WOTextField {
+    id = "unTypeTierlbl";
+	value = typeTier.libelle;
+	maxlength = "80";
+	disabled = ctrl.lockFieldTypeTier;
+	otherTagString = "required";
+	placeholder="Libelle type de tier ici";
+}
+
+unTypeTierlblObserver : AjaxObserveField {
+	observeFieldID = "unTypeTierlbl";
+	action = submit;
+} 
+
+unTypeTierTableCible : WOTextField {
+    id = "unTypeTierTableCible";
+	value = typeTier.tableCible.toUpperCase;
+	maxlength = "20";
+	disabled = ctrl.lockFieldTypeTier;
+	otherTagString = "required";
+	placeholder="Libelle table cible ici";
+}
+
+unTypeTierTableCibleObserver : AjaxObserveField {
+	observeFieldID = "unTypeTierTableCible";
+	action = submit;
+}
+
+unId : WOTextField {
+    id = "unId";
+	value = typeTier.id.toUpperCase;
+	maxlength = "20";
+	disabled = ctrl.lockFieldTypeTier;
+	otherTagString = "required";
+	placeholder="Libelle ID table cible ici";
+}
+
+unIdObserver : AjaxObserveField {
+	observeFieldID = "unId";
+	action = submit;
+}
+
+unTypeTierdateCrea : WOTextField {
+	value = typeTier.dateCrea;
+	disabled = true;
+	dateformat = "%d/%m/%Y";
+}
+
+unTypeTierdateFin : CktlAjaxDatePicker {
+	id = "unTypeTierdateFin";
+	dateValue = typeTierDateFin;
+	updateContainerID = "TRTypeTier";
+	disabled = ctrl.lockFieldTypeTier;
+}
+
+unTypeTierdateFinObserver : AjaxObserveField {
+	observeFieldID = "unTypeTierdateFin";
+	action = submit;
+} 
+
+unTypeTierEnregistrer : CktlAjaxSubmitButton {
+	action = unTypeTierEnregistrer;
+	text = "Enregistrer";
+    type = "validate";
+    title = "Créer et enregistrer un type de tier dans le référentiel";
+    formName = "FormAdminNameOne";
+	onComplete = "function() {TRTypeTierUpdate();}";
+}
+
+afficherTypeTierEdit : WOConditional {
+	condition = ctrl.activUpdateTypeTier;
+}
+
+unTypeTierEditer : CktlAjaxSubmitButton {
+	action = ctrl.editTypeTierFiled;
+	text = "Modifier";
+    type = "edit";
+    title = "Modifier le type de tier sélectionné";
+    formName = "FormAdminNameOne";
+	onComplete = "function() {TRTypeTierUpdate();}";
+}
+
+unTypeTierDelete : CktlAjaxSubmitButton {
+	action = ctrl.deleteTypeTier;
+	text = "Supprimer";
+    type = "delete";
+    title = "Supprimé le type de tier sélectionné";
+    formName = "FormAdminNameOne";
+	onComplete = "function() {TRTypeTierUpdate();}";
+}
+
+unTypeTierAnnuler : CktlAjaxSubmitButton {
+	action = ctrl.annulerTypeTierFiled;
+	text = "Annuler";
+    type = "cancel";
+    title = "Annuler la modification";
+    formName = "FormAdminNameOne";
+	onComplete = "function() {TRTypeTierUpdate();}";
+}

@@ -1,0 +1,36 @@
+Wrapper : WrapperModal {
+}
+
+
+PersonneMultipleContainer : AjaxUpdateContainer {
+	id = personneTierUpdateContainerId;
+}
+
+Form : ERXWOForm {
+    embedded = true;
+}
+
+TierPersSrch : PersonneTierSrch {
+    utilisateurPersId = persId;
+    selectionDisplayGroup = selectedPersonnesDisplayGroup;
+    titre = titre;
+    wantReset = resetAjoutPersonnesDialog;
+    editingContext = editingContext;
+    tiersIndiv = tiersIndiv;
+    tiersStr = tiersStr;
+    qualifierForIndividu = qualifierForIndividu;
+}
+
+Annuler : CktlAjaxButton {
+    action = annulerAjout;
+    text = "Annuler";
+    type = "cancel";
+}
+
+AjouterPersonnes : CktlAjaxButton {
+    action = ajouterPersonnes;
+    text = ajouterPersonnesLabel;
+    type = "validate";
+    title = "Ajouter ces personnes à la liste des tiers";
+    updateContainerID = personneTierUpdateContainerId;
+}

@@ -1,0 +1,21 @@
+CssRfcct : ERXStyleSheet {
+	filename = "css/rfcct.css";
+	framework = "app";
+}
+
+UttCommonCouleur : ERXStyleSheet {
+	framework = "FwkCktlThemes";
+	filename = cssApplication;
+}
+
+Numero : WOString {
+	value = competence.numeroCompetence;
+}
+Consulter : WOHyperlink {
+	action = consulter;
+	target = "_top";
+}
+Accueil : WOHyperlink {
+	action = accueil;
+	target = "_top";
+}

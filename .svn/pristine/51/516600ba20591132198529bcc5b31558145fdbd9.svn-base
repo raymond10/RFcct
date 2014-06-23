@@ -1,0 +1,616 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+package org.utt.rfcct.serveur.components;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOComponent;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WORequest;
+import com.webobjects.appserver.WOResponse;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOKeyValueQualifier;
+import com.webobjects.eocontrol.EOQualifier;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSKeyValueCoding;
+import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSPathUtilities;
+
+import er.ajax.AjaxUtils;
+import er.ajax.CktlERXResponseRewriter;
+import er.extensions.appserver.ERXWOContext;
+import er.extensions.components.ERXClickToOpenSupport;
+import er.extensions.eof.ERXEC;
+import er.extensions.eof.ERXQ;
+
+import org.apache.log4j.Logger;
+import org.cocktail.fwkcktlajaxwebext.serveur.CktlAjaxWOComponent;
+import org.cocktail.fwkcktlajaxwebext.serveur.CktlResourceProvider;
+import org.utt.fwkuttcompetences.serveur.CompetenceApplicationUser;
+import org.utt.fwkuttcompetences.serveur.RFcctApplicationUser;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOCompetence;
+import org.utt.rfcct.serveur.Application;
+import org.utt.rfcct.serveur.RfcctHelpers;
+import org.utt.rfcct.serveur.Session;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 18 mars 2013
+ */
+@SuppressWarnings("all")
+public class BaseComponent extends CktlAjaxWOComponent implements
+		CktlResourceProvider {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2034635383782447746L;
+	public static final boolean isClickToOpenEnabled = Boolean.valueOf(System
+			.getProperty("er.component.clickToOpen", "false"));
+	private String onloadJS;
+	private Application application;;
+	private Session session;
+	private CompetenceApplicationUser applicationUser;
+	private RFcctApplicationUser GdApplicationUser;
+	private String _id;
+	//FontOffice
+	private Boolean consultattion = null;
+	private Boolean droitTout = null;
+	private Boolean peutConsulterCompetence = null;
+	private Boolean accesRfcct = null;
+	private Boolean peutCreerCompetence = null;
+	private Boolean creerUneCompetence = null;
+	private Boolean peutAdminRfcct = null;
+	private Boolean accessBackOffice = null;
+	private Boolean rechercheAvance = null;
+	private Integer persId = null;
+	private Boolean modifier = null;
+	//BackOffice
+	private Boolean accesDomaineEnseignement = null;
+	private Boolean accesDomaineRecherche = null;
+	private Boolean accesDomaineEntreprise = null;
+	private Boolean accesDomaineUv = null;
+	private Boolean knowDomaineEnseignement = null;
+	private Boolean knowDomaineRecherche = null;
+	private Boolean creerUnDomaine = null;
+	private Boolean creerUneMatier = null;
+	private Boolean creerUnTerrain = null;
+	private Boolean creerUneCapacite = null;
+
+	public BaseComponent(WOContext context) {
+		super(context);
+	}
+
+	public void awake() {
+		super.awake();
+	}
+
+	public void takeValuesFromRequest(WORequest worequest, WOContext wocontext) {
+		super.takeValuesFromRequest(worequest, wocontext);
+	}
+
+	public WOActionResults invokeAction(WORequest worequest, WOContext wocontext) {
+		WOActionResults result = super.invokeAction(worequest, wocontext);
+		return result;
+	}
+
+	public void appendToResponse(WOResponse woresponse, WOContext wocontext) {
+		ERXClickToOpenSupport.preProcessResponse(woresponse, wocontext,
+				isClickToOpenEnabled);
+		super.appendToResponse(woresponse, wocontext);
+		ERXClickToOpenSupport.postProcessResponse(getClass(), woresponse,
+				wocontext, isClickToOpenEnabled);
+	}
+
+	public void sleep() {
+		super.sleep();
+	}
+
+	/**
+	 * @return the onloadJS
+	 */
+	public String onloadJS() {
+		return onloadJS;
+	}
+
+	/**
+	 * @param onloadJS
+	 *            the onloadJS to set
+	 */
+	public void setOnloadJS(String onloadJS) {
+		this.onloadJS = onloadJS;
+	}
+
+	@Override
+	public Application myApp() {
+		if (application == null)
+			application = (Application) super.application();
+		return application;
+	}
+	
+	public NSMutableArray<EOCompetence> myCompetences() {
+		return mySession().competences();
+	}
+
+	@Override
+	public Session mySession() {
+		if (session == null)
+			session = (Session) session();
+		return session;
+	}
+
+	public EOEditingContext edc() {
+		return ERXEC.newEditingContext();
+	}
+
+	// Droit depuis JefyAdmin
+	public CompetenceApplicationUser myJefyUser() {
+		if (applicationUser == null)
+			applicationUser = mySession().applicationUser();
+		return applicationUser;
+	}
+
+	// Droit depuis GD_PROFIL
+	public RFcctApplicationUser myGdUser() {
+		if (GdApplicationUser == null)
+			GdApplicationUser = mySession().gdApplicationUser();
+		return GdApplicationUser;
+	}
+
+	protected String uniqueDomId() {
+		if (_id == null)
+			_id = ERXWOContext.safeIdentifierName(context(), true);
+		return _id;
+	}
+
+	public Logger myLogger() {
+		return myApp().logger();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.cocktail.fwkcktlajaxwebext.serveur.CktlResourceProvider#injectResources
+	 * (com.webobjects.appserver.WOResponse, com.webobjects.appserver.WOContext)
+	 */
+	@Override
+	public void injectResources(WOResponse paramWOResponse,
+			WOContext paramWOContext) {
+		// TODO Auto-generated method stub
+		RfcctHelpers.insertStylesSheet(paramWOContext, paramWOResponse);
+	}
+
+	// Initialisation des droits
+	/**
+	 * @return the droitTout
+	 */
+	public Boolean droitTout() {
+		if (droitTout == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				droitTout = myGdUser().getCompetenceAutorisationCache()
+						.gDRfcctSuperUser();
+			} else {
+				droitTout = myJefyUser().hasDroitSuperUser();
+			}
+		}
+		return droitTout;
+	}
+
+	/**
+	 * @param droitTout
+	 *            the droitTout to set
+	 */
+	public void setDroitTout(Boolean droitTout) {
+		this.droitTout = droitTout;
+	}
+
+	/**
+	 * @return the peutConsulterCompetence
+	 */
+	public Boolean peutConsulterCompetence() {
+		if (peutConsulterCompetence == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				peutConsulterCompetence = myGdUser()
+						.getCompetenceAutorisationCache()
+						.gDRfcctConsultationComptence();
+			} else {
+				peutConsulterCompetence = myJefyUser()
+						.hasDroitConsultationCompetence();
+			}
+		}
+		return peutConsulterCompetence;
+	}
+
+	/**
+	 * @param peutConsulterCompetence
+	 *            the peutConsultertCompetence to set
+	 */
+	public void setPeutConsultertCompetence(Boolean peutConsulterCompetence) {
+		this.peutConsulterCompetence = peutConsulterCompetence;
+	}
+
+	public boolean isConsultationEnabled() {
+		if (consultattion == null)
+			consultattion = peutConsulterCompetence() || droitTout();
+		return consultattion;
+	}
+
+	/**
+	 * @return the peutCreerCompetence
+	 */
+	public Boolean peutCreerCompetence() {
+		if (peutCreerCompetence == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				peutCreerCompetence = myGdUser()
+						.getCompetenceAutorisationCache()
+						.gDRfcctCreationComptence();
+			} else {
+				peutCreerCompetence = myJefyUser().hasDroitCreationCompetence();
+			}
+		}
+		return peutCreerCompetence;
+	}
+
+	/**
+	 * @param peutCreerCompetence
+	 *            the peutCreerCompetence to set
+	 */
+	public void setPeutCreerCompetence(Boolean peutCreerCompetence) {
+		this.peutCreerCompetence = peutCreerCompetence;
+	}
+
+	/**
+	 * @return the peutAdminRfcct
+	 */
+	public Boolean peutAdminRfcct() {
+		if (peutAdminRfcct == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				peutAdminRfcct = myGdUser().getCompetenceAutorisationCache()
+						.gDRfcctAdministrateur();
+			} else {
+				peutAdminRfcct = myJefyUser().hasDroitAdministrateur();
+			}
+		}
+		return peutAdminRfcct;
+	}
+
+	/**
+	 * @param peutAdminRfcct
+	 *            the peutAdminRfcct to set
+	 */
+	public void setPeutAdminRfcct(Boolean peutAdminRfcct) {
+		this.peutAdminRfcct = peutAdminRfcct;
+	}
+
+	/**
+	 * @return the accesRfcct
+	 */
+	public Boolean accesRfcct() {
+		if (accesRfcct == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				accesRfcct = myGdUser().getCompetenceAutorisationCache()
+						.gDRfcctAcces();
+			} else {
+				accesRfcct = myJefyUser().hasDroitAccesRfcct();
+			}
+		}
+		return accesRfcct;
+	}
+
+	/**
+	 * @param accesRfcct
+	 *            the accesRfcct to set
+	 */
+	public void setAccesRfcct(Boolean accesRfcct) {
+		this.accesRfcct = accesRfcct;
+	}
+	
+	/**
+	 * @return the modifier
+	 */
+	public Boolean modifier() {
+		if (modifier == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				modifier = myGdUser().getCompetenceAutorisationCache()
+						.gDRfcctModificationComptence();
+			} else {
+				modifier = myJefyUser().hasDroitModificationCompetence();
+			}
+		}
+		return modifier;
+	}
+
+	/**
+	 * @param modifier
+	 *            the modifier to set
+	 */
+	public void setModifier(Boolean modifier) {
+		this.modifier = modifier;
+	}
+
+	/**
+	 * @return the persId
+	 */
+	public Integer persId() {
+		if(persId == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				persId = myGdUser().getPersId();
+			} else {
+				persId = myJefyUser().getPersId();
+			}
+		}
+		return persId;
+	}
+
+	/**
+	 * @param persId the persId to set
+	 */
+	public void setPersId(Integer persId) {
+		this.persId = persId;
+	}
+	
+	public Object user() {
+		Object user = null;
+		if(myApp().newGestionDroitsEnabled()) {
+			user = myGdUser();
+		} else {
+			user = myJefyUser();
+		}
+		return user;
+	}
+	
+	//Administration
+
+	/**
+	 * @return the accesDomaineEnseignement
+	 */
+	public Boolean accesDomaineEnseignement() {
+		if(accesDomaineEnseignement == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				accesDomaineEnseignement = myGdUser().getCompetenceAutorisationCache().gDRfcctDomaineEnseignement();
+			} else {
+				accesDomaineEnseignement = myJefyUser().hasDroitDomaineEnseignement();
+			}
+		}
+		return accesDomaineEnseignement;
+	}
+
+	/**
+	 * @param accesDomaineEnseignement the accesDomaineEnseignement to set
+	 */
+	public void setAccesDomaineEnseignement(Boolean accesDomaineEnseignement) {
+		this.accesDomaineEnseignement = accesDomaineEnseignement;
+	}
+
+	/**
+	 * @return the accesDomaineRecherche
+	 */
+	public Boolean accesDomaineRecherche() {
+		if(accesDomaineRecherche == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				accesDomaineRecherche = myGdUser().getCompetenceAutorisationCache().gDRfcctDomaineRecherche();
+			} else {
+				accesDomaineRecherche = myJefyUser().hasDroitDomaineRecherche();
+			}
+		}
+		return accesDomaineRecherche;
+	}
+
+	/**
+	 * @param accesDomaineRecherche the accesDomaineRecherche to set
+	 */
+	public void setAccesDomaineRecherche(Boolean accesDomaineRecherche) {
+		this.accesDomaineRecherche = accesDomaineRecherche;
+	}
+
+	/**
+	 * @return the knowDomaineEnseignement
+	 */
+	public Boolean knowDomaineEnseignement() {
+		if(knowDomaineEnseignement == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				knowDomaineEnseignement = myGdUser().getCompetenceAutorisationCache().gDRfcctKnowDomaineEnseignement();
+			} else {
+				knowDomaineEnseignement = !myJefyUser().hasDroitDomaineEnseignement();
+			}
+		}
+		return knowDomaineEnseignement;
+	}
+
+	/**
+	 * @param knowDomaineEnseignement the knowDomaineEnseignement to set
+	 */
+	public void setKnowDomaineEnseignement(Boolean knowDomaineEnseignement) {
+		this.knowDomaineEnseignement = knowDomaineEnseignement;
+	}
+
+	/**
+	 * @return the accesDomaineEntreprise
+	 */
+	public Boolean accesDomaineEntreprise() {
+		if(accesDomaineEntreprise == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				accesDomaineEntreprise = myGdUser().getCompetenceAutorisationCache().gDRfcctDomaineEntreprise();
+			} else {
+				accesDomaineEntreprise = myJefyUser().hasDroitDomaineEntreprise();
+			}
+		}
+		return accesDomaineEntreprise;
+	}
+
+	/**
+	 * @param accesDomaineEntreprise the accesDomaineEntreprise to set
+	 */
+	public void setAccesDomaineEntreprise(Boolean accesDomaineEntreprise) {
+		this.accesDomaineEntreprise = accesDomaineEntreprise;
+	}
+
+	/**
+	 * @return the accesDomaineUv
+	 */
+	public Boolean accesDomaineUv() {
+		if(accesDomaineUv == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				accesDomaineUv = myGdUser().getCompetenceAutorisationCache().gDRfcctDomaineUv();
+			} else {
+				accesDomaineUv = myJefyUser().hasDroitDomaineUv();
+			}			
+		}
+		return accesDomaineUv;
+	}
+
+	/**
+	 * @param accesDomaineUv the accesDomaineUv to set
+	 */
+	public void setAccesDomaineUv(Boolean accesDomaineUv) {
+		this.accesDomaineUv = accesDomaineUv;
+	}
+
+	/**
+	 * @return the knowDomaineRecherche
+	 */
+	public Boolean knowDomaineRecherche() {
+		if(knowDomaineRecherche == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				knowDomaineRecherche = myGdUser().getCompetenceAutorisationCache().gDRfcctKnowDomaineRecherche();
+			} else {
+				knowDomaineRecherche = !myJefyUser().hasDroitDomaineRecherche();
+			}
+		}
+		return knowDomaineRecherche;
+	}
+
+	/**
+	 * @param knowDomaineRecherche the knowDomaineRecherche to set
+	 */
+	public void setKnowDomaineRecherche(Boolean knowDomaineRecherche) {
+		this.knowDomaineRecherche = knowDomaineRecherche;
+	}
+
+	/**
+	 * @return the creerUnDomaine
+	 */
+	public Boolean creerUnDomaine() {
+		if(creerUnDomaine == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				creerUnDomaine = myGdUser().getCompetenceAutorisationCache().gDRfcctCreationDomaine();
+			} else {
+				creerUnDomaine = myJefyUser().hasDroitCreationDomaine();
+			}
+		}
+		return creerUnDomaine;
+	}
+
+	/**
+	 * @param creerUnDomaine the creerUnDomaine to set
+	 */
+	public void setCreerUnDomaine(Boolean creerUnDomaine) {
+		this.creerUnDomaine = creerUnDomaine;
+	}
+
+	/**
+	 * @return the creerUneMatier
+	 */
+	public Boolean creerUneMatier() {
+		if(creerUneMatier == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				creerUneMatier = myGdUser().getCompetenceAutorisationCache().gDRfcctCreationMatiere();
+			} else {
+				creerUneMatier = myJefyUser().hasDroitCreationMatiere();
+			}			
+		}
+		return creerUneMatier;
+	}
+
+	/**
+	 * @param creerUneMatier the creerUneMatier to set
+	 */
+	public void setCreerUneMatier(Boolean creerUneMatier) {
+		creerUneMatier = creerUneMatier;
+	}
+
+	/**
+	 * @return the creerUnTerrain
+	 */
+	public Boolean creerUnTerrain() {
+		if(creerUnTerrain == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				creerUnTerrain = myGdUser().getCompetenceAutorisationCache().gDRfcctCreationTerrain();
+			} else {
+				creerUnTerrain = myJefyUser().hasDroitCreationTerrain();
+			}	
+		}
+		return creerUnTerrain;
+	}
+
+	/**
+	 * @param creerUnTerrain the creerUnTerrain to set
+	 */
+	public void setCreerUnTerrain(Boolean creerUnTerrain) {
+		this.creerUnTerrain = creerUnTerrain;
+	}
+
+	/**
+	 * @return the creerUneCapacite
+	 */
+	public Boolean creerUneCapacite() {
+		if(creerUneCapacite == null) {
+			if(myApp().newGestionDroitsEnabled()) {
+				creerUneCapacite = myGdUser().getCompetenceAutorisationCache().gDRfcctCreationCapacite();
+			} else {
+				creerUneCapacite = myJefyUser().hasDroitCreationCapacite();
+			}
+		}
+		return creerUneCapacite;
+	}
+
+	/**
+	 * @param creerUneCapacite the creerUneCapacite to set
+	 */
+	public void setCreerUneCapacite(Boolean creerUneCapacite) {
+		this.creerUneCapacite = creerUneCapacite;
+	}
+
+	// Recherches des individus en fonction de type de tier
+	public EOQualifier qualifierIndividusChercheurs() {
+		return new EOKeyValueQualifier(
+				"toRepartAssociations.toIndividusAssocies.toRepartStructures.toStructureGroupe.toRepartTypeGroupes.typeGroupe.tgrpCode",
+				EOQualifier.QualifierOperatorEqual, "ER");
+	}
+
+	public EOQualifier qualifierIndividusEnseignant() {
+		return new EOKeyValueQualifier("toVPersonnelActuelEnses.noDossierPers",
+				EOQualifier.QualifierOperatorNotEqual,
+				NSKeyValueCoding.NullValue);
+	}
+
+	public EOQualifier qualifierForIndividus() {
+		return ERXQ.or(new NSArray<EOQualifier>(qualifierIndividusChercheurs(),
+				qualifierIndividusEnseignant()));
+	}
+}

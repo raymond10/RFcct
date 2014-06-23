@@ -1,0 +1,142 @@
+package org.utt.rfcct.serveur.components;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOCompetence;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOVDataRealCompTree;
+import org.utt.fwkuttcompetences.serveur.utils.factory.FactoryCompetence;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOQualifier;
+import com.webobjects.foundation.NSDictionary;
+import com.webobjects.foundation.NSForwardException;
+
+import er.extensions.eof.ERXEC;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 23 août 2013
+ */
+@SuppressWarnings("all")
+public class GestionGroupe extends BaseComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1548360048092977383L;
+	private EOEditingContext gestionGroupeEc = ERXEC.newEditingContext();
+	private EOVDataRealCompTree dataTree;
+	private NSDictionary<String, EOQualifier> filters;
+
+	private Boolean creerUneCompetence = null;
+	private Boolean accessBackOffice = null;
+	private Boolean rechercheAvance = null;
+
+	public GestionGroupe(WOContext context) {
+		super(context);
+	}
+
+	@Override
+	public EOEditingContext edc() {
+		return gestionGroupeEc;
+	}
+
+	/**
+	 * @return the dataTree
+	 */
+	public EOVDataRealCompTree getDataTree() {
+		return dataTree;
+	}
+
+	/**
+	 * @param dataTree
+	 *            the dataTree to set
+	 */
+	public void setDataTree(EOVDataRealCompTree dataTree) {
+		this.dataTree = dataTree;
+	}
+
+	public boolean unGroupeEstSelectionne() {
+		return getDataTree() != null;
+	}
+
+	/**
+	 * @return the filters
+	 */
+	public NSDictionary<String, EOQualifier> filters() {
+		return filters;
+	}
+
+	/**
+	 * @param filters
+	 *            the filters to set
+	 */
+	public void setFilters(NSDictionary<String, EOQualifier> filters) {
+		this.filters = filters;
+	}
+
+	public WOActionResults onSelectGroupe() {
+		edc().revert();
+		return null;
+	}
+
+	public boolean isCreerUneCompetenceDisabled() {
+		if (creerUneCompetence == null) {
+			creerUneCompetence = peutCreerCompetence() || droitTout();
+		}
+		return !creerUneCompetence;
+	}
+
+	public boolean isAccessBackOfficeDisabled() {
+		if (accessBackOffice == null)
+			accessBackOffice = (droitTout())
+					|| (peutAdminRfcct() && accesDomaineEnseignement())
+					|| (peutAdminRfcct() && accesDomaineRecherche())
+					|| (peutAdminRfcct() && accesDomaineEntreprise())
+					|| (peutAdminRfcct() && knowDomaineEnseignement())
+					|| (peutAdminRfcct() && knowDomaineRecherche());
+		return !accessBackOffice;
+	}
+
+	public boolean isRechercheAvanceDisabled() {
+		if (rechercheAvance == null)
+			rechercheAvance = peutConsulterCompetence() || droitTout();
+		return !rechercheAvance;
+	}
+
+	// Creer une competence pour des tiers
+	public WOActionResults creerCompetence() {
+		resetSessionState();
+		GestionCompetence nextPage = (GestionCompetence) pageWithName(GestionCompetence.class
+				.getName());
+		FactoryCompetence fc = new FactoryCompetence(edc());
+		try {
+			EOCompetence competence = fc.creerCompetenceVierge(persId());
+			competence.setTemMulti("O");
+			mySession().setCompetence(competence);
+			nextPage.setCompetence(competence);
+		} catch (Exception e) {
+			throw NSForwardException._runtimeExceptionForThrowable(e);
+		}
+		return nextPage;
+	}
+
+	// Creer des compétences pour un tier
+	public WOActionResults creerTiersCompetences() {
+		resetSessionState();
+		GestionCompetencesTiers nextPage = (GestionCompetencesTiers) pageWithName(GestionCompetencesTiers.class
+				.getName());
+		FactoryCompetence fc = new FactoryCompetence(edc());
+		try {
+			EOCompetence competence = fc.creerCompetenceVierge(persId());
+			mySession().setCompetence(competence);
+			nextPage.setCompetence(competence);
+		} catch (Exception e) {
+			throw NSForwardException._runtimeExceptionForThrowable(e);
+		}
+		return nextPage;
+	}
+
+	private void resetSessionState() {
+		mySession().setIndexModuleActifCreationCompetence(0);
+		mySession().setIndexModuleActifGestionAdministration(0);
+	}
+}

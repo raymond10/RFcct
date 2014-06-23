@@ -1,0 +1,23 @@
+Wrapper : Wrapper {
+	
+}
+
+AssistantAdministrateurContainer : AjaxUpdateContainer {
+    id = idAssistantAdministration;
+}
+
+AssistantAdministration : AssistantAdministration {
+	modules = modules;
+	indexModuleActif = mySession.indexModuleActifGestionAdministration; 
+	etapes = etapes;
+	updateContainerId = idAssistantAdministration;
+	utilisateurPersId = persId;
+	editingContext = editingContext;
+	domaine = mySession.domaine;
+	matiere = mySession.matiere;
+	terrain = mySession.terrain;
+	capacite = mySession.capacite;
+	applicationUser = user;
+	terminer = terminer;
+}
+

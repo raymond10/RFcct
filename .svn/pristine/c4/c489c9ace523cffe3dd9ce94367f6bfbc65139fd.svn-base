@@ -1,0 +1,89 @@
+ContainerAssistantEtapes : AjaxUpdateContainer {
+	id = "ContainerAssistantEtapes";
+	class = "assistantEtapes";
+}
+
+Etapes : WORepetition {
+    list = etapes;
+    item = uneEtape;
+}
+
+DivEtape : WOGenericContainer {
+  elementName = "div";
+  class = styleForEtape;
+}
+Etape : WOString {
+  value = uneEtape;
+  escapeHTML = false;
+}
+
+SelectEtapeHyperLink : AjaxHyperlink {
+	action = selectEtape;
+	onSuccess = "function () {ContainerAssistantConventionModuleUpdate();ContainerAssistantContentUpdate();ContainerAssistantMenuUpdate();ContainerAssistantEtapesUpdate();}";
+	//class = styleForEtape;
+}
+
+ContainerAssistantContent : AjaxUpdateContainer {
+	id = "ContainerAssistantContent";
+	class = "assistantContent";
+}
+
+ContainerAssistantModule : AjaxUpdateContainer {
+	id = "ContainerAssistantConventionModule";
+	class = "assitantModuleContainer";
+}
+
+Module : WOSwitchComponent {
+	WOComponentName = moduleName;
+    module = module;
+    editingContext = editingContext;
+	domaine = domaine;
+	matiere = matiere;
+	terrain = terrain;
+	capacite = capacite;
+	utilisateurPersId = utilisateurPersId;
+	assistant = assistant;
+	applicationUser = applicationUser;
+	updateContainerID = ^updateContainerId;
+	wantRefresh = wantRefreshEtapeModule;
+}
+
+ContainerAssistantMenu : AjaxUpdateContainer {
+	id = idContainerAssistantMenu;
+	style = "height:28px;";
+	class = "assistantMenu";
+}
+
+Annuler : CktlButton {
+	//onClick = "return confirm('Les données déjà saisies seront définitivement perdues ?');";
+	action = annuler;
+	title = "Quitter";
+	text = "Retour à l'acceuil";
+	type = "cancel";
+}
+
+Precedent : CktlAjaxButton {
+	action = precedent;
+	onSuccess = "function () {ContainerAssistantConventionModuleUpdate();ContainerAssistantMenuUpdate();ContainerAssistantEtapesUpdate();}";
+	onFailure = myApp.onFailureMessage;
+	id = "BtnPrecedent";
+	title = "Précédent";
+	text = "Précédent";
+	type = "previous";
+	showBusyImage = true;
+	enabled = isPrecedentEnabled;	
+}
+
+Suivant : CktlAjaxButton {
+	action = suivant;
+	onFailure = myApp.onFailureMessage;
+	onSuccess = "function () {ContainerAssistantConventionModuleUpdate();ContainerAssistantMenuUpdate();ContainerAssistantEtapesUpdate();}";
+	id = "BtnSuivant";
+	title = "Suivant";
+	text = "Suivant";
+	type = "next";
+	isImagePositionIsRight = true;
+	showBusyImage = true;
+	evalScripts = true;
+	enabled = isSuivantEnabled;
+}

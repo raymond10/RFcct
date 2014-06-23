@@ -1,0 +1,174 @@
+ContainerTerrains : AjaxUpdateContainer {
+	id = containerId;
+	class = classeCss;
+	style = styleCss;
+}
+
+FormAdminThree : WOForm {
+  id = "FormAdminThree";
+  name ="FormAdminNameThree";
+  action = submit;
+  multipleSubmit = true;
+  onsubmit = "return false;";
+}
+
+TRTerrain : AjaxUpdateContainer {
+	id = "TRTerrain";
+	elementName = "tr";
+}
+
+Terrains : WOPopUpButton {
+	id = "TerrainsId";
+	list = ctrl.lesTerrains;
+	item = ctrl.unTerrain;
+	displayString = ctrl.unTerrain.lblCourt;
+	selection = ctrl.selectedTerrain;
+	noSelectionString = " ";
+}
+
+TerrainsObserver : AjaxObserveField {
+    observeFieldID = "TerrainsId";
+	action = ctrl.editTerrain;
+	fullSubmit = false;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRTerrainUpdate();}";
+}
+
+createTerrainWdows : CktlAjaxButton {
+    dialogIDForOpen = dialogcreateTerrainId;
+    text = "Définir nouveau terrain";
+    title = "Nouveau terrain";
+    type = "new";
+    enabled = isCreationTerrainEnabled;
+}
+
+DialogcreateTerrain : CktlAjaxWindow {
+    id = dialogcreateTerrainId;
+    action = openCreateTerrainWdows;
+    width = 670;
+    height = 500;
+    slideDownDuration = 0;
+    slideUpDuration = 0;
+    onClose = refreshTerrains;
+    resizable = false;
+    closable = false;
+    closeUpdateContainerID = "TRTerrain";
+}
+
+terrainCreateEnabled : WOConditional {
+	condition = isCreationTerrainEnabled;
+}
+
+unTerrainSup : WOPopUpButton {
+	id = "unTerrainSup";
+	list = ctrl.lesTerrains;
+	item = ctrl.unTerrainPere;
+	displayString = ctrl.unTerrainPere.lblCourt;
+	selection = ctrl.selectedTerrainPere;
+	noSelectionString = " ";
+	disabled = ctrl.lockFieldTerrain;
+}
+
+unTerrainSupObserver : AjaxObserveField {
+	observeFieldID = "unTerrainSup";
+	action = submit;
+}
+
+unTerrainlblLong : WOTextField {
+    id ="unTerrainlblLong";
+	value = terrain.lblLong;
+	maxlength = "80";
+	disabled = ctrl.lockFieldTerrain;
+	otherTagString = "required";
+	placeholder="Libelle terrain long ici";
+}
+
+unTerrainlblLongObserver : AjaxObserveField {
+	observeFieldID = "unTerrainlblLong";
+	action = submit;
+}
+
+unTerrainlblCourt : WOTextField {
+	id = "unTerrainlblCourt";
+	value = terrain.lblCourt;
+	maxlength = "20";
+	disabled = ctrl.lockFieldTerrain;
+	otherTagString = "required";
+	placeholder="Libelle terrain court ici";
+}
+
+unTerrainlblCourtObserver : AjaxObserveField {
+	observeFieldID = "unTerrainlblCourt";
+	action = submit;
+}
+
+unTerrainedateCrea : WOTextField {
+	value = terrain.dateCrea;
+	disabled = true;
+	dateformat = "%d/%m/%Y";
+}
+
+unTerraindateFin : CktlAjaxDatePicker {
+	id = "unTerraindateFin";
+	dateValue = terrainDateFin;
+	disabled = ctrl.lockFieldTerrain;
+	updateContainerID = "TRTerrain";
+}
+
+unTerraindateFinObserver : AjaxObserveField {
+	observeFieldID = "unTerraindateFin";
+	action = submit;
+}
+
+lesTerrainsDomaine : WORepetition {
+	list = ctrl.lesDomaines;
+	item = ctrl.itemDomaine;
+}
+
+unTerrainDomaine : WOCheckBox {
+  checked = ctrl.domaineSelected;
+  disabled = ctrl.lockFieldTerrain;
+}
+
+lblDomaine : WOString {
+	value = ctrl.itemDomaine.lblCourt;
+	class = "etiquette";
+}
+
+unTerrainDomaineObserver : AjaxObserveField {
+    id = "checkId";
+    elementName = "span";
+    fullSubmit = true;
+	action = submit;
+}
+
+unTerrainEnregistrer : CktlAjaxSubmitButton {
+	action = unTerrainEnregistrer;
+    text = "Enregistrer";
+    type = "validate";
+    title = "Créer et enregistrer un terrain dans le référentiel";
+    formName = "FormAdminNameThree";
+	onComplete = "function() {TRTerrainUpdate();}";
+}
+
+afficherTerrainEdit : WOConditional {
+	condition = ctrl.activUpdateTerrain;
+}
+
+unTerrainEditer : CktlAjaxSubmitButton {
+	action = ctrl.editTerrainFiled;
+    text = "Modifier";
+    type = "edit";
+    title = "Modifier le terrain sélectionné";
+    formName = "FormAdminNameThree";
+	onComplete = "function() {TRTerrainUpdate();}";
+}
+
+unTerrainAnnuler : CktlAjaxSubmitButton {
+	action = ctrl.annulerTerrainFiled;
+    text = "Annuler";
+    type = "cancel";
+    title = "Annuler la modification du terrain";
+    formName = "FormAdminNameThree";
+	onComplete = "function() {TRTerrainUpdate();}";
+}

@@ -1,0 +1,115 @@
+<webobject name = "containerTier">
+  <center>
+    <webobject name = "formTier">
+      <table width = "100%" cellpadding = "0" cellspacing = "0">
+        <tbody>
+          <tr>
+            <td>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "4">
+                      <span>
+                        <h4>Type de tier</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRTypeTier">
+                    <td class = "decale">
+                      <label for = "CentreTypeTier" class = "etiquette obligatoire" style = "text-align:center;">TypeTier</label>
+                      <webobject name = "CentreTypeTier" />
+                      <webobject name = "ObserverCentreTypeTier" />
+                    </td>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "5">
+                      <span>
+                        <h4>Tier</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRTiers">
+                    <td class = "decale">
+                      <label for = "TiersDomaine" class = "etiquette obligatoire">Tier (Enseignants, Chercheurs, Entreprises) </label>
+                      <webobject name = "TiersTypeSelect" />
+                      <webobject name = "DialogPersonnes" />
+                      <webobject name = "ObserverTiersType" />
+                    </td>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "6">
+                      <span>
+                        <h4>Tier s&eacute;lectionn&eacute;</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRTiersSelection">
+                    <td class = "decale"> <webobject name = "tier" /> </td>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "4">
+                      <span>
+                        <h4>Domaine</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRDomaine">
+                    <td class = "decale">
+                      <label for = "CentreDomaine" class = "etiquette obligatoire" style = "text-align:center;">Domaines</label>
+                    </td>
+                    <td width = "35%">
+                      <webobject name = "unTierDomaineObserver">
+                        <webobject name = "lesTiersDomaine">
+                          <label for = "unTierDomaine" class = "etiquette checkBox">
+                            <webobject name = "unTierDomaine" />
+                            <webobject name = "lblMatiere" />
+                          </label>
+                        </webobject>
+                      </webobject>
+                    </td>
+                    <td><webobject name = "compGenerate" /></td>
+                    <td width = "20%"></td>
+                  </webobject>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "4">
+                      <span>
+                        <h4>Comp&eacute;tences</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <webobject name = "TRCompoement">
+                      <webobject name = "competenceCount">
+                        <td>
+                          <webobject name = "dynamicTab">
+                          <webobject name = "compUpdate">
+                            <webobject name = "template" />
+                            </webobject>
+                          </webobject>
+                        </td>
+                    </webobject>
+                  </webobject>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </webobject>
+  </center>
+</webobject>

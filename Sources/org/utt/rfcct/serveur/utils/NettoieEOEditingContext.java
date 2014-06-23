@@ -1,0 +1,71 @@
+/**
+ * 
+ */
+package org.utt.rfcct.serveur.utils;
+
+import org.utt.rfcct.serveur.Application;
+
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOEnterpriseObject;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSMutableDictionary;
+import com.webobjects.foundation.NSSet;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 8 nov. 2013
+ * 
+ */
+@SuppressWarnings("all")
+public class NettoieEOEditingContext {
+
+	/**
+	 * 
+	 */
+	public NettoieEOEditingContext() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public static EOEditingContext cleanEC(EOEditingContext ec) {
+		EOEditingContext context = ec;
+		if (context.insertedObjects() != null) {
+			NSArray<EOEnterpriseObject> objects = context.insertedObjects();
+			for (int i = 0; i < objects.count(); i++) {
+				context.deleteObject(objects.get(i));
+				context.insertedObjects().remove(objects.get(i));
+			}
+		}
+		return context;
+	}
+
+	public static EOEditingContext cleanEC(EOEditingContext ec,
+			EOEnterpriseObject object) {
+		EOEditingContext context = ec;
+		if (context.insertedObjects() != null) {
+			NSArray<EOEnterpriseObject> objects = context.insertedObjects();
+			for (int i = 0; i < objects.count(); i++) {
+				if (!objects.get(i).equals(object)) {
+					context.deleteObject(objects.get(i));
+					context.insertedObjects().remove(objects.get(i));
+				}
+			}
+		}
+		return context;
+	}
+
+	public static NSArray<NSMutableDictionary> typeTierList() {
+		NSSet<String> listTypetiers = Application.app().listTypeTiers();
+		NSMutableArray list = new NSMutableArray();
+		for (String type : listTypetiers) {
+			NSMutableDictionary dico = new NSMutableDictionary();
+			int index = type.indexOf("_");
+			String id = type.substring(0, index);
+			String libelle = type.substring(index + 1, type.length());
+			dico.put("TYPE_TIERS", libelle);
+			dico.put("TYPE_TIERS_ID", Integer.valueOf(id));
+			list.addObject(dico);
+		}
+		return list.immutableClone();
+	}
+
+}

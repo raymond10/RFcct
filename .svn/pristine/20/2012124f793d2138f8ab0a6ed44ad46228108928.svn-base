@@ -1,0 +1,112 @@
+ContainerAssistantEtapes : AjaxUpdateContainer {
+	id = "ContainerAssistantEtapes";
+	class = "assistantEtapes";
+}
+
+Etapes : WORepetition {
+    list = etapes;
+    item = uneEtape;
+}
+
+DivEtape : WOGenericContainer {
+  elementName = "div";
+  class = styleForEtape;
+}
+Etape : WOString {
+  value = uneEtape;
+  escapeHTML = false;
+}
+
+isCreationMode : WOConditional {
+	condition = isEditMode;
+	negate = true;
+}
+
+isEditMode : WOConditional {
+	condition = isEditMode;
+}
+
+SelectEtapeHyperLink : AjaxHyperlink {
+	action = selectEtape;
+	onSuccess = "function () {ContainerAssistantContentUpdate();ContainerAssistantMenuUpdate();ContainerAssistantEtapesUpdate();}";
+}
+
+ContainerAssistantContent : AjaxUpdateContainer {
+	id = "ContainerAssistantContent";
+	class = "assistantContent";
+}
+
+ContainerAssistantModule : AjaxUpdateContainer {
+	id = "ContainerAssistantConventionModule";
+	class = "assitantModuleContainer";
+}
+
+Module : WOSwitchComponent {
+	WOComponentName = moduleName;
+    module = module;
+    editingContext = editingContext;
+	competence = competence;
+	utilisateurPersId = utilisateurPersId;
+	assistant = assistant;
+	indexTerrainCapaciteModuleActif = mySession.indexModuleActifGestionTerrainCapacite;
+}
+
+ContainerAssistantMenu : AjaxUpdateContainer {
+	id = "ContainerAssistantMenu";
+	style = "height:28px;";
+	class = "assistantMenu";
+}
+
+Annuler : CktlButton {
+	onClick = "return confirm('Les données déjà saisies seront définitivement perdues ?');";
+	action = annuler;
+	title = "Tout annuler";
+	text = "Tout annuler";
+	type = "cancel";
+}
+
+Precedent : CktlAjaxButton {
+	action = precedent;
+	onSuccess = "function () {ContainerAssistantContentUpdate(); ContainerAssistantMenuUpdate(); ContainerAssistantEtapesUpdate();}";
+	onFailure = myApp.onFailureMessage;
+	id = "BtnPrecedent";
+	disabled = isPrecedentDisabled;
+	title = "Précédent";
+	text = "Précédent";
+	type = "previous";
+	showBusyImage = true;	
+}
+
+Suivant : CktlAjaxButton {
+	action = suivant;
+	onSuccess = "function () {ContainerAssistantContentUpdate(); ContainerAssistantMenuUpdate(); ContainerAssistantEtapesUpdate();}";
+	onFailure = myApp.onFailureMessage;
+	id = "BtnSuivant";
+	disabled = isSuivantDisabled;
+	title = "Suivant";
+	text = "Suivant";
+	type = "next";
+	isImagePositionIsRight = true;
+	showBusyImage = true;
+	evalScripts = true;
+}
+
+Terminer : CktlAjaxButton {
+	action = terminer;
+	updateContainerID = myApp.messageContainerID;
+	text = "Valider";
+	type = "validate";
+	title = "Valider et enregistrer";
+	showBusyImage = true;
+	disabled = isTerminerDisabled;
+}
+
+ApresEnregistrerModalDialog: CktlAjaxWindow {
+	id = "ApresEnregistrerModalDialog";
+	showOpener = false; 
+	title = "Enregistrement OK";
+	action = apresTerminer;
+	width = 400;
+	height = 250;
+	closable = false;
+}

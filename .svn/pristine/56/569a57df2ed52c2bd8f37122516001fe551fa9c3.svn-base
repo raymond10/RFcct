@@ -1,0 +1,43 @@
+Container : AjaxUpdateContainer {
+	id = "SelectedPersContainer";
+}
+
+PersonneSrch : PersonneSrch {
+    updateContainerID = "SelectedPersContainer";
+    titre = titre;
+    editingContext = ^editingContext;
+    displayGroup = displayGroup;
+    isReadOnly = true;
+    showDetail = false;
+    showDetailInModalBox = false;
+    updateContainerIDOnSelectionnerPersonneInTableview = "SelectedPersContainer";
+    utilisateurPersId = ^utilisateurPersId;
+    showIndividus = tiersIndiv;
+    showStructures = tiersStr;
+    showPersonnesInternes = true;
+    showPersonnesExternes = true;
+    showRadioInterneExterne = false;
+    persType = personneSrchType;
+    selectedPersonne = selectedPersonne;
+    selectionMultipleEnabled = true;
+    wantReset = wantResetPersonneSrch;
+    qualifierForIndividus = qualifierForIndividu;
+}
+
+Revenir : CktlAjaxButton {
+	action = showAccueil;
+    updateContainerID = "SelectedPersContainer";
+    type = "previous";
+    text = "Revenir";
+}
+
+ShowSelect : WOConditional {
+	condition = hasResults;
+}
+
+Selectionner : CktlAjaxButton {
+	action = selectPersonnesRecherche;
+	updateContainerID = "SelectedPersContainer";
+	type = "add";
+	text = "Sélectionner";
+}

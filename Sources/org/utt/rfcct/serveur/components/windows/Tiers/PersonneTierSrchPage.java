@@ -1,0 +1,214 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+package org.utt.rfcct.serveur.components.windows.Tiers;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.eocontrol.EOQualifier;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSMutableArray;
+
+import er.extensions.appserver.ERXDisplayGroup;
+import er.extensions.eof.ERXEC;
+
+import org.cocktail.fwkcktlajaxwebext.serveur.component.CktlAjaxWindow;
+import org.cocktail.fwkcktlpersonne.common.metier.IPersonne;
+import org.utt.fwkuttcompetences.serveur.modele.grhum.EOIndividuUlr;
+import org.utt.fwkuttcompetences.serveur.modele.grhum.EOStructureUlr;
+import org.utt.fwkuttcompetences.serveur.utils.tiers.Tiers;
+import org.utt.rfcct.serveur.components.BaseComponent;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 11 juil. 2013
+ */
+@SuppressWarnings("all")
+public class PersonneTierSrchPage extends BaseComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9175048370801241239L;
+	private boolean resetAjoutPersonnesDialog;
+	private EOEditingContext editingContext;
+	private ERXDisplayGroup selectedPersonnesDisplayGroup;
+	private boolean tiersIndiv = false;
+	private boolean tiersStr = false;
+	private EOQualifier qualifierForIndividu;
+	private Integer persId;
+	private String titre;
+
+	public PersonneTierSrchPage(WOContext context) {
+		super(context);
+	}
+
+	/**
+	 * @return the resetAjoutPersonnesDialog
+	 */
+	public boolean isResetAjoutPersonnesDialog() {
+		return resetAjoutPersonnesDialog;
+	}
+
+	/**
+	 * @param resetAjoutPersonnesDialog
+	 *            the resetAjoutPersonnesDialog to set
+	 */
+	public void setResetAjoutPersonnesDialog(boolean resetAjoutPersonnesDialog) {
+		this.resetAjoutPersonnesDialog = resetAjoutPersonnesDialog;
+	}
+
+	/**
+	 * @return the editingContext
+	 */
+	public EOEditingContext editingContext() {
+		return editingContext;
+	}
+
+	/**
+	 * @param editingContext
+	 *            the editingContext to set
+	 */
+	public void setEditingContext(EOEditingContext editingContext) {
+		this.editingContext = editingContext;
+	}
+
+	/**
+	 * @return the selectedPersonnesDisplayGroup
+	 */
+	public ERXDisplayGroup selectedPersonnesDisplayGroup() {
+		return selectedPersonnesDisplayGroup;
+	}
+
+	/**
+	 * @param selectedPersonnesDisplayGroup
+	 *            the selectedPersonnesDisplayGroup to set
+	 */
+	public void setSelectedPersonnesDisplayGroup(
+			ERXDisplayGroup selectedPersonnesDisplayGroup) {
+		this.selectedPersonnesDisplayGroup = selectedPersonnesDisplayGroup;
+	}
+
+	public String getPersonneTierUpdateContainerId() {
+		return getComponentId() + "_PersonneTierSearchPage";
+	}
+
+	public String ajouterPersonnesLabel() {
+		return "Ajouter ces personnes ˆ la liste des tiers";
+	}
+
+	/**
+	 * @return the tiersIndiv
+	 */
+	public boolean tiersIndiv() {
+		return tiersIndiv;
+	}
+
+	/**
+	 * @param tiersIndiv
+	 *            the tiersIndiv to set
+	 */
+	public void setTiersIndiv(boolean tiersIndiv) {
+		this.tiersIndiv = tiersIndiv;
+	}
+
+	/**
+	 * @return the tiersStr
+	 */
+	public boolean tiersStr() {
+		return tiersStr;
+	}
+
+	/**
+	 * @param tiersStr
+	 *            the tiersStr to set
+	 */
+	public void setTiersStr(boolean tiersStr) {
+		this.tiersStr = tiersStr;
+	}
+
+	/**
+	 * @return the qualifierForIndividu
+	 */
+	public EOQualifier qualifierForIndividu() {
+		return qualifierForIndividu;
+	}
+
+	/**
+	 * @param qualifierForIndividu
+	 *            the qualifierForIndividu to set
+	 */
+	public void setQualifierForIndividu(EOQualifier qualifierForIndividu) {
+		this.qualifierForIndividu = qualifierForIndividu;
+	}
+
+	/**
+	 * @return the titre
+	 */
+	public String titre() {
+		return titre;
+	}
+
+	/**
+	 * @param titre
+	 *            the titre to set
+	 */
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
+	// Ajouter personne selectionnees
+	public WOActionResults ajouterPersonnes() {
+		NSArray<IPersonne> selectedPersonnes = selectedPersonnesDisplayGroup()
+				.displayedObjects();
+		for (IPersonne personne : selectedPersonnes) {
+			Tiers tmp = Tiers.Tiers(ERXEC.newEditingContext());
+			if (personne.isIndividu()) {
+				tmp.setTiersInvididu(EOIndividuUlr.individuPourPersId(
+						tmp.editingContext(), personne.persId()));
+			}
+			if (personne.isStructure()) {
+				tmp.setTiersStructure(EOStructureUlr.structurePourPersId(
+						tmp.editingContext(), personne.persId()));
+			}
+			tmp._setValueForPrimaryKey(personne.persId(), "tiersNumero");
+			tmp.setTiersNumero(personne.persId());
+			tmp.setTiersLibelle(personne.persLibelle());
+			tmp.setTiersDetails(personne.persType());
+			if (mySession().listTiers() == null)
+				mySession().setListTiers(new NSMutableArray<Tiers>());
+			mySession().listTiers().addObject(tmp);
+		}
+		return annulerAjout();
+	}
+
+	public WOActionResults annulerAjout() {
+		CktlAjaxWindow.close(context());
+		return null;
+	}
+}

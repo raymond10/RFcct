@@ -1,0 +1,14 @@
+#Fri Sept 14 10:33:00 CEST 2012
+cfBundleID=org.utt
+cfBundleShortVersion=
+cfBundleVersion=
+customInfoPListContent=
+embedLocal=true
+embedProject=true
+embedSystem=true
+embedUser=true
+eoAdaptorClassName=
+javaClient=false
+principalClass=org.utt.rfcct.serveur.Application
+webXML=false
+webXML_CustomContent=

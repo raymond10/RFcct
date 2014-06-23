@@ -1,0 +1,122 @@
+Wrapper : Wrapper {
+	onloadJS = onloadJS;
+}
+
+Form : WOForm {
+    name = "groupeFormName";
+	id = "groupeForm";
+	multipleSubmit = true;
+}
+
+HasDroitConsultation : WOConditional {
+	condition = isConsultationEnabled;
+}
+
+GroupesTree : CompetencesAjaxGroupeTreeView {
+	id = "groupeTree";
+	selection = dataTree;
+	editingContext = edc;
+	label = "Donnée parente";
+	treeViewTitle = "Sélectionnez la donnée parente";    
+    treeViewWidth = "700px"; 
+    treeViewHeight = "300px";
+    userFiltersFormID = "groupeForm";
+    userFiltersDictionary = filters;
+    cssSelectedGroupe = "selected";
+    onSuccessSelect = onSelectGroupe;
+    filtreTexte = false;
+    expandToLevel = 1;
+}
+
+CompTabView : CktlButton {
+	id = "CompTabViewId";
+	action = accueil;
+	text = "tableau";
+	type = "view_document";
+	title = "Voir les compétences dans un tableau";
+}
+
+CreerComp : CktlButton {
+      id = "CreerCompId";
+    action = creerCompetence;
+    disabled = isCreerUneCompetenceDisabled;
+    text = "Plusieurs tiers";
+    type = "add";
+    title = "Créer une compétence pour plusieurs tiers";
+}
+
+CreerTierComp : CktlButton {
+	id = "CreerTierCompId";
+    action = creerTiersCompetences;
+    disabled = isCreerUneCompetenceDisabled;
+    text = "Un tiers";
+    type = "add";
+    title = "Créer les compétences d'un tiers";
+}
+
+Administration : CktlButton {
+	id = "AdministrationId";
+    action = accederAdmin;
+    disabled = isAccessBackOfficeDisabled;
+    text = "Administration";
+    type = "etoile";
+    title = "Accéder à l'administration de l'application";
+}
+
+RechercheAvancee : CktlButton {
+	id = "RechercheAvanceeId";
+    action = afficherRechercheAvancee;
+    disabled = isRechercheAvanceDisabled;
+    text = "Recherche avancée";
+    type = "find";
+    title = "Recherche par filtre";
+}
+
+Imprimer : CktlButton {
+	id = "ImprimerId";
+    action = afficherLesEditions;
+    disabled = isRechercheAvanceDisabled;
+    text = "Editions";
+    type = "print";
+}
+
+Outils : CktlButton {
+	id = "OutilsId";
+	action = afficherLesOutils;
+	text = "Outils";
+	type = "process";
+}
+
+HasNoDroitConsultation : WOConditional {
+	condition = isConsultationEnabled;
+	negate = true;
+}
+
+ExceptionModalDialog: CktlAjaxWindow {
+	id = "ExceptionModalDialog";
+	title = "Une erreur inattendue est survenue";
+	minWidth = 500;
+	// height = 200;
+	resizable = true;
+	minimizable = false;
+	closable = false;
+	maximizable = false;
+	draggable = true;
+	centerVertically = true;
+	open = isOpenFenetreException;
+	showOpener = false;
+}
+
+ExceptionInfos : WOText {
+    value = mySession.generalErrorMessage; 
+    style = "width:494px;";
+    rows = "8";
+}
+
+RetourTree : CktlButton {
+	id = "RetourTreeId";
+    action = retourGestionGroupe;
+    text = "Fermer";
+    type = "cancel";
+    target = "_top";
+}

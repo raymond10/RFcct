@@ -1,0 +1,123 @@
+# (c) Cèdre
+# Fichier de config de l'application RFCCT 
+# Les parametres definis ici remplacent ceux
+# definis dans la table GRHUM.GRHUM_PARAMETRES, RFCCT.RFCCT_PARAMETRES 
+
+APP_USE_MAIL=YES
+HOST_MAIL=smtp.utt.fr
+ADMIN_MAIL=raymond.naneon@utt.fr
+DOMAIN_NAME=utt.fr
+
+APP_ALIAS=Rfcct
+APP_TITLE=RFCCT
+APP_USE_GEDFS=NO
+APP_URL=http://imac-cedre.utt.fr:8485/cgi-bin/WebObjects/RFcct.woa
+
+NET_NO_PROXY_HOSTS=*.utt.fr
+
+#Identification CAS
+#utilisation de l'identification CAS
+#APP_USE_CAS=(YES|NO)
+#APP_USE_CAS=NO
+APP_USE_CAS=YES
+CAS_LOGOUT_URL = https://cas.utt.fr/cas/logout?service=http://imac-cedre.utt.fr:8485/cgi-bin/WebObjects/RFcct
+
+MAIN_WEB_SITE_URL=http://imac-cedre.utt.fr:8485/cgi-bin/WebObjects/RFcct.woa
+
+MAIN_LOGO_URL=http://agecanonix-form.utt.fr/WebObjects/Images/logoUTTgaucheLittle.png
+
+DEFAULT_NS_TIMEZONE=Europe/Paris
+
+# Ces modes  permettent d'activer ou non les logs ou envoie de mail
+TEST=TRUE
+MODE_DEBUG=TRUE
+
+#JRE Version MAX
+JRE_MAX = 1.7
+
+# Choix de la gestion des droits('False' gestion par jefyAdmin/'True' Gestion par AGRHUM
+# Activation/desactivation de la nouvelle gestion des droits
+ENABLE_NEW_GD = TRUE
+
+# OGNL
+ognl.helperFunctions=true
+ognl.inlineBindings=true
+
+# WoLips configuration
+wolips.password=passepar2
+wolips.host=localhost
+wolips.port=9485
+
+# Wonder Configuration
+
+WOFrameworksBaseURL=/WebObjects/RFcct.woa/Contents/Frameworks
+
+er.extensions.ERXLocalizer.defaultLanguage=French
+er.extensions.ERXLocalizer.fileNamesToWatch=("Messages.strings", "ValidationTemplate.strings")
+er.extensions.ERXApplication.useEditingContextUnlocker=true
+er.extensions.ERXEC.defaultAutomaticLockUnlock=true
+er.extensions.ERXModelGroup.FwkGspot_Local.ignoreTypeMismatch=true
+er.extensions.ERXApplication.responseCompressionEnabled=true
+er.extensions.ERXJDBCAdaptor.className=er.extensions.jdbc.ERXJDBCAdaptor
+# laisse les valeurs erronés au niveau des attributs jusqu'à la prochaine phase
+er.extensions.ERXValidationShouldPushChangesToObject = true
+#er.extensions.ERXRaiseOnMissingEditingContextDelegate=false
+
+er.extensions.maxPageReplacementCacheSize=60
+
+er.extensions.WOConditional.patch=true
+er.extensions.loadOnDemandDuringReplace=true
+
+er.javamail.centralize=false
+
+# Log4j Configuration
+log4j.loggerFactory=er.extensions.logging.ERXLogger$Factory
+log4j.rootCategory=INFO,A1
+log4j.appender.A1=er.extensions.logging.ERXConsoleAppender
+log4j.appender.A1.layout=er.extensions.logging.ERXPatternLayout
+log4j.appender.A1.layout.ConversionPattern=%d{MMM dd HH:mm:ss} %$[%#] %-5p %c %x - %m%n
+
+# Log4j Categories
+# Here are a few log4j sub-categories that are interesting.
+# Don't forget that in development mode this file will get reloaded
+# everytime it changes, so if you say want to turn adaptor debugging
+# on in the middle of the app simply set the below category to debug.
+# Very handy.
+# Base Category
+log4j.logger.er=INFO
+
+# ERExtensions
+# Transaction - Switching this to debug will start the sql ouputting.
+log4j.logger.er.transaction.adaptor.EOAdaptorDebugEnabled=DEBUG
+
+# Fixes - Turning this on will show all the models that are loaded
+log4j.logger.er.extensions.fixes.ERSharedEOLoader=INFO
+
+er.extensions.ERXNSLogLog4jBridge=INFO
+log4j.logger.er.eo.ERXGenericRecord=DEBUG
+log4j.logger.er.validation.ERXEntityClassDescription=DEBUG
+log4j.logger.er.default.ERXEntityClassDescription=DEBUG
+log4j.logger.er.extensions.ERXDatabaseContextDelegate=WARN
+log4j.logger.er.extensions.ERXConfigurationManager=INFO
+#log4j.logger.er.extensions.ERXApplication.RequestHandling=DEBUG
+#log4j.logger.er.extensions.appserver.ajax.ERXAjaxSession=DEBUG
+
+#Activation de la mise en forme automatique des formulaires
+org.cocktail.global.formulaires.miseenformeautomatique=true
+
+# Logger RFCCT
+log4j.logger.org.utt.rfcct.serveur=INFO
+#log4j.logger.org.utt.rfcct.serveur.components.DetailCompetence=DEBUG
+#log4j.logger.org.utt.rfcct.serveur.util.Editions=INFO
+
+#Reverse Engine Info
+#jdbc:oracle:thin:@asterix-dev.utt.fr:1532:COCKTAILT
+#oracle.jdbc.driver.OracleDriver
+
+# Paramètres de connexion à la base, à changer selon configuration
+#dbConnectURLGLOBAL = jdbc:oracle:thin:@asterix-dev.utt.fr:1533:COCKTAILF
+dbConnectURLGLOBAL = jdbc:oracle:thin:@asterix-dev.utt.fr:1532:COCKTAILT
+dbConnectUserGLOBAL.encrypted = true
+dbConnectUserGLOBAL = grhum
+dbConnectPasswordGLOBAL.encrypted = true
+dbConnectPasswordGLOBAL = 02acfd14f4d4961c

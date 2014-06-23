@@ -1,0 +1,11 @@
+<webobject name = "Cadre">
+  <table width = "100%">
+    <tr>
+      <td id = "main" valign = "top" align = "center">
+        <div style = "text-align:center;padding:5em;">
+          <span class = "warning"><webobject name = "Message" /> </span>
+        </div>
+      </td>
+    </tr>
+  </table>
+</webobject>

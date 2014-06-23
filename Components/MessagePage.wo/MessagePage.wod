@@ -1,0 +1,7 @@
+Cadre : Wrapper {
+	titre = "Rfcct : Référentiel des compétences, des capacités et des thématiques";
+}
+
+Message : WOString {
+  value = message;
+}

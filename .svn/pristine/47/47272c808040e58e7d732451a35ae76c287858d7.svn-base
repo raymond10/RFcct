@@ -1,0 +1,41 @@
+ContainerDetailConmpetence : AjaxUpdateContainer {
+	id = "ContainerDetailConmpetence";
+	class = "assistantModule";
+}
+
+woIf : WOConditional {
+	condition = multi;
+}
+
+TabbedPanel : CCTabPanel {
+    id = "ConmpetenceTabs";
+    selectedTab = competenceTabs.selectedTab;
+    tabs = competenceTabs.tabs;
+    tabNameKey = "libelle";
+}
+
+IsCompTiersPart : WOConditional {
+	condition = domTiersMatTab.isSelected;
+}
+
+competenceTiers : ModuleCompetenceDomaine {
+	competence = competence;
+	applicationUser = user;
+	editingContext = domTiersMatTab.editingContext;
+}
+//    <webobject name = "IsTabSndPart"> <webobject name = "PresentationTwo" /> </webobject>
+
+woElse : WOConditional {
+	condition = multi;
+	negate = true;
+}
+
+IsTierCompPart : WOConditional {
+	condition = tierTab.selected;
+}
+
+tierCompetence : ModuleCompetenceDomaine {
+	competence = competence;
+	applicationUser = user;
+	editingContext = tierTab.editingContext;
+}

@@ -1,0 +1,349 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+package org.utt.rfcct.serveur.components.assistants.modules;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOCapacite;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EODomaine;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EORepartDomCapacite;
+import org.utt.fwkuttcompetences.serveur.utils.factory.FactoryDomaineCapacite;
+import org.utt.rfcct.serveur.components.assistants.Assistant;
+import org.utt.rfcct.serveur.components.controlers.ModuleAdminCapaciteCtrl;
+import org.utt.rfcct.serveur.utils.NettoieEOEditingContext;
+
+import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.eoaccess.EOUtilities;
+import com.webobjects.eocontrol.EOEditingContext;
+import com.webobjects.foundation.NSArray;
+import com.webobjects.foundation.NSLog;
+import com.webobjects.foundation.NSMutableArray;
+import com.webobjects.foundation.NSTimestamp;
+
+import er.ajax.AjaxUpdateContainer;
+import er.extensions.appserver.ERXWOContext;
+
+/**
+ * @author Raymond NANEON <raymond.naneon at utt.fr> 28 mars 2013
+ */
+@SuppressWarnings("all")
+public class ModuleAdminCapacite extends ModuleAssistant {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4308418321843797868L;
+	private String containerId;
+	private boolean isResetDialogcreateCapacite;
+	private ModuleAdminCapaciteCtrl ctrl = null;
+	private NSMutableArray<EODomaine> capaciteDomaines;
+	private Boolean creationCapacite = null;
+	private Boolean droitTout = null;
+
+	public ModuleAdminCapacite(WOContext context) {
+		super(context);
+		NSLog.out.appendln("ModuleAdminCapacite");
+	}
+
+	/**
+	 * @return the droitTout
+	 */
+	public Boolean droitTout() {
+		if (droitTout == null) {
+			if (myApp().newGestionDroitsEnabled()) {
+				droitTout = myGdUser().getCompetenceAutorisationCache()
+						.gDRfcctSuperUser();
+			} else {
+				droitTout = myJefyUser().hasDroitSuperUser();
+			}
+		}
+		return droitTout;
+	}
+
+	/**
+	 * @param droitTout
+	 *            the droitTout to set
+	 */
+	public void setDroitTout(Boolean droitTout) {
+		this.droitTout = droitTout;
+	}
+
+	/**
+	 * @return the ctrl
+	 */
+	public ModuleAdminCapaciteCtrl ctrl() {
+		if (ctrl == null)
+			ctrl = new ModuleAdminCapaciteCtrl(this);
+		return ctrl;
+	}
+
+	/**
+	 * @param ctrl
+	 *            the ctrl to set
+	 */
+	public void setCtrl(ModuleAdminCapaciteCtrl ctrl) {
+		this.ctrl = ctrl;
+	}
+
+	public void onPrecedent() {
+	}
+
+	public void onSuivant() {
+	}
+
+	public String getContainerId() {
+		if (containerId == null)
+			containerId = ERXWOContext.safeIdentifierName(context(), true);
+		return containerId;
+	}
+
+	// Id de la fenêtre creer matiere
+	public String dialogcreateCapaciteId() {
+		return "DialogcreateCapacite_" + uniqueDomId();
+	}
+
+	/**
+	 * @return the isResetDialogcreateCapacite
+	 */
+	public boolean isResetDialogcreateCapacite() {
+		return isResetDialogcreateCapacite;
+	}
+
+	/**
+	 * @param isResetDialogcreateCapacite
+	 *            the isResetDialogcreateCapacite to set
+	 */
+	public void setResetDialogcreateCapacite(boolean isResetDialogcreateCapacite) {
+		this.isResetDialogcreateCapacite = isResetDialogcreateCapacite;
+	}
+
+	// Affichage de la fenêtre creation capacite
+	public WOActionResults openCreateCapaciteWdows() {
+		setResetDialogcreateCapacite(true);
+		return null;
+	}
+
+	public WOActionResults refreshCapacites() {
+		return null;
+	}
+
+	public boolean validerCapacite() {
+		boolean validate = false;
+		NSArray<String> failureMessages = new NSArray<String>();
+		Assistant assistant = (Assistant) parent();
+		EOCapacite capacite = capacite();
+		if (capacite != null && assistant != null) {
+			if (ctrl().checkDomaines().isEmpty()) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("Le(s) domaine(s) de définition");
+			}
+
+			if (capacite.lblLong() == null || capacite.lblLong().equals("")) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("Le Libellé long");
+			}
+
+			if (capacite.lblCourt() == null || capacite.lblCourt().equals("")) {
+				failureMessages = failureMessages
+						.arrayByAddingObject("Le Libellé court");
+			}
+
+			if (failureMessages.count() == 0) {
+				validate = true;
+				assistant.setFailureMessage(null);
+			} else {
+				assistant.setFailureMessage("Veuillez renseigner "
+						+ failureMessages.componentsJoinedByString(", ") + ".");
+			}
+
+		} else {
+			assistant
+					.setFailureMessage("Veuillez renseigner les champs obligatoires du domaine (en rouge).");
+		}
+		if (validate) {
+			mySession().getUiMessages().removeAllObjects();
+			setCapacite(capacite);
+		}
+		return validate;
+	}
+
+	public WOActionResults uneCapaciteEnregistrer() {
+		// Initialisation des domaine lies a la capacite
+		currentDomaineCapacite();
+		EOCapacite capacite = capacite();
+		EOEditingContext ec = capacite.editingContext();
+		boolean modification = false;
+		int tmp = 0;
+		try {
+			if (validerCapacite()) {
+				// En modification?
+				if (EOUtilities.primaryKeyForObject(ec, capacite()) != null) {
+					modification = true;
+					capacite().setDateModif(new NSTimestamp());
+					capacite().setPersIdModif(utilisateurPersId());
+					ec = NettoieEOEditingContext.cleanEC(ec);
+					if (ctrl().uneCapacitedateFin() != null)
+						capacite().setDateFin(ctrl().uneCapacitedateFin());
+					//Update
+					ec.saveChanges();
+					// On compare les domaines de l'origine et ceux de la
+					// modification
+					if (capaciteDomaines().count() > ctrl().checkDomaines()
+							.count()) {
+						for (EODomaine domaine : ctrl().removedDomaines()) {
+							// On retire les domaines deselectionnes
+							capaciteDomaines().removeObject(domaine);
+						}
+						tmp = capaciteDomaines().count();
+					}
+					// On procède à l'enregistrement des modifications des
+					// domaines
+					for (EODomaine domaine : ctrl().checkDomaines()) {
+						if (capaciteDomaines().contains(domaine)) {
+							FactoryDomaineCapacite fdc = new FactoryDomaineCapacite(
+									ec, true);
+							fdc.enregistrementDomaineCapacite(domaine, capacite);
+							capaciteDomaines().removeObject(domaine);
+						} else {
+							if (tmp != 0 && capaciteDomaines().count() == 1) {
+								domaine = capaciteDomaines().lastObject();
+							}
+							FactoryDomaineCapacite fdc = new FactoryDomaineCapacite(
+									ec, true);
+							fdc.suppressionDomaineCapacite(domaine, capacite);
+						}
+						if (ctrl().removedDomaines() != null
+								&& ctrl().removedDomaines().count() != 0) {
+							for (EODomaine domaineToRemove : ctrl()
+									.removedDomaines()) {
+								FactoryDomaineCapacite fdc = new FactoryDomaineCapacite(
+										ec, true);
+								fdc.supprimerLeDomaineCapacite(domaineToRemove,
+										capacite);
+
+							}
+							ctrl().removedDomaines().removeAllObjects();
+						}
+					}
+					resetUneCapaciteField();
+					ctrl().editCapacite();
+					mySession().addSimpleInfoMessage("Confirmation",
+							"Capacité modifiée dans le référentiel");
+				} else {
+					// Nouvelle capacité
+					if (ctrl().uneCapacitedateFin() != null)
+						capacite().setDateFin(ctrl().uneCapacitedateFin());
+					if (ec.hasChanges()) {
+						ec.saveChanges();
+						for (EODomaine domaine : ctrl().checkDomaines()) {
+							FactoryDomaineCapacite fdc = new FactoryDomaineCapacite(
+									ec, true);
+							fdc.enregistrementDomaineCapacite(domaine, capacite);
+						}
+						resetUneCapaciteField();
+						ctrl().editCapacite();
+						mySession().addSimpleInfoMessage("Confirmation",
+								"Capacité enregistrée dans le référentiel");
+					}
+				}
+				context().response().setStatus(500);
+				AjaxUpdateContainer.updateContainerWithID(myApp()
+						.messageContainerID(), context());
+			} else {
+				context().response().setStatus(500);
+				AjaxUpdateContainer.updateContainerWithID(myApp()
+						.messageContainerID(), context());
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			mySession().addSimpleErrorMessage("ALERTE", e.toString());
+			context().response().setStatus(500);
+			AjaxUpdateContainer.updateContainerWithID(myApp()
+					.messageContainerID(), context());
+			return null;
+		}
+		return null;
+	}
+
+	public void resetUneCapaciteField() {
+		ctrl().setSelectedCapacite(null);
+		ctrl().setCheckDomaines(null);
+		ctrl().setRemovedDomaines(null);
+		ctrl().setLesDomaines(null);
+		ctrl().setLesCapacites(null);
+	}
+
+	public NSTimestamp capaciteDateFin() {
+		return capacite().dateFin();
+	}
+
+	public void setCapaciteDateFin(NSTimestamp date) {
+		try {
+			capacite().setDateFin(date);
+		} catch (ValidationException e) {
+			mySession().addSimpleErrorMessage("RFCCT", e.getMessage());
+		}
+	}
+
+	/**
+	 * @return the capaciteDomaines
+	 */
+	public NSMutableArray<EODomaine> capaciteDomaines() {
+		if (capaciteDomaines == null)
+			capaciteDomaines = new NSMutableArray<EODomaine>();
+		return capaciteDomaines;
+	}
+
+	/**
+	 * @param capaciteDomaines
+	 *            the capaciteDomaines to set
+	 */
+	public void setCapaciteDomaines(NSMutableArray<EODomaine> capaciteDomaines) {
+		this.capaciteDomaines = capaciteDomaines;
+	}
+
+	public NSMutableArray<EODomaine> currentDomaineCapacite() {
+		EOCapacite capacite = capacite();
+		if (capacite.repartDomCapacites().count() > 0) {
+			for (EORepartDomCapacite rdc : capacite.repartDomCapacites()) {
+				if (!capaciteDomaines().contains(rdc.domaine()))
+					capaciteDomaines().addObject(rdc.domaine());
+			}
+
+		}
+		return capaciteDomaines();
+	}
+
+	public boolean isCreationCapaciteEnabled() {
+		if (creationCapacite == null) {
+			creationCapacite = creerUneCapacite() || droitTout();
+		}
+		return creationCapacite;
+	}
+}

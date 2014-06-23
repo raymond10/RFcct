@@ -1,0 +1,191 @@
+ContainerDomaines : AjaxUpdateContainer {
+	id = "ContainerDomaines";
+	class = classeCss;
+	style = styleCss;
+}
+
+FormAdminOne : WOForm {
+  id = "FormAdminOne";
+  name ="FormAdminNameOne";
+  action = submit;
+  multipleSubmit = true;
+  onsubmit = "return false;";
+}
+
+TRDomaine : AjaxUpdateContainer {
+	id = "TRDomaine";
+	elementName = "tr";
+}
+
+Domaines : WOPopUpButton {
+	id = "domainesId";
+	list = ctrl.lesDomaines;
+	item = ctrl.unDomaine;
+	displayString = ctrl.unDomaine.lblCourt;
+	selection = ctrl.selectedDomaine;
+	noSelectionString = " ";
+}
+
+domainesObserver : AjaxObserveField {
+	observeFieldID = "domainesId";
+	action = ctrl.editDomaine;
+	fullSubmit = false;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRDomaineUpdate();}";
+}
+
+createDomaineWdows : CktlAjaxButton {
+    dialogIDForOpen = dialogcreateDomaineId;
+    text = "Définir nouveau domaine";
+    title = "Nouveau domaine";
+    type = "new";
+    enabled = isCreationDomaineEnabled;
+}
+
+DialogcreateDomaine : CktlAjaxWindow {
+    id = dialogcreateDomaineId;
+    action = openCreateDomaineWdows;
+    width = 670;
+    height = 500;
+    slideDownDuration = 0;
+    slideUpDuration = 0;
+    onClose = refreshDomaines;
+    resizable = false;
+    closable = false;
+    closeUpdateContainerID = "TRDomaine";
+}
+
+domaineCreateEnabled : WOConditional {
+	condition = isCreationDomaineEnabled;
+}
+
+unDomaineTiers : WOPopUpButton {
+    id = "typeTiers";
+	list = ctrl.typeTiers;
+	item = ctrl.unTypeTiers;
+	displayString = ctrl.unTypeTiers.libelle;
+	selection = ctrl.selectedTypeTiers;
+	//selection = domaine.eoTypeTiers;
+	noSelectionString = " ";
+	disabled = ctrl.lockFieldDomaine;
+	otherTagString = "required";
+}
+
+unDomaineTiersObserver : AjaxObserveField {
+	observeFieldID = "typeTiers";
+	action = submit;
+}
+
+unDomainelblLong : WOTextField {
+    id = "unDomainelblLong";
+	value = domaine.lblLong;
+	maxlength = "80";
+	disabled = ctrl.lockFieldDomaine;
+	otherTagString = "required";
+	placeholder="Libelle domaine long ici";
+}
+
+unDomainelblLongObserver : AjaxObserveField {
+	observeFieldID = "unDomainelblLong";
+	action = submit;
+} 
+
+unDomainelblCourt : WOTextField {
+    id = "unDomainelblCourt";
+	value = domaine.lblCourt;
+	maxlength = "20";
+	disabled = ctrl.lockFieldDomaine;
+	otherTagString = "required";
+	placeholder="Libelle domaine court ici";
+}
+
+unDomainelblCourtObserver : AjaxObserveField {
+	observeFieldID = "unDomainelblCourt";
+	action = submit;
+}
+
+unDomainelblMatiere : WOTextField {
+    id = "unDomainelblMatiere";
+	value = domaine.lblMatiere;
+	maxlength = "20";
+	disabled = ctrl.lockFieldDomaine;
+	otherTagString = "required";
+	placeholder="Libelle de la matière ici";
+}
+
+unDomainelblMatiereObserver : AjaxObserveField {
+	observeFieldID = "unDomainelblMatiere";
+	action = submit;
+}
+
+unDomainelblTerrain : WOTextField {
+    id = "unDomainelblTerrain";
+	value = domaine.lblTerrain;
+	maxlength = "20";
+	disabled = ctrl.lockFieldDomaine;
+	otherTagString = "required";
+	placeholder="Libelle du terrain ici";
+}
+
+unDomainelblTerrainObserver : AjaxObserveField {
+	observeFieldID = "unDomainelblTerrain";
+	action = submit;
+}
+
+unDomainelblCapacite : WOTextField {
+    id = "unDomainelblCapacite";
+	value = domaine.lblCapacite;
+	maxlength = "20";
+	disabled = true;
+	otherTagString = "required";
+} 
+
+unDomainedateCrea : WOTextField {
+	value = domaine.dateCrea;
+	disabled = true;
+	dateformat = "%d/%m/%Y";
+}
+
+unDomainedateFin : CktlAjaxDatePicker {
+	id = "unDomainedateFin";
+	dateValue = domaineDateFin;
+	updateContainerID = "TRDomaine";
+	disabled = ctrl.lockFieldDomaine;
+}
+
+unDomainedateFinObserver : AjaxObserveField {
+	observeFieldID = "unDomainedateFin";
+	action = submit;
+} 
+
+unDomaineEnregistrer : CktlAjaxSubmitButton {
+	action = unDomaineEnregistrer;
+	text = "Enregistrer";
+    type = "validate";
+    title = "Créer et enregistrer un domaine dans le référentiel";
+    formName = "FormAdminNameOne";
+	onComplete = "function() {TRDomaineUpdate();}";
+}
+
+afficherDomaineEdit : WOConditional {
+	condition = ctrl.activUpdateDomaine;
+}
+
+unDomaineEditer : CktlAjaxSubmitButton {
+	action = ctrl.editDomaineFiled;
+	text = "Modifier";
+    type = "edit";
+    title = "Modifier le domaine sélectionné";
+    formName = "FormAdminNameOne";
+	onComplete = "function() {TRDomaineUpdate();}";
+}
+
+unDomaineAnnuler : CktlAjaxSubmitButton {
+	action = ctrl.annulerDomaineFiled;
+	text = "Annuler";
+    type = "cancel";
+    title = "Annuler la modification";
+    formName = "FormAdminNameOne";
+	onComplete = "function() {TRDomaineUpdate();}";
+	
+}

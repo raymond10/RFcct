@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang = "fr">
+  <head>
+    <meta charset = "utf-8" />
+    <meta name = "robots" content = "noindex" />
+    <!-- disable iPhone inital scale -->
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    <title><webobject name = "Titre" /></title>
+    <script type = "text/javascript">
+      if(window.history.forward(1) != null) {
+        window.history.forward(1);
+      }
+    </script>
+  </head>
+  <webobject name = "Body">
+    <webobject name = "Contenu" />
+    <webobject name = "Notifs" />
+  </webobject>
+</html>

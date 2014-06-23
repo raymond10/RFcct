@@ -1,0 +1,23 @@
+#Fri Mar 22 15:44:48 CET 2013
+build.app.version=1.0.0.0
+classes.dir=bin
+component.inlineBindingPrefix=[
+component.inlineBindingSuffix=]
+component.wellFormedTemplateRequired=false
+customInfoPListContent=
+embed.Local=true
+embed.Project=true
+embed.System=true
+embed.User=true
+eoAdaptorClassName=
+javaVersion=1.5+
+principalClass=org.utt.rfcct.serveur.Application
+project.name=RFcct
+project.name.lowercase=rfcct
+project.type=application
+webXML=false
+webXML_CustomContent=
+#Indique la sphere de laquelle l'application depend
+org.utt.sphere=comp
+#nom complet de la classe contenant une mÈthode main affichant le n∞ de version de l'application dans la sortie standard.
+org.utt.versionClass=org.utt.rfcct.serveur.VersionMe

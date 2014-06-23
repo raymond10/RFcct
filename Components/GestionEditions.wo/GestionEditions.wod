@@ -1,0 +1,25 @@
+Wrapper : Wrapper {
+	
+}
+
+EditionForm : WOForm {
+	
+}
+
+DatesObserveField : AjaxObserveField {
+	elementName = "span";
+}
+
+Dates : CktlAjaxDatePicker {
+	id = "DateFinCompetence";
+	dateValue = dateFin;
+}
+
+EditionCompetence : CktlReportingExecButton {
+    action = doNothing;
+    text = "Editer";
+    reporter = reporter;
+    reporterProgress = reporterProgress;
+    reportFilename = reportFilename;
+    resultMimeType =  "application/excel";
+}

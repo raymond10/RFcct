@@ -1,0 +1,28 @@
+<webobject name = "ContainerGroupeTreeView">
+  <webobject name = "IsFiltrageTexteAvailable">
+    <webobject name = "FiltreTexte" />
+    <webobject name = "FiltreTexteObserver" />
+    <webobject name = "IsFiltrageAvailable">
+      <webobject name = "Filtre" />
+      <webobject name = "FiltreObserver" />
+      <webobject name = "RechercherSubmitFunction" />
+    </webobject>
+    <webobject name = "ResetButton" />
+  </webobject>
+  <webobject name = "IsFiltrageTexteNotAvailable">
+    <webobject name = "IsFiltrageAvailable">
+      <span>Filtre:</span>
+      <webobject name = "Filtre" />
+      <webobject name = "FiltreObserver" />
+      <webobject name = "ResetButton" />
+    </webobject>
+  </webobject>
+  <webobject name = "ContainerAjaxTree">
+    <div style = "width:100%;">
+      <webobject name = "UnAjaxTree">
+        <webobject name = "IsAutorise"><webobject name = "GroupeLink" /></webobject>
+        <webobject name = "IsNotAutorise"><webobject name = "GroupeLibelle" /></webobject>
+      </webobject>
+    </div>
+  </webobject>
+</webobject>

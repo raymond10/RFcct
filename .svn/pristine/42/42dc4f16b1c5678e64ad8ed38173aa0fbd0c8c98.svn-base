@@ -1,0 +1,121 @@
+<webobject name = "ContainerResume">
+  <center>
+    <webobject name = "FormResume">
+      <table width = "100%" cellpadding = "0" cellspacing = "0">
+        <tbody>
+          <tr>
+            <td>
+              <table border = "0" width = "100%" height = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "5">
+                      <span>
+                        <h4>Domaine</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class = "decale">
+                    <td width = "50%">
+                      <label for = "Domaines" class = "etiquette" style = "font-weight: bold">Domaine&nbsp;:</label>
+                      <webobject name = "compDomaine" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%" height = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "6">
+                      <span>
+                        <h4>Tiers s&eacute;lectionn&eacute;s</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width = "50%" class = "decale"> <webobject name = "tiersTBV" /> </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%" height = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "7">
+                      <span>
+                        <h4>Mati&egrave;re</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class = "decale">
+                    <td width = "50%">
+                      <label for = "CentreMatiere" class = "etiquette" style = "font-weight: bold">Mati&egrave;re&nbsp;:</label>
+                      <webobject name = "compMatiere" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%" height = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "8">
+                      <span>
+                        <h4>Terrain</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class = "decale">
+                    <td width = "50%">
+                      <label for = "CentreTerrain" class = "etiquette" style = "font-weight: bold">Terrain&nbsp;:</label>
+                      <webobject name = "compTerrain" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "4">
+                      <span>
+                        <h4>Capacit&eacute;</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class = "decale">
+                    <td width = "50%" ><label for = "CentreCapacite" class = "etiquette" style = "font-weight: bold">Capacit&eacute;&nbsp;:</label>
+                      <webobject name = "compCapacite" /></td>
+                  </tr>
+                </tbody>
+              </table>
+              <table border = "0" width = "100%">
+                <tbody>
+                  <tr>
+                    <td colspan = "6">
+                      <span>
+                        <h4>Autres informations</h4>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class = "decale">
+                    <td valign = "top" width = "5%" align = "right">
+                      <label for = "DateFinCompetence" class = "etiquette">Date de fin</label>
+                    </td>
+                    <td colspan = "2" style = "padding-right: 10px;">
+                      <webobject name = "DateFinCompetence" />
+                      </td>
+                    </tr>
+                  <tr class = "decale">
+                    <td valign = "top" width = "5%" align = "right">
+                      <label for = "compCommentaire" class = "etiquette">Commentaires</label>
+                    </td>
+                    <td colspan = "2" style = "padding-right: 10px;">
+                      <webobject name = "compCommentaire" />
+                      </td>
+                    </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </webobject>
+  </center>
+</webobject>

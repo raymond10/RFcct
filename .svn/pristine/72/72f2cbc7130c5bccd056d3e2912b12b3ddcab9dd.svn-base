@@ -1,0 +1,48 @@
+enabled : WOConditional {
+	condition = enabled;
+	negate = true;
+}
+
+Annuler : CktlButton {
+    onClick = "return confirm('Les données déjà saisies seront perdues pour cet onglet, êtes vous sûr ?');";
+    action = annuler;
+    title = "Annuler";
+    text = "Annuler";
+    type = "cancel";
+}
+
+Valider : CktlButton {
+	onClick = "return confirm('Êtes vous sûr d'enregistrer ces modifications ?');";
+    action = enregistrer;
+    title = "Valider et enregistrer";
+    text = "Enregistrer";
+    type = "validate";
+}
+
+ApresEnregistrerModalDialog: CktlAjaxWindow {
+    id = "ApresEnregistrerModalDialog";
+    showOpener = false; 
+    title = "Modification(s) enregistrées";
+    width = 400;
+    height = 250;
+    closable = false;
+}
+
+Numero : WOString {
+    value = competence.numeroCompetence;
+}
+
+Consulter : CktlButton {
+    action = consulter;
+    target = "_top";
+    text = "Consulter la convention";
+    type = "edit";
+    title = "Consulter";
+}
+
+Accueil : CktlButton {
+    action = accueil;
+    target = "_top";
+    text = "Revenir à l'accueil";
+    type = "accueil";
+}

@@ -1,0 +1,173 @@
+ContainerMatieres : AjaxUpdateContainer {
+	id = "ContainerMatieres";
+	class = classeCss;
+	style = styleCss;
+}
+
+FormAdminTwo : WOForm {
+  id = "FormAdminTwo";
+  name ="FormAdminNameTwo";
+  action = submit;
+  multipleSubmit = true;
+  onsubmit = "return false;";
+}
+
+TRMatiere : AjaxUpdateContainer {
+	id = "TRMatiere";
+	elementName = "tr";
+}
+
+lesMatiereDomaine : WORepetition {
+	list = ctrl.lesDomaines;
+	item = ctrl.itemDomaine;
+}
+
+uneMatiereDomaine : WOCheckBox {
+  checked = ctrl.domaineSelected;
+  disabled = ctrl.lockFieldMatiere;
+}
+
+lblMatiere : WOString {
+	value = ctrl.itemDomaine.lblCourt;
+	class = "etiquette";
+}
+
+uneMatiereDomaineObserver : AjaxObserveField {
+    id = "checkId";
+    elementName = "span";
+    fullSubmit = true;
+	action = submit;
+}
+
+uneMatiereSup : WOPopUpButton {
+	id = "Matieres";
+	list = ctrl.lesMatieres;
+	item = ctrl.uneMatierePere;
+	displayString = ctrl.uneMatierePere.lblCourt;
+	selection = ctrl.selectedMatierePere;
+	noSelectionString = " ";
+	disabled = ctrl.lockFieldMatiere;
+}
+
+uneMatiereSupObserver : AjaxObserveField {
+	observeFieldID = "Matieres";
+	action = submit;
+}
+
+uneMatierelblLong : WOTextField {
+    id = "uneMatierelblLong";
+	value = matiere.lblLong;
+	maxlength = "80";
+	disabled = ctrl.lockFieldMatiere;
+	otherTagString = "required";
+	placeholder="Libelle matiere long ici";
+}
+
+uneMatierelblLongObserver : AjaxObserveField {
+	observeFieldID = "uneMatierelblLong";
+	action = submit;
+}
+
+uneMatierelblCourt : WOTextField {
+	id = "uneMatierelblCourt";
+	value = matiere.lblCourt;
+	maxlength = "20";
+	disabled = ctrl.lockFieldMatiere;
+	placeholder="Libelle matiere court ici";
+}
+
+uneMatierelblCourtObserver : AjaxObserveField {
+	observeFieldID = "uneMatierelblCourt";
+	action = submit;
+}
+
+uneMatieredateCrea : WOTextField {
+	value = matiere.dateCrea;
+	disabled = true;
+	dateformat = "%d/%m/%Y";
+}
+
+uneMatieredateFin : CktlAjaxDatePicker {
+	id = "uneMatieredateFin";
+	dateValue = matiereDateFin;
+	disabled = ctrl.lockFieldMatiere;
+	updateContainerID = "TRMatiere";
+}
+
+uneMatieredateFinObserver : AjaxObserveField {
+	observeFieldID = "uneMatieredateFin";
+	action = submit;
+}
+
+uneMatiereEnregistrer : CktlAjaxSubmitButton {
+	action = uneMatiereEnregistrer;
+    text = "Enregistrer";
+    type = "validate";
+    title = "Créer et enregistrer une matière dans le référentiel";
+    formName = "FormAdminNameTwo";
+	onComplete = "function() {TRMatiereUpdate();}";
+}
+
+afficherMatiereEdit : WOConditional {
+	condition = ctrl.activUpdateMatiere;
+}
+
+uneMatiereEditer : CktlAjaxSubmitButton {
+	action = ctrl.editMatiereFiled;
+	text = "Modifier";
+    type = "edit";
+    title = "Modifier la matière sélectionnée";
+    formName = "FormAdminNameTwo";
+	onComplete = "function() {TRMatiereUpdate();}";
+}
+
+uneMatiereAnnuler : CktlAjaxSubmitButton {
+	action = ctrl.annulerMatiereFiled;
+	text = "Annuler";
+    type = "cancel";
+    title = "Annuler la modification de la matière";
+    formName = "FormAdminNameTwo";
+	onComplete = "function() {TRMatiereUpdate();}";
+}
+
+Matieres : WOPopUpButton {
+	id = "MatieresId";
+	list = ctrl.lesMatieres;
+	item = ctrl.uneMatiere;
+	displayString = ctrl.uneMatiere.lblCourt;
+	selection = ctrl.selectedMatiere;
+	noSelectionString = " ";
+}
+
+MatieresObserver : AjaxObserveField {
+	observeFieldID = "MatieresId";
+	action = ctrl.editMatiere;
+	fullSubmit = false;
+	onFailure = myApp.onFailureMessage;
+	onComplete = "function() {TRMatiereUpdate();}";
+}
+
+createMatiereWdows : CktlAjaxButton {
+    dialogIDForOpen = dialogcreateMatiereId;
+    text = "Définir nouvelle matière";
+    title = "Nouvelle matière";
+    type = "new";
+    enabled = isCreationMatiereEnabled;
+}
+
+DialogcreateMatiere : CktlAjaxWindow {
+    id = dialogcreateMatiereId;
+    action = openCreateMatiereWdows;
+    width = 670;
+    height = 500;
+    slideDownDuration = 0;
+    slideUpDuration = 0;
+    onClose = refreshMatieres;
+    resizable = false;
+    closable = false;
+    closeUpdateContainerID = "TRMatiere";
+}
+
+matiereCreateEnabled : WOConditional {
+	condition = isCreationMatiereEnabled;
+}

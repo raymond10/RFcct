@@ -1,0 +1,113 @@
+<webobject name = "ContainerMatieres">
+  <center>
+    <webobject name = "FormAdminTwo">
+      <table width = "100%" cellpadding = "0" cellspacing = "0" align = "center">
+        <tbody>
+          <tr valign = "middle">
+            <td>
+              <table border = "0" width = "100%" height = "25%">
+                <tbody>
+                  <tr>
+                    <td colspan = "5">
+                      <span>
+                        <h4>D&eacute;finition d'une mati&egrave;re</h4>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id = "sauts"></div>
+              <table border = "0" width = "100%" height = "25%">
+                <tbody>
+                  <webobject name = "TRMatiere">
+                    <td width = "50%">
+                      <label for = "Matieres" class = "etiquette" style = "font-weight: bold">Mati&egrave;re&nbsp;</label>
+                      <webobject name = "Matieres" />
+                      <webobject name = "MatieresObserver" />
+                    </td>
+                    <td width = "50%" class = "hide">
+                      <webobject name = "createMatiereWdows" />
+                      <webobject name = "DialogcreateMatiere" />
+                    </td>
+                    <td class = "verticalLine"></td>
+                    <webobject name = "matiereCreateEnabled">
+                    <td>
+                      <table cellpadding = "0" cellspacing = "0" width = "100%">
+                        <th>
+                          <td>
+                            <span>
+                              <h2>Cr&eacute;er une nouvelle mati&egrave;re</h2>
+                            </span>
+                          </td>
+                        </th>
+                        <th> </th>
+                        <tr>
+                          <td class = "etiquette obligatoire">&nbsp;Libell&eacute; long&nbsp;</td>
+                          <td>
+                            <webobject name = "uneMatierelblLong" />
+                            <webobject name = "uneMatierelblLongObserver" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class = "etiquette obligatoire">&nbsp;Libell&eacute; court&nbsp;</td>
+                          <td>
+                            <webobject name = "uneMatierelblCourt" />
+                            <webobject name = "uneMatierelblCourtObserver" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class = "etiquette obligatoire">&nbsp;Date&nbsp;de&nbsp;cr&eacute;ation&nbsp;</td>
+                          <td class = "etiquette"> <webobject name = "uneMatieredateCrea" /> </td>
+                        </tr>
+                        <tr>
+                          <td class = "etiquette" style = "font-weight: bold">&nbsp;Date&nbsp;de&nbsp;fin&nbsp;</td>
+                          <td class = "etiquette">
+                            <webobject name = "uneMatieredateFin" />
+                            <webobject name = "uneMatieredateFinObserver" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class = "etiquette" style = "font-weight: bold">&nbsp;Mati&egrave;re sup&eacute;rieure&nbsp;</td>
+                          <td>
+                            <webobject name = "uneMatiereSup" />
+                            <webobject name = "uneMatiereSupObserver" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <br />
+                          <br />
+                          <td class = "etiquette obligatoire">&nbsp;Domaines&nbsp;</td>
+                          <td>
+                            <webobject name = "uneMatiereDomaineObserver">
+                              <webobject name = "lesMatiereDomaine">
+                                <label for = "uneMatiereDomaine" class = "etiquette checkBox">
+                                  <webobject name = "uneMatiereDomaine" />
+                                  <webobject name = "lblMatiere" />
+                                </label>
+                              </webobject>
+                            </webobject>
+                          </td>
+                        </tr>
+                      </table>
+                      <br />
+                      <table class = "etiquette" align = "center">
+                        <tr>
+                          <td><webobject name = "uneMatiereEnregistrer" /></td>
+                          <webobject name = "afficherMatiereEdit">
+                            <td><webobject name = "uneMatiereEditer" /></td>
+                            <td><webobject name = "uneMatiereAnnuler" /></td>
+                          </webobject>
+                        </tr>
+                      </table>
+                    </td>
+                    </webobject>
+                  </webobject>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </webobject>
+  </center>
+</webobject>

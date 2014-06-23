@@ -1,0 +1,188 @@
+/*******************************************************************************
+ * Copyright (c) Raymond NANEON  - 2013.
+ * Universite de Technologie de Troyes - CEDRE (www.utt.fr), since 1993.
+ * This software is governed by the CeCILL license under French law and abiding by the
+ * rules of distribution of free software. You can use, modify and/or 
+ * redistribute the software under the terms of the CeCILL license as 
+ * circulated by CEA, CNRS and INRIA at the following URL 
+ * "http://www.cecill.info". 
+ * As a counterpart to the access to the source code and rights to copy, modify 
+ * and redistribute granted by the license, users are provided only with a 
+ * limited warranty and the software's author, the holder of the economic 
+ * rights, and the successive licensors have only limited liability. In this 
+ * respect, the user's attention is drawn to the risks associated with loading,
+ * using, modifying and/or developing or reproducing the software by the user 
+ * in light of its specific status of free software, that may mean that it
+ * is complicated to manipulate, and that also therefore means that it is 
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the 
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally, 
+ * to use and operate it in the same conditions as regards security. The
+ * fact that you are presently reading this means that you have had knowledge 
+ * of the CeCILL license and that you accept its terms.
+ * 
+ * Do not remove this copyright message
+ * 
+ * Contributors:
+ *     Raymond NANEON - initial API and implementation
+ ******************************************************************************/
+package org.utt.rfcct.serveur.components.assistants;
+
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOCapacite;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EODomaine;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOMatiere;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOTerrain;
+import org.utt.fwkuttcompetences.serveur.modele.rfcct.EOTypeTiers;
+
+import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WOResponse;
+
+public class AssistantAdministration extends Assistant {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8073257126041421904L;
+	public static final String TYPETIER_BDG = "typeTier";
+	public static final String DOMAINE_BDG = "domaine";
+	public static final String MATIERE_BDG = "matiere";
+	public static final String TERRAIN_BDG = "terrain";
+	public static final String CAPACITE_BDG = "capacite";
+	
+	private EOTypeTiers typeTier;
+	private EODomaine domaine;
+	private EOMatiere matiere;
+	private EOTerrain terrain;
+	private EOCapacite capacite;
+
+	public AssistantAdministration(WOContext context) {
+        super(context);
+        setEditMode(true);
+    }
+	
+	public void appendToResponse(WOResponse response, WOContext context) {
+		super.appendToResponse(response, context);
+	}
+
+	public boolean isPrecedentEnabled() {
+		boolean precedentEnabled = !super.isPrecedentDisabled();
+		return precedentEnabled;
+	}
+	public boolean isSuivantEnabled() {
+		boolean suivantEnabled = !super.isSuivantDisabled();
+		return suivantEnabled;
+	}
+	
+	public String idContainerAssistantMenu() {
+        return "ContainerAssistantMenu";
+    }
+	
+	@Override
+    public void reset() {
+		typeTier = null;
+		domaine = null;
+		matiere = null;
+		terrain = null;
+		capacite = null;
+		setEditMode(true);
+        super.reset();
+	}
+
+	/**
+	 * @return the typeTier
+	 */
+	public EOTypeTiers typeTier() {
+		if(hasBinding(TYPETIER_BDG))
+			typeTier = (EOTypeTiers) valueForBinding(TYPETIER_BDG);
+		return typeTier;
+	}
+
+	/**
+	 * @param typeTier the typeTier to set
+	 */
+	public void setTypeTier(EOTypeTiers typeTier) {
+		this.typeTier = typeTier;
+		if(hasBinding(TYPETIER_BDG))
+			setValueForBinding(typeTier, TYPETIER_BDG);
+	}
+
+	/**
+	 * @return the domaine
+	 */
+	public EODomaine domaine() {
+		if (hasBinding(DOMAINE_BDG)) {
+			domaine = (EODomaine) valueForBinding(DOMAINE_BDG);
+		}
+		return domaine;
+	}
+
+	/**
+	 * @param domaine the domaine to set
+	 */
+	public void setDomaine(EODomaine domaine) {
+		this.domaine = domaine;
+		if (hasBinding(DOMAINE_BDG)) {
+			setValueForBinding(domaine, DOMAINE_BDG);
+		}
+	}
+
+	/**
+	 * @return the matiere
+	 */
+	public EOMatiere matiere() {
+		if (hasBinding(MATIERE_BDG)) {
+			matiere = (EOMatiere) valueForBinding(MATIERE_BDG);
+		}
+		return matiere;
+	}
+
+	/**
+	 * @param matiere the matiere to set
+	 */
+	public void setMatiere(EOMatiere matiere) {
+		this.matiere = matiere;
+		if (hasBinding(MATIERE_BDG)) {
+			setValueForBinding(matiere, MATIERE_BDG);
+		}
+	}
+
+	/**
+	 * @return the terrain
+	 */
+	public EOTerrain terrain() {
+		if (hasBinding(TERRAIN_BDG)) {
+			terrain = (EOTerrain) valueForBinding(TERRAIN_BDG);
+		}
+		return terrain;
+	}
+
+	/**
+	 * @param terrain the terrain to set
+	 */
+	public void setTerrain(EOTerrain terrain) {
+		this.terrain = terrain;
+		if (hasBinding(TERRAIN_BDG)) {
+			setValueForBinding(terrain, TERRAIN_BDG);
+		}
+	}
+
+	/**
+	 * @return the capacite
+	 */
+	public EOCapacite capacite() {
+		if (hasBinding(CAPACITE_BDG)) {
+			capacite = (EOCapacite) valueForBinding(CAPACITE_BDG);
+		}
+		return capacite;
+	}
+
+	/**
+	 * @param capacite the capacite to set
+	 */
+	public void setCapacite(EOCapacite capacite) {
+		this.capacite = capacite;
+		if (hasBinding(CAPACITE_BDG)) {
+			setValueForBinding(capacite, CAPACITE_BDG);
+		}
+	}
+}
